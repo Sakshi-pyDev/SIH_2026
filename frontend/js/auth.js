@@ -1,9 +1,9 @@
 /**
- * auth.js - Authentication and Role-Based Access Control
+ * auth.js - Authentication and Session Management
  * SIF Precursor Detection System — Oil India Limited
  */
 
-const API_BASE = "http://127.0.0.1:8000";
+window.API_BASE = window.API_BASE || "http://127.0.0.1:8000";
 
 const AuthState = {
   getToken: () => localStorage.getItem('oil_sif_token'),
@@ -36,25 +36,19 @@ const AuthState = {
     const usernameDisplays = document.querySelectorAll('.user-name-display');
     const roleDisplays = document.querySelectorAll('.user-role-display');
 
-    const navReport = document.getElementById('navLinkReport');
-    const navDashboard = document.getElementById('navLinkDashboard');
-
     if (isLoggedIn) {
       authBtns.forEach(el => el.style.display = 'none');
       userSession.forEach(el => el.style.display = 'flex');
       usernameDisplays.forEach(el => el.textContent = username);
       roleDisplays.forEach(el => el.textContent = (role || '').replace('_', ' ').toUpperCase());
-
-      if (navDashboard) navDashboard.style.display = 'inline-flex';
-      if (navReport) {
-        navReport.style.display = (role === 'field_worker' || role === 'admin') ? 'inline-flex' : 'none';
-      }
     } else {
       authBtns.forEach(el => el.style.display = 'flex');
       userSession.forEach(el => el.style.display = 'none');
+    }
 
-      if (navReport) navReport.style.display = 'none';
-      if (navDashboard) navDashboard.style.display = 'none';
+    const activeUser = document.getElementById('activeUserLabel');
+    if (activeUser) {
+      activeUser.textContent = username ? `${username} (${(role || 'worker').replace('_', ' ')})` : 'worker1 (Field Worker)';
     }
   }
 };
@@ -64,7 +58,7 @@ async function handleLogin(username, password) {
   form.append('username', username);
   form.append('password', password);
 
-  const res = await fetch(`${API_BASE}/auth/login`, {
+  const res = await fetch(`${window.API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: form
@@ -80,7 +74,7 @@ async function handleLogin(username, password) {
 }
 
 async function handleRegister(username, password, role) {
-  const res = await fetch(`${API_BASE}/auth/register`, {
+  const res = await fetch(`${window.API_BASE}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password, role })
@@ -97,13 +91,7 @@ async function handleRegister(username, password, role) {
 
 function handleLogout() {
   AuthState.clearSession();
-  if (window.location.pathname.endsWith('login.html') || window.location.pathname.endsWith('register.html')) {
-    window.location.href = 'index.html';
-  } else if (typeof navigateToPage === 'function') {
-    navigateToPage('home');
-  } else {
-    window.location.href = 'index.html';
-  }
+  window.location.href = 'index.html';
 }
 
 document.addEventListener('DOMContentLoaded', () => {

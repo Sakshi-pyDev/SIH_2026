@@ -73,8 +73,8 @@
   <nav class="gov-nav" aria-label="Main Navigation">
     <div class="gov-nav-links">
       <a href="index.html">🏠 Portal Home</a>
-      <a href="report.html" class="active">📝 Submit Safety Report</a>
-      <a href="dashboard.html">📊 Surveillance Dashboard</a>
+      <a href="report.html" class="active" id="navLinkReport">📝 Submit Safety Report</a>
+      <a href="dashboard.html" id="navLinkDashboard">📊 Surveillance Dashboard</a>
     </div>
 
     <div class="gov-nav-right">
@@ -99,28 +99,42 @@
   <!-- Breadcrumb -->
   <div style="background:var(--bg-card); border-bottom:1px solid var(--border-subtle); padding:7px 24px; font-size:11.5px; color:var(--text-muted);">
     <a href="index.html" style="color:var(--gov-orange); text-decoration:none;">Portal Home</a> &rsaquo; 
-    <span style="color:var(--text-main); font-weight:600;">Submit SIF Safety Hazard Report</span>
+    <span style="color:var(--text-main); font-weight:600;">Field Worker Safety Hazard &amp; Precursor Reporting</span>
   </div>
 
-  <!-- Main Content: Restored SIF Reporting Console (Commit ad25296) -->
+  <!-- Main Content: Restored SIF Reporting Console + File Upload (Commit ad25296) -->
   <main class="main-wrapper">
+    
+    <!-- Quick Scenario Presets -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11.5px; font-weight:700; color:var(--text-secondary); margin-bottom:6px;">
+        ⚡ QUICK PRESET HAZARD SCENARIOS (Click to Auto-fill):
+      </div>
+      <div class="preset-scenarios-container">
+        <button type="button" class="preset-chip" onclick="applyScenario(0)">⚡ Gas Kick at BOP (High Energy SIF)</button>
+        <button type="button" class="preset-chip" onclick="applyScenario(1)">⚠️ Scaffolding Guardrail Missing</button>
+        <button type="button" class="preset-chip" onclick="applyScenario(2)">🔥 Toxic H2S Sensor Alert</button>
+        <button type="button" class="preset-chip" onclick="applyScenario(3)">🛢️ Crane Hoist Wire Fraying</button>
+      </div>
+    </div>
+
     <div class="sif-core-grid">
       <!-- Submission Form Column -->
       <div>
         <div class="gov-card">
           <div class="gov-card-header">
-            <span>📝 Submit Safety Report for Instant AI Risk Analysis</span>
-            <span style="font-size:11px; font-weight:normal; opacity:0.9;">DGMS Format Compliant</span>
+            <span>📝 Submit Safety Observation &amp; Evidence for AI SIF Triage</span>
+            <span style="font-size:11px; font-weight:normal; opacity:0.9;">DGMS &amp; OISD-156 Compliant</span>
           </div>
           <div class="gov-card-body">
             <div id="reportAlert" class="alert"></div>
 
             <div class="form-group">
-              <label class="form-label" for="repType">Report Type <span class="required">*</span></label>
+              <label class="form-label" for="repType">Report Classification Type <span class="required">*</span></label>
               <select id="repType" class="form-control">
                 <option value="Near Miss">Near Miss (High-Potential Precursor)</option>
-                <option value="Hazard Observation">Hazard Observation / Unsafe Condition</option>
-                <option value="Unsafe Act">Unsafe Act / Operational Deviation</option>
+                <option value="Unsafe Condition">Unsafe Condition / Structural Deviation</option>
+                <option value="Unsafe Act">Unsafe Act / Procedural Violation</option>
                 <option value="Equipment Failure">Equipment Failure / Pressure Surge Trip</option>
                 <option value="Leakage">Gas / Hydrocarbon Leakage Alert</option>
               </select>
@@ -129,49 +143,62 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label class="form-label" for="repLocation">Asset / Facility Location <span class="required">*</span></label>
-                <input id="repLocation" class="form-control" placeholder="e.g. Rig Floor, Tank Farm, Duliajan" value="Rig Floor - Drill Rig 4">
+                <input id="repLocation" class="form-control" placeholder="e.g. Rig Floor, Well Pad 14, Duliajan" value="Rig Floor - Well Pad 14, Duliajan">
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="repDept">Operational Department <span class="required">*</span></label>
-                <input id="repDept" class="form-control" placeholder="e.g. Drilling, Production, HSE" value="Drilling &amp; Well Servicing">
+                <input id="repDept" class="form-control" placeholder="e.g. Drilling, Production, HSE" value="Drilling Operations">
               </div>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="repText">Report Description (Observations &amp; Precursor Signals) <span class="required">*</span></label>
-              <textarea id="repText" class="form-control" rows="5"
-                placeholder="Describe the unsafe act / condition / near-miss in detail. Example: High pressure gas kick observed on drill pipe, pressure gauge fluctuating wildly near blowout preventer..."
+              <textarea id="repText" class="form-control" rows="4"
+                placeholder="Describe the unsafe act / condition / near-miss in detail. Example: High pressure gas kick observed on drill string. Pressure gauge fluctuating wildly near blowout preventer..."
                 oninput="onReportTextInput()"></textarea>
               <!-- Autocomplete suggestions dropdown -->
               <div id="suggestBox" class="suggest-dropdown"></div>
             </div>
 
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-              <button class="btn btn-primary" id="submitReportBtn" onclick="submitReportFromPortal()" style="padding:10px 24px; font-size:14px;">
+            <!-- Multi-Modal File & Evidence Attachment Dropzone -->
+            <div class="form-group">
+              <label class="form-label">📁 Attach Media Evidence &amp; Incident Logs (Photos, CCTV Clips, Inspection PDF, Sensor CSV)</label>
+              <div id="fileDropzone" class="file-dropzone">
+                <div class="dropzone-icon">📸 🎥 📄 📊</div>
+                <div class="dropzone-title">Click or Drag &amp; Drop Incident Evidence Files Here</div>
+                <div class="dropzone-sub">Supports Rig Photos (.jpg, .png), Video Clips (.mp4), Inspection Sheets (.pdf), Telemetry Logs (.csv)</div>
+                <input type="file" id="reportFileInput" multiple accept="image/*,video/*,.pdf,.csv,.xlsx,.doc,.docx" style="display:none;">
+              </div>
+              <!-- File Previews Container -->
+              <div id="filePreviewList" class="file-preview-list"></div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:16px;">
+              <button class="btn btn-primary" id="submitReportBtn" onclick="submitReportFromPortal()" style="padding:10px 24px; font-size:13.5px; font-weight:700;">
                 ⚡ Analyze &amp; Submit Safety Report
               </button>
               <span id="authStatusHint" style="font-size:11.5px; color:var(--text-muted);">
-                Submitting as: <strong id="activeUserLabel">field_worker</strong>
+                Filing as: <strong id="activeUserLabel">worker1 (Field Worker)</strong>
               </span>
             </div>
           </div>
         </div>
 
-        <!-- Restored Prediction Result Box (Matching Commit ad25296) -->
+        <!-- Restored Prediction Result Box (Commit ad25296) -->
         <div id="predictResult" style="display:none; margin-top:16px;"></div>
       </div>
 
-      <!-- Sidebar: Guidelines & Regulatory Assistance -->
+      <!-- Sidebar: Core SIF Signals & Emergency Contacts -->
       <div>
         <div class="gov-card">
-          <div class="gov-card-header">ℹ️ Core SIF Precursor Signals</div>
+          <div class="gov-card-header">🛡️ Core SIF Precursor Signals</div>
           <div class="gov-card-body" style="font-size:12px; line-height:1.7;">
             <ul style="padding-left:16px;">
-              <li><strong>High Energy Release:</strong> Uncontrolled pressure spikes, gas blowouts, heavy dropped objects.</li>
-              <li><strong>Missing Barrier:</strong> Inactive pressure relief valves, bypass of interlocks, uncertified lifting slings.</li>
-              <li><strong>Toxic Exposure:</strong> H2S detection, flammable hydrocarbon vapor accumulation.</li>
-              <li><strong>Audit Assurance:</strong> All submissions are processed through the trained NLP model with SHAP factor verification.</li>
+              <li><strong>High Energy Release:</strong> Uncontrolled pressure surges, blowout kicks, heavy suspended loads.</li>
+              <li><strong>Missing Safety Barriers:</strong> Inactive pressure relief valves, bypassed interlocks, uncertified lifting slings.</li>
+              <li><strong>Toxic Chemical Exposure:</strong> H2S gas detection, flammable hydrocarbon vapor clouds.</li>
+              <li><strong>Audit Traceability:</strong> NLP &amp; SHAP attribution model instantly scores precursor risk.</li>
             </ul>
           </div>
         </div>
@@ -181,12 +208,39 @@
           <div class="gov-card-body" style="font-size:12px; line-height:1.8;">
             <div><strong>OIL Emergency Control (Duliajan):</strong><br>1800-345-6789 (Toll Free)</div>
             <div style="margin-top:6px;"><strong>DGMS Directorate Guwahati:</strong><br>+91-361-2236547</div>
-            <div style="margin-top:6px;"><strong>HSE Helpdesk:</strong><br>hse@oilindia.in</div>
+            <div style="margin-top:6px;"><strong>HSE Central Control:</strong><br>hse@oilindia.in</div>
             <div style="margin-top:8px; padding:6px; background:#FDECEA; color:#7F0000; border-radius:2px; font-size:11.5px;">
               🚨 For life-threatening emergencies, dial <strong>112</strong> immediately.
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Restored Recent Reports Table (Commit ad25296 Match) -->
+    <div class="gov-card" style="margin-top:24px;">
+      <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <h3 id="dashboardTitle" style="font-size:13.5px; font-weight:700; margin:0;">📋 Ground Incident Observations &amp; Precursor Log</h3>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" id="reportFilterInput" class="form-control" placeholder="Filter by location / narrative..." style="font-size:11.5px; padding:4px 10px; width:220px;" oninput="filterReportsTable()">
+          <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px; color:var(--text-main); border-color:var(--border-input);" onclick="loadReports()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:140px;">Type &amp; Date</th>
+              <th style="width:180px;">Location / Dept</th>
+              <th>Observation Narrative</th>
+              <th style="width:260px;">AI Risk Triage &amp; SHAP Drivers</th>
+              <th style="width:110px;">Reported By</th>
+            </tr>
+          </thead>
+          <tbody id="reportsTableBody">
+            <tr><td colspan="5" class="empty-state">Loading reports from secure database...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </main>

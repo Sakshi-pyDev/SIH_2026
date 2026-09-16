@@ -1286,6 +1286,144 @@ textarea.form-control {
   color: var(--gov-navy);
 }
 
+/* ==========================================================================
+   FILE UPLOAD DROPZONE & EVIDENCE ATTACHMENTS
+   ========================================================================== */
+.file-dropzone {
+  border: 2px dashed #94A3B8;
+  border-radius: 6px;
+  background-color: var(--bg-subtle);
+  padding: 16px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.file-dropzone:hover,
+.file-dropzone.dragover {
+  border-color: var(--gov-orange);
+  background-color: rgba(255, 102, 0, 0.06);
+}
+
+body.dark-mode .file-dropzone {
+  border-color: #475569;
+  background-color: #132238;
+}
+
+body.dark-mode .file-dropzone:hover,
+body.dark-mode .file-dropzone.dragover {
+  border-color: #FF6600;
+  background-color: rgba(255, 102, 0, 0.12);
+}
+
+.dropzone-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.dropzone-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.dropzone-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.file-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.file-preview-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  box-shadow: var(--shadow-sm);
+  max-width: 100%;
+}
+
+.file-preview-thumb {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.file-preview-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-preview-name {
+  font-weight: 600;
+  color: var(--text-main);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-preview-size {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.file-preview-remove {
+  background: none;
+  border: none;
+  color: #EF4444;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  font-weight: bold;
+}
+
+.file-preview-remove:hover {
+  color: #B91C1C;
+}
+
+/* Preset Hazard Scenario Chips */
+.preset-scenarios-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.preset-chip {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-link);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-chip:hover {
+  background: var(--gov-orange);
+  color: #FFFFFF;
+  border-color: var(--gov-orange);
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;
