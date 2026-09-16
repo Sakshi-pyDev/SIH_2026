@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <linearGradient id="oilFlame" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FF4500"/>
+      <stop offset="60%" stop-color="#FF8C00"/>
+      <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8, 6)">
+    <circle cx="24" cy="24" r="22" fill="#003366"/>
+    <path d="M24 8 C20 18 14 22 14 28 C14 34 18 38 24 38 C30 38 34 34 34 28 C34 22 28 18 24 8 Z" fill="url(#oilFlame)"/>
+    <ellipse cx="24" cy="30" rx="5" ry="7" fill="#FFF" opacity="0.8"/>
+    <circle cx="24" cy="24" r="21" fill="none" stroke="#FF6600" stroke-width="2" stroke-dasharray="4,2"/>
+  </g>
+  <text x="60" y="26" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#003366">ऑयल इंडिया</text>
+  <text x="60" y="42" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FF6600">OIL INDIA LIMITED</text>
+  <text x="60" y="52" font-family="Arial, sans-serif" font-size="8" fill="#666">A Maharatna PSU</text>
+</svg>

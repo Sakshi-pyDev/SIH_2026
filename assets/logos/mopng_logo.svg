@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 60" width="210" height="60">
+  <g transform="translate(8, 6)">
+    <circle cx="24" cy="24" r="22" fill="#0A2540"/>
+    <path d="M24 10 L28 17 L35 17 L30 22 L32 29 L24 25 L16 29 L18 22 L13 17 L20 17 Z" fill="#E5A93C"/>
+    <rect x="17" y="31" width="14" height="4" fill="#E5A93C" rx="1"/>
+  </g>
+  <text x="60" y="24" font-family="Arial, sans-serif" font-size="10.5" font-weight="bold" fill="#0A2540">पेट्रोलियम एवं प्राकृतिक गैस मंत्रालय</text>
+  <text x="60" y="39" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#0A2540">MoPNG &#8226; Govt of India</text>
+  <text x="60" y="51" font-family="Arial, sans-serif" font-size="8" fill="#666">Ministry of Petroleum</text>
+</svg>

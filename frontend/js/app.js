@@ -33,6 +33,9 @@ let carouselTimer = null;
 const TOTAL_CAROUSEL_SLIDES = 4;
 
 function initCarousel() {
+  const slides = document.querySelectorAll('.carousel-slide');
+  if (!slides.length) return;
+
   setCarouselSlide(0);
   startCarouselAutoPlay();
 

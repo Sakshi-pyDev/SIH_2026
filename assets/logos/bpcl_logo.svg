@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <g transform="translate(8, 6)">
+    <circle cx="24" cy="24" r="22" fill="#003876"/>
+    <circle cx="24" cy="24" r="16" fill="#FFCC00"/>
+    <path d="M24 14 L27 21 L34 22 L29 27 L30 34 L24 30 L18 34 L19 27 L14 22 L21 21 Z" fill="#003876"/>
+  </g>
+  <text x="60" y="26" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#003876">भारत पेट्रोलियम</text>
+  <text x="60" y="42" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#003876">BPCL</text>
+  <text x="60" y="52" font-family="Arial, sans-serif" font-size="8" fill="#666">Energising Lives</text>
+</svg>

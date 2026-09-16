@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <g transform="translate(8, 6)">
+    <circle cx="24" cy="24" r="22" fill="#1B365D"/>
+    <path d="M16 14 L32 34 M32 14 L16 34" stroke="#FFB81C" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="6" fill="#FFF" stroke="#1B365D" stroke-width="1.5"/>
+    <circle cx="24" cy="24" r="3" fill="#DA291C"/>
+  </g>
+  <text x="60" y="24" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1B365D">खान सुरक्षा महानिदेशालय</text>
+  <text x="60" y="40" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1B365D">DGMS INDIA</text>
+  <text x="60" y="52" font-family="Arial, sans-serif" font-size="8" fill="#666">Safety in Indian Mines</text>
+</svg>

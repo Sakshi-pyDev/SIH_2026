@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <g transform="translate(8, 6)">
+    <circle cx="24" cy="24" r="22" fill="#006699"/>
+    <path d="M24 10 C28 17 32 22 30 28 C28 34 23 37 19 35 C15 33 14 28 17 24 C19 21 24 18 24 10 Z" fill="#4CAF50"/>
+    <path d="M24 14 C22 19 18 23 20 27 C22 31 26 31 27 28 C28 25 26 21 24 14 Z" fill="#FFD700"/>
+  </g>
+  <text x="60" y="26" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#006699">गेल (इंडिया) लि.</text>
+  <text x="60" y="42" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#4CAF50">GAIL (India) Ltd.</text>
+  <text x="60" y="52" font-family="Arial, sans-serif" font-size="8" fill="#666">Tomorrow's Energy</text>
+</svg>
