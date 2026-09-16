@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIF Precursor Detection System — Oil India Limited</title>
+  <link rel="icon" href="../assets/oil_safety_logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+
+  <!-- ======================================================================
+       TOP ACCESSIBILITY & UTILITY BAR
+       ====================================================================== -->
+  <div class="gov-top-bar">
+    <div class="top-bar-links">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited Official</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
+      <a href="https://sih.gov.in" target="_blank" rel="noopener">Smart India Hackathon 2026</a>
+      <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">Swagger API Docs</a>
+    </div>
+
+    <div class="top-bar-controls">
+      <!-- 25-Language Selector -->
+      <div class="lang-select-wrapper">
+        <label for="oilLanguageSelect">🌐 Lang:</label>
+        <select id="oilLanguageSelect" class="lang-select" aria-label="Select Portal Language"></select>
+      </div>
+
+      <!-- Hidden Google Translate Mount -->
+      <div id="google_translate_element" style="display:none;"></div>
+
+      <!-- Dark / Light Mode Switcher -->
+      <button class="btn-theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark/Light Mode">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       OFFICIAL GOVERNMENT HEADER
+       ====================================================================== -->
+  <header class="gov-header">
+    <a href="index.html#home" class="gov-logo-link">
+      <img src="../assets/oil_safety_logo.png" alt="Oil India Limited Official Logo" class="logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/e/e0/Oil_India_Limited_Logo.png'">
+    </a>
+    <div class="gov-header-text">
+      <h1>Oil India Limited — SIF Precursor Detection System</h1>
+      <p class="hindi">ऑयल इंडिया लिमिटेड — SIF पूर्वसूचक पहचान प्रणाली</p>
+      <p class="sub">Ministry of Petroleum &amp; Natural Gas | Government of India | DGMS Compliant | Smart India Hackathon 2026 — Problem No. 1776</p>
+    </div>
+    <div class="gov-header-right">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="Emblem of India" class="gov-emblem" onerror="this.style.display='none'">
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       PRIMARY NAVIGATION BAR
+       ====================================================================== -->
+  <nav class="gov-nav" aria-label="Main Navigation">
+    <div class="gov-nav-links">
+      <a href="#home" id="navLinkHome" class="active">🏠 Home</a>
+      <a href="#report" id="navLinkReport" style="display:none;">📝 File Incident Report</a>
+      <a href="#dashboard" id="navLinkDashboard" style="display:none;">📊 Reports Dashboard</a>
+    </div>
+
+    <div class="gov-nav-right">
+      <!-- Unauthenticated State: Prominent Login & Register Buttons -->
+      <div class="nav-auth-buttons">
+        <a href="login.html" class="btn-nav-login">🔐 Login</a>
+        <a href="register.html" class="btn-nav-register">📝 Register</a>
+      </div>
+
+      <!-- Authenticated State: User Session Badge & Logout -->
+      <div class="nav-user-session">
+        <span class="user-badge">
+          👤 <span class="user-name-display"></span>
+          <span class="user-role-tag user-role-display"></span>
+        </span>
+        <button class="btn-nav-logout" onclick="handleLogout()">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       BREADCRUMB BAR
+       ====================================================================== -->
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="#home">Home</a> &rsaquo; <span id="breadcrumbCurrent" class="current">Welcome to SIF Precursor Portal</span>
+  </div>
+
+  <!-- ======================================================================
+       MAIN APPLICATION WRAPPER (SPA ROUTING)
+       ====================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- ====================================================================
+         PAGE: HOME / LANDING VIEW
+         ==================================================================== -->
+    <section id="page-home" class="page-section active">
+
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-text">
+          <h2>AI-Powered Serious Injury &amp; Fatality (SIF)<br>Precursor Detection Platform</h2>
+          <p>An intelligent safety surveillance system engineered for Oil India Limited's upstream drilling rigs, refinery complexes, and pipeline infrastructure — identifying high-energy SIF precursor events from field hazard observations before catastrophic accidents occur.</p>
+          <div class="hero-badges">
+            <span class="hero-badge">🛡️ DGMS &amp; OISD-156 Compliant</span>
+            <span class="hero-badge">🤖 NLP Machine Learning Inference</span>
+            <span class="hero-badge">📊 SHAP Explainable AI</span>
+            <span class="hero-badge">🏭 Upstream &amp; Midstream Telemetry</span>
+            <span class="hero-badge">🇮🇳 SIH 2026 Problem No. 1776</span>
+          </div>
+          <div class="hero-actions">
+            <a href="login.html" class="btn btn-primary">Access Secure Portal →</a>
+            <button class="btn btn-ghost" onclick="document.getElementById('aboutGovSystem').scrollIntoView({behavior:'smooth'})">Explore Safety Guidelines</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Official Telemetry Statistics -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="sn">4,200+</div>
+          <div class="sl">KM Pipeline Network Monitored</div>
+        </div>
+        <div class="stat-card">
+          <div class="sn">122</div>
+          <div class="sl">Curated Field Hazard Training Records</div>
+        </div>
+        <div class="stat-card">
+          <div class="sn">3 Roles</div>
+          <div class="sl">Field Worker, Safety Officer, Admin</div>
+        </div>
+        <div class="stat-card">
+          <div class="sn">SHAP AI</div>
+          <div class="sl">Explainable Feature Attribution Engine</div>
+        </div>
+      </div>
+
+      <!-- Security & Authorized Access Notice -->
+      <div class="notice-box info">
+        <span>ℹ️</span>
+        <div><strong>Official Platform Notice:</strong> This portal is restricted to authorized personnel of Oil India Limited and regulatory safety inspectors. All incident submissions are legally auditable under the Mines Act, 1952 and DGMS General Regulations. Unauthorized access is punishable under the IT Act, 2000.</div>
+      </div>
+
+      <!-- 3-Column Information Grid -->
+      <div class="info-grid" id="aboutGovSystem">
+        <div class="info-card">
+          <div class="info-card-head">🔬 SIF Precursor Detection Engine</div>
+          <div class="info-card-body">
+            <ul>
+              <li>Analyzes near-miss and unsafe observation narratives in real time.</li>
+              <li>Combines TF-IDF feature weights with high-energy hazard indicators (gas kick, pressure surge, cable fraying).</li>
+              <li>Calculates SIF risk probability score with high-confidence alert triggers.</li>
+              <li>Provides explainable SHAP contribution chips for auditing.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-head">👷 Role-Based Workflow</div>
+          <div class="info-card-body">
+            <ul>
+              <li><strong>Field Workers / Drill Crew:</strong> Direct observation logging with real-time text autocomplete assistance.</li>
+              <li><strong>Safety Officers / Auditors:</strong> Full oversight telemetry, risk trend monitoring, and compliance reviews.</li>
+              <li><strong>System Administrators:</strong> Global system audit, user credentials, and model metrics.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-head">⚖️ Regulatory Alignment</div>
+          <div class="info-card-body">
+            <ul>
+              <li><strong>DGMS General Regulations 1984:</strong> Mandatory accident and near-miss record keeping.</li>
+              <li><strong>OISD-156:</strong> Standardized Safety Management Systems for petroleum installations.</li>
+              <li><strong>Petroleum Rules 2002:</strong> Safe pipeline transportation &amp; storage protocols.</li>
+              <li>Encrypted role-based database storage with audit logs.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access Card -->
+      <div class="gov-card">
+        <div class="gov-card-header">
+          <span>⚡ Quick Actions &amp; External Portals</span>
+        </div>
+        <div class="quick-access-bar">
+          <a href="login.html" class="btn btn-primary">🔐 Portal Sign In</a>
+          <a href="register.html" class="btn btn-navy">📝 New Account Application</a>
+          <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener" class="btn" style="background:#00695C; color:#fff;">📋 Interactive Swagger API</a>
+          <a href="https://www.oilindia.in/hse/" target="_blank" rel="noopener" class="btn" style="background:#455A64; color:#fff;">🌐 OIL Corporate HSE</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         PAGE: FILE INCIDENT REPORT (FIELD WORKERS)
+         ==================================================================== -->
+    <section id="page-report" class="page-section">
+      <div class="page-title">📝 File Incident / Precursor Observation Report</div>
+
+      <!-- Role Warning for Officers/Admins -->
+      <div id="reportRoleNotice" class="notice-box danger" style="display:none;">
+        <span>🚫</span>
+        <div><strong>Oversight Mode:</strong> Safety Officers and System Administrators operate in review mode. Incident report submission is reserved for Field Workers and Drill Crew. Please use the Reports Dashboard for supervisory duties.</div>
+      </div>
+
+      <div class="report-grid">
+        <!-- Main Form Column -->
+        <div>
+          <div class="gov-card">
+            <div class="gov-card-header">
+              <span>Enter Hazard Observation Details</span>
+            </div>
+            <div class="gov-card-body">
+              <div id="reportAlert" class="alert"></div>
+
+              <div class="form-group">
+                <label class="form-label" for="repType">Report Type <span class="required">*</span></label>
+                <select id="repType" class="form-control">
+                  <option value="Near Miss">Near Miss (Precursor Event)</option>
+                  <option value="Hazard Observation">Hazard Observation / Unsafe Condition</option>
+                  <option value="Unsafe Act">Unsafe Act / Operational Violation</option>
+                  <option value="Equipment Failure">Equipment Failure / Pressure Relief Trip</option>
+                  <option value="Leakage">Hydrocarbon / H2S Gas Leakage</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="repLocation">Asset / Facility Location <span class="required">*</span></label>
+                <select id="repLocation" class="form-control">
+                  <option value="Duliajan Refinery Complex">Duliajan Refinery Complex (Assam)</option>
+                  <option value="Drilling Rig - Rig Floor">Drilling Rig — Rig Floor</option>
+                  <option value="Offshore Platform Alpha">Offshore Platform Alpha (Bay of Bengal)</option>
+                  <option value="Assam-Barauni Pipeline Sector 4">Assam-Barauni Pipeline Sector 4</option>
+                  <option value="Numaligarh Terminal">Numaligarh Terminal &amp; Pump Station</option>
+                  <option value="Tank Farm - Crude Storage">Tank Farm — Crude Storage</option>
+                  <option value="Gas Compressor Station">Gas Compressor Station</option>
+                  <option value="Workover Rig">Workover Rig</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="repDept">Operational Department <span class="required">*</span></label>
+                <select id="repDept" class="form-control">
+                  <option value="Drilling">Drilling &amp; Well Servicing</option>
+                  <option value="Refining">Refining &amp; Petrochemicals</option>
+                  <option value="Pipeline Logistics">Pipeline Logistics &amp; SCADA</option>
+                  <option value="Gas Processing">Gas Processing Operations</option>
+                  <option value="Production">Production &amp; Flow Stations</option>
+                  <option value="Maintenance">Mechanical &amp; Electrical Maintenance</option>
+                  <option value="HSE">HSE &amp; Fire Services</option>
+                  <option value="Logistics">Field Transport &amp; Logistics</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="repText">Detailed Narrative &amp; Precursor Signals <span class="required">*</span></label>
+                <textarea id="repText" class="form-control" rows="6"
+                  placeholder="Describe the incident, unsafe act, near-miss, or equipment anomaly in detail. Include location specifics, personnel involved, and any sensory precursor signals (sound, smell, vibration, pressure)..."
+                  oninput="onReportTextInput()"></textarea>
+                <!-- Autocomplete Dropdown -->
+                <div id="suggestBox" class="suggest-dropdown"></div>
+              </div>
+
+              <button class="btn btn-primary btn-block" id="submitReportBtn" onclick="submitIncidentReport()">
+                Submit for AI Risk Classification →
+              </button>
+            </div>
+          </div>
+
+          <!-- Prediction Result Card -->
+          <div id="predResultContainer" style="display:none;">
+            <div id="resultBox" class="result-box">
+              <h3 id="resultStatus" style="font-size:15px; margin-bottom:8px;"></h3>
+              <p id="resultProb" style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;"></p>
+              <div>
+                <strong style="font-size:12.5px; color:var(--text-main);">Top SIF Precursor Risk Factors (SHAP Analysis):</strong>
+                <div id="resultFactors" style="margin-top:6px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div>
+          <div class="gov-card">
+            <div class="gov-card-header">ℹ️ Reporting Protocols</div>
+            <div class="gov-card-body" style="font-size:12.5px; line-height:1.7;">
+              <ul style="padding-left:16px;">
+                <li>Report <strong>immediately</strong> without delay.</li>
+                <li>State facts observed, avoiding assumptions.</li>
+                <li>Highlight <strong>high-energy hazard factors</strong> (pressure, gas, electrical, gravity).</li>
+                <li>Whistleblower protection is strictly enforced under OIL policy.</li>
+                <li>AI classification assists triage; officer review follows.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="gov-card">
+            <div class="gov-card-header" style="background:var(--gov-green);">📞 Emergency Helplines</div>
+            <div class="gov-card-body" style="font-size:12.5px; line-height:1.9;">
+              <div><strong>OIL Control Room (Duliajan):</strong><br>1800-345-6789 (Toll Free)</div>
+              <div style="margin-top:6px;"><strong>DGMS Regional Directorate:</strong><br>+91-361-2236547</div>
+              <div style="margin-top:6px;"><strong>HSE Incident Desk:</strong><br>hse@oilindia.in</div>
+              <div style="margin-top:10px; padding:8px; background:#FDECEA; color:#7F0000; border-radius:2px; font-size:12px;">
+                🚨 For life-threatening emergencies, dial <strong>112</strong> immediately.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         PAGE: REPORTS TELEMETRY DASHBOARD
+         ==================================================================== -->
+    <section id="page-dashboard" class="page-section">
+      <div class="page-title">📊 Reports Surveillance Dashboard</div>
+
+      <!-- Stats Summary Counters -->
+      <div class="dash-stats-grid">
+        <div class="ds-card">
+          <div class="ds-num" id="statTotalReports">—</div>
+          <div class="ds-label">Total Reports Logged</div>
+        </div>
+        <div class="ds-card risk">
+          <div class="ds-num" id="statHighRiskReports">—</div>
+          <div class="ds-label">SIF Precursor Events Detected (High Risk)</div>
+        </div>
+        <div class="ds-card safe">
+          <div class="ds-num" id="statLowRiskReports">—</div>
+          <div class="ds-label">Low Risk Safety Observations</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Table Card -->
+      <div class="gov-card">
+        <div class="gov-card-header">
+          <span>Live Field Incident Stream</span>
+          <button class="btn btn-ghost" style="padding:4px 12px; font-size:12px;" onclick="loadDashboardReports()">↻ Refresh Live Feed</button>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Asset Location</th>
+                <th>Department</th>
+                <th>Hazard Observation</th>
+                <th>AI Risk Triage</th>
+                <th>Confidence</th>
+                <th>Logged By</th>
+                <th>Date &amp; Time</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTableBody">
+              <tr><td colspan="9" class="empty-state">Loading reports from secure database...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       FLOATING SAFETY AI CHATBOT WIDGET
+       ====================================================================== -->
+  <!-- Floating Launch Button -->
+  <button id="oilChatbotToggle" class="oil-chatbot-toggle" onclick="toggleChatbot()" aria-label="Open Safety AI Assistant">
+    <span class="bot-avatar">🤖</span>
+    <span class="bot-label">
+      <span class="bot-title">OIL Suraksha Sahayak</span>
+      <span class="bot-sub">AI Safety Assistant</span>
+    </span>
+  </button>
+
+  <!-- Floating Chat Window Container -->
+  <div id="oilChatbotWindow" class="oil-chatbot-window" role="dialog" aria-label="Safety AI Assistant Chat">
+    <div class="chatbot-header">
+      <div class="chatbot-header-info">
+        <div class="chatbot-header-avatar">🛡️</div>
+        <div class="chatbot-header-text">
+          <h3>OIL Suraksha Sahayak</h3>
+          <p><span class="status-dot"></span> Online &bull; DGMS &amp; SIF AI Safety</p>
+        </div>
+      </div>
+      <button class="chatbot-close-btn" onclick="toggleChatbot(false)" aria-label="Close Chat Window">&times;</button>
+    </div>
+
+    <!-- Quick Questions Chips -->
+    <div class="chatbot-quick-prompts">
+      <button class="quick-chip" data-query="What is a SIF Precursor?">What is SIF?</button>
+      <button class="quick-chip" data-query="How to report gas leak?">Gas Leak Rule</button>
+      <button class="quick-chip" data-query="How to file report?">Filing Steps</button>
+      <button class="quick-chip" data-query="Emergency numbers">Helpline</button>
+    </div>
+
+    <!-- Chat Messages Stream -->
+    <div id="chatbotMessagesStream" class="chatbot-messages">
+      <div class="chat-msg bot">
+        <div class="chat-bubble">
+          Namaste! I am <strong>OIL Suraksha Sahayak</strong>, your AI safety assistant. Ask me anything regarding SIF precursor hazards, DGMS compliance rules, gas leak procedures, or reporting protocols!
+        </div>
+        <div class="chat-time">Just now</div>
+      </div>
+    </div>
+
+    <!-- Chat Input Form -->
+    <form id="chatbotForm" class="chatbot-input-bar">
+      <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Type your safety query in English or Hindi..." autocomplete="off">
+      <button type="submit" class="chatbot-send-btn" aria-label="Send Message">➤</button>
+    </form>
+  </div>
+
+  <!-- ======================================================================
+       OFFICIAL GOVERNMENT FOOTER
+       ====================================================================== -->
+  <footer class="gov-footer">
+    <div class="footer-links">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
+      <a href="https://petroleum.nic.in" target="_blank" rel="noopener">Ministry of Petroleum &amp; Natural Gas</a>
+      <a href="https://sih.gov.in" target="_blank" rel="noopener">Smart India Hackathon 2026</a>
+      <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">API Documentation</a>
+    </div>
+    <div>&copy; 2026 Oil India Limited. All Rights Reserved. | SIH 2026 Problem Statement No. 1776</div>
+    <div style="margin-top:4px; font-size:11px; opacity:0.8;">
+      Official Government Portal. Unauthorized access is strictly prohibited under the Information Technology Act, 2000.
+    </div>
+  </footer>
+
+  <!-- Scripts: Modular Separation -->
+  <script src="js/auth.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

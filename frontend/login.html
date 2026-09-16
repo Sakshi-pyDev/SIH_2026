@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — SIF Precursor Detection System | Oil India Limited</title>
+  <link rel="icon" href="../assets/oil_safety_logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="gov-top-bar">
+    <div class="top-bar-links">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS</a>
+      <a href="index.html">← Back to Portal Home</a>
+    </div>
+    <div class="top-bar-controls">
+      <div class="lang-select-wrapper">
+        <label for="oilLanguageSelect">🌐 Lang:</label>
+        <select id="oilLanguageSelect" class="lang-select" aria-label="Select Portal Language"></select>
+      </div>
+      <div id="google_translate_element" style="display:none;"></div>
+      <button class="btn-theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark/Light Mode">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="gov-header">
+    <a href="index.html" class="gov-logo-link">
+      <img src="../assets/oil_safety_logo.png" alt="OIL Logo" class="logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/e/e0/Oil_India_Limited_Logo.png'">
+    </a>
+    <div class="gov-header-text">
+      <h1>Oil India Limited — SIF Precursor Detection System</h1>
+      <p class="hindi">ऑयल इंडिया लिमिटेड — SIF पूर्वसूचक पहचान प्रणाली</p>
+      <p class="sub">Ministry of Petroleum &amp; Natural Gas | Government of India | Secure Access Portal</p>
+    </div>
+    <div class="gov-header-right">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="Emblem of India" class="gov-emblem" onerror="this.style.display='none'">
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="gov-nav">
+    <div class="gov-nav-links">
+      <a href="index.html">🏠 Home</a>
+      <a href="login.html" class="active">🔐 Login</a>
+      <a href="register.html">📝 Register</a>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> &rsaquo; <span class="current">User Authentication (Sign In)</span>
+  </div>
+
+  <!-- Main Login Card Container -->
+  <main class="main-wrapper">
+    <div class="auth-page-wrapper">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-icon">🔐</div>
+          <h2>Official Portal Sign In</h2>
+          <p>Enter your authorized Oil India Limited credentials</p>
+        </div>
+
+        <div class="notice-box info">
+          <span>ℹ️</span>
+          <div><strong>Notice:</strong> Field Workers can log observations. Safety Officers and Administrators are granted monitoring &amp; audit access.</div>
+        </div>
+
+        <div id="loginAlert" class="alert"></div>
+
+        <form id="loginForm" onsubmit="onLoginFormSubmit(event)">
+          <div class="form-group">
+            <label class="form-label" for="loginUsername">Username <span class="required">*</span></label>
+            <input type="text" id="loginUsername" class="form-control" placeholder="e.g. worker1 or officer1" required autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password <span class="required">*</span></label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+          </div>
+
+          <button type="submit" id="loginBtn" class="btn btn-primary btn-block">
+            Sign In to Portal →
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          Don't have an operational account? <a href="register.html">Register New Account</a>
+          <br><br>
+          <a href="index.html" style="color:var(--text-secondary);">← Return to Public Landing Page</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Chatbot Widget -->
+  <button id="oilChatbotToggle" class="oil-chatbot-toggle" onclick="toggleChatbot()" aria-label="Open Safety AI Assistant">
+    <span class="bot-avatar">🤖</span>
+    <span class="bot-label">
+      <span class="bot-title">OIL Suraksha Sahayak</span>
+      <span class="bot-sub">AI Safety Assistant</span>
+    </span>
+  </button>
+
+  <div id="oilChatbotWindow" class="oil-chatbot-window" role="dialog" aria-label="Safety AI Assistant Chat">
+    <div class="chatbot-header">
+      <div class="chatbot-header-info">
+        <div class="chatbot-header-avatar">🛡️</div>
+        <div class="chatbot-header-text">
+          <h3>OIL Suraksha Sahayak</h3>
+          <p><span class="status-dot"></span> Online &bull; DGMS &amp; SIF AI Safety</p>
+        </div>
+      </div>
+      <button class="chatbot-close-btn" onclick="toggleChatbot(false)">&times;</button>
+    </div>
+    <div class="chatbot-quick-prompts">
+      <button class="quick-chip" data-query="What is a SIF Precursor?">What is SIF?</button>
+      <button class="quick-chip" data-query="Emergency numbers">Helpline</button>
+    </div>
+    <div id="chatbotMessagesStream" class="chatbot-messages">
+      <div class="chat-msg bot">
+        <div class="chat-bubble">Namaste! Need assistance with login, credentials, or safety rules? Ask me anytime!</div>
+        <div class="chat-time">Just now</div>
+      </div>
+    </div>
+    <form id="chatbotForm" class="chatbot-input-bar">
+      <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Type your question..." autocomplete="off">
+      <button type="submit" class="chatbot-send-btn">➤</button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer class="gov-footer">
+    <div class="footer-links">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS</a>
+      <a href="index.html">Portal Home</a>
+      <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">API Docs</a>
+    </div>
+    <div>&copy; 2026 Oil India Limited. All Rights Reserved. | SIH 2026 Problem Statement No. 1776</div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script>
+    function initTheme() {
+      const saved = localStorage.getItem('oil_sif_theme') || 'light';
+      if (saved === 'dark') document.body.classList.add('dark-mode');
+      updateThemeBtn();
+    }
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('oil_sif_theme', isDark ? 'dark' : 'light');
+      updateThemeBtn();
+    }
+    function updateThemeBtn() {
+      const isDark = document.body.classList.contains('dark-mode');
+      document.querySelectorAll('.btn-theme-toggle').forEach(b => {
+        b.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+      });
+    }
+
+    async function onLoginFormSubmit(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById('loginAlert');
+      alertEl.className = 'alert';
+      alertEl.style.display = 'none';
+
+      const uname = document.getElementById('loginUsername').value.trim();
+      const pwd = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginBtn');
+
+      btn.disabled = true;
+      btn.textContent = 'Authenticating...';
+
+      try {
+        const res = await handleLogin(uname, pwd);
+        alertEl.textContent = 'Login successful! Redirecting to operational portal...';
+        alertEl.className = 'alert alert-success show';
+
+        setTimeout(() => {
+          if (res.role === 'field_worker') {
+            window.location.href = 'index.html#report';
+          } else {
+            window.location.href = 'index.html#dashboard';
+          }
+        }, 600);
+      } catch (err) {
+        alertEl.textContent = err.message;
+        alertEl.className = 'alert alert-error show';
+        btn.disabled = false;
+        btn.textContent = 'Sign In to Portal →';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initTheme);
+  </script>
+</body>
+</html>
