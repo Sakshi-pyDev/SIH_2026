@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surveillance Dashboard — SIF Precursor Detection System | Oil India Limited</title>
+  <link rel="icon" href="../assets/oil_safety_logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+</head>
+<body>
+
+  <!-- Authentic Indian Tricolor Ribbon -->
+  <div class="gov-tricolor-strip"></div>
+
+  <!-- Top Utility & Accessibility Bar -->
+  <div class="gov-top-bar">
+    <div class="top-bar-left">
+      <span class="top-bar-gov-tag">🇮🇳 भारत सरकार | Government of India</span>
+      <div class="top-bar-links">
+        <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
+        <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
+        <a href="index.html">← Back to Portal Home</a>
+        <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">API Docs</a>
+      </div>
+    </div>
+
+    <div class="top-bar-controls">
+      <div class="lang-select-wrapper">
+        <label for="oilLanguageSelect">🌐 Lang:</label>
+        <select id="oilLanguageSelect" class="lang-select" aria-label="Select Portal Language"></select>
+      </div>
+      <div id="google_translate_element" style="display:none;"></div>
+      <button class="btn-theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark/Light Mode">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </div>
+
+  <!-- Aesthetic Theme-Adaptive Header -->
+  <header class="gov-header">
+    <a href="index.html" class="gov-header-brand">
+      <img src="../assets/oil_safety_logo.png" alt="Oil India Limited Official Logo" class="logo" onerror="this.src='../assets/logos/oil_logo.svg'">
+      <div class="gov-brand-divider"></div>
+      <div class="gov-brand-text">
+        <span class="gov-brand-hi">ऑयल इंडिया लिमिटेड</span>
+        <span class="gov-brand-en">OIL INDIA LIMITED</span>
+        <span class="gov-brand-sub">A Government of India Enterprise &bull; Maharatna PSU</span>
+      </div>
+    </a>
+
+    <div class="gov-portal-badge">
+      <span class="gov-badge-icon">🛡️</span>
+      <div class="gov-badge-text">
+        <div class="gov-badge-title">SIF PRECURSOR DETECTION SYSTEM</div>
+        <div class="gov-badge-sub">गंभीर चोट एवं घातकता पूर्ववर्ती विश्लेषण मंच &bull; Problem #1776</div>
+      </div>
+    </div>
+
+    <div class="gov-header-right">
+      <div class="gov-ministry-text">
+        <span class="hi">पेट्रोलियम एवं प्राकृतिक गैस मंत्रालय</span>
+        <span class="en">Ministry of Petroleum &amp; Natural Gas</span>
+        <span class="sub">Government of India &bull; DGMS Compliant</span>
+      </div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="State Emblem of India" class="gov-emblem" onerror="this.src='../assets/logos/mopng_logo.svg'">
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="gov-nav" aria-label="Main Navigation">
+    <div class="gov-nav-links">
+      <a href="index.html">🏠 Portal Home</a>
+      <a href="report.html" id="navLinkReport">📝 Submit Safety Report</a>
+      <a href="dashboard.html" class="active" id="navLinkDashboard">📊 Surveillance Dashboard</a>
+    </div>
+
+    <div class="gov-nav-right">
+      <div class="nav-auth-buttons">
+        <button class="btn" style="background:#0284C7; color:#fff; padding:4px 12px; font-size:11.5px; border-radius:3px;" onclick="quickDemoLogin()" title="Click to auto-authenticate as Field Worker">
+          ⚡ Quick Demo Login
+        </button>
+        <a href="login.html" class="btn-nav-login">🔐 Login</a>
+        <a href="register.html" class="btn-nav-register">Register</a>
+      </div>
+
+      <div class="nav-user-session">
+        <span class="user-badge">
+          👤 <span class="user-name-display"></span>
+          <span class="user-role-tag user-role-display"></span>
+        </span>
+        <button class="btn-nav-logout" onclick="handleLogout()">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div style="background:var(--bg-card); border-bottom:1px solid var(--border-subtle); padding:7px 24px; font-size:11.5px; color:var(--text-muted);">
+    <a href="index.html" style="color:var(--gov-orange); text-decoration:none;">Portal Home</a> &rsaquo; 
+    <span style="color:var(--text-main); font-weight:600;">Reports Surveillance &amp; Triage Dashboard</span>
+  </div>
+
+  <!-- Main Content: Surveillance Dashboard -->
+  <main class="main-wrapper">
+    <!-- Metric Overview Cards -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:20px;">
+      <div class="gov-card" style="padding:16px; border-left:4px solid #0284C7;">
+        <div style="font-size:11.5px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Total Hazard Reports</div>
+        <div id="statTotalReports" style="font-size:26px; font-weight:800; color:var(--text-accent); margin-top:4px;">--</div>
+        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Across all operational sectors</div>
+      </div>
+
+      <div class="gov-card" style="padding:16px; border-left:4px solid #EF4444;">
+        <div style="font-size:11.5px; color:#EF4444; font-weight:700; text-transform:uppercase;">SIF Precursors Detected</div>
+        <div id="statSifPrecursors" style="font-size:26px; font-weight:800; color:#EF4444; margin-top:4px;">--</div>
+        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Critical high-energy events</div>
+      </div>
+
+      <div class="gov-card" style="padding:16px; border-left:4px solid #22C55E;">
+        <div style="font-size:11.5px; color:#22C55E; font-weight:700; text-transform:uppercase;">Monitored Assets</div>
+        <div style="font-size:26px; font-weight:800; color:#22C55E; margin-top:4px;">42 Rigs / 4,200 KM</div>
+        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Active drilling &amp; pipeline sectors</div>
+      </div>
+
+      <div class="gov-card" style="padding:16px; border-left:4px solid #F59E0B;">
+        <div style="font-size:11.5px; color:#F59E0B; font-weight:700; text-transform:uppercase;">DGMS Audit Status</div>
+        <div style="font-size:22px; font-weight:800; color:#F59E0B; margin-top:4px;">OISD-156 Aligned</div>
+        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Continuous compliance monitoring</div>
+      </div>
+    </div>
+
+    <!-- Reports Surveillance Table -->
+    <div class="gov-card">
+      <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <h3 id="dashboardTitle" style="font-size:14px; font-weight:700; margin:0;">📊 Real-time Reports Surveillance Table</h3>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" id="reportFilterInput" class="form-control" placeholder="Search by location / text..." style="font-size:11.5px; padding:4px 10px; width:200px;" oninput="filterReportsTable()">
+          <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px;" onclick="loadReports()">↻ Refresh Live Table</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:140px;">Type</th>
+              <th style="width:180px;">Location / Dept</th>
+              <th>Observation Narrative</th>
+              <th style="width:260px;">AI Risk Triage &amp; SHAP Drivers</th>
+              <th style="width:110px;">Reported By</th>
+            </tr>
+          </thead>
+          <tbody id="reportsTableBody">
+            <tr><td colspan="5" class="empty-state">Loading reports from secure database...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Chatbot Widget ("OIL Suraksha Sahayak") -->
+  <button id="oilChatbotToggle" class="oil-chatbot-toggle" onclick="toggleChatbot()" aria-label="Open Safety AI Assistant">
+    <span class="bot-avatar">🤖</span>
+    <span class="bot-label">
+      <span class="bot-title">OIL Suraksha Sahayak</span>
+      <span class="bot-sub">AI Safety Assistant</span>
+    </span>
+  </button>
+
+  <div id="oilChatbotWindow" class="oil-chatbot-window" role="dialog" aria-label="Safety AI Assistant Chat">
+    <div class="chatbot-header">
+      <div class="chatbot-header-info">
+        <div class="chatbot-header-avatar">🛡️</div>
+        <div class="chatbot-header-text">
+          <h3>OIL Suraksha Sahayak</h3>
+          <p><span class="status-dot"></span> Online &bull; DGMS &amp; SIF AI Safety</p>
+        </div>
+      </div>
+      <button class="chatbot-close-btn" onclick="toggleChatbot(false)">&times;</button>
+    </div>
+
+    <div class="chatbot-quick-prompts">
+      <button class="quick-chip" data-query="What is a SIF Precursor?">What is SIF?</button>
+      <button class="quick-chip" data-query="How to report gas leak?">Gas Leak Rule</button>
+      <button class="quick-chip" data-query="Emergency numbers">Helpline</button>
+    </div>
+
+    <div id="chatbotMessagesStream" class="chatbot-messages">
+      <div class="chat-msg bot">
+        <div class="chat-bubble">
+          Namaste! I am <strong>OIL Suraksha Sahayak</strong>, your AI safety assistant. Ask me anything about SIF precursor indicators, DGMS reporting guidelines, or gas leak protocols!
+        </div>
+        <div class="chat-time">Just now</div>
+      </div>
+    </div>
+
+    <form id="chatbotForm" class="chatbot-input-bar">
+      <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Ask your safety question..." autocomplete="off">
+      <button type="submit" class="chatbot-send-btn">➤</button>
+    </form>
+  </div>
+
+  <!-- Government Standard Footer -->
+  <footer class="gov-footer">
+    <div class="footer-links">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
+      <a href="https://petroleum.nic.in" target="_blank" rel="noopener">Ministry of Petroleum</a>
+      <a href="index.html">Portal Home</a>
+      <a href="report.html">Submit Safety Report</a>
+    </div>
+    <div>&copy; 2026 Oil India Limited. All Rights Reserved. | SIH 2026 Problem No. 1776 | Government of India</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

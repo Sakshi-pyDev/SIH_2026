@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/chatbot.css">
 </head>
-<body>
+<body class="landing-page-body">
 
   <!-- ======================================================================
        AUTHENTIC INDIAN TRICOLOR TOP ACCENT RIBBON
@@ -28,7 +28,7 @@
         <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
         <a href="https://petroleum.nic.in" target="_blank" rel="noopener">MoPNG</a>
         <a href="https://sih.gov.in" target="_blank" rel="noopener">SIH 2026</a>
-        <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">Swagger API</a>
+        <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">API Docs</a>
       </div>
     </div>
 
@@ -50,7 +50,7 @@
   </div>
 
   <!-- ======================================================================
-       AESTHETIC GOVERNMENT & PSU BRANDING HEADER
+       AESTHETIC THEME-ADAPTIVE GOVERNMENT & PSU BRANDING HEADER
        ====================================================================== -->
   <header class="gov-header">
     <!-- Left Corporate Identity -->
@@ -85,14 +85,13 @@
   </header>
 
   <!-- ======================================================================
-       PRIMARY NAVIGATION BAR
+       PRIMARY NAVIGATION BAR (Direct Multi-Page Navigation)
        ====================================================================== -->
   <nav class="gov-nav" aria-label="Main Navigation">
     <div class="gov-nav-links">
-      <a href="#heroOverview" class="active">🏠 Home &amp; Overview</a>
-      <a href="#submitSection">📝 Submit Safety Report</a>
-      <a href="#dashboardSection">📊 Surveillance Dashboard</a>
-      <a href="#partnersSection">🏛️ Affiliated PSUs &amp; Regulators</a>
+      <a href="index.html" class="active">🏠 Portal Home</a>
+      <a href="report.html" id="navLinkReport">📝 Submit Safety Report</a>
+      <a href="dashboard.html" id="navLinkDashboard">📊 Surveillance Dashboard</a>
     </div>
 
     <div class="gov-nav-right">
@@ -117,284 +116,144 @@
   </nav>
 
   <!-- ======================================================================
-       FULL-SCREEN FITTED HERO WITH BACKGROUND IMAGE & TEXT ON TOP
+       FULL-SCREEN FITTED IMAGE HERO CONTAINER (Non-Scrollable 100vh Landing)
        ====================================================================== -->
-  <section class="hero-fullscreen" id="heroOverview">
-    <!-- Fitted Background Image of Oil Rig -->
-    <img src="../assets/offshore_oil_rig.jpg" alt="Offshore Oil Rig at Twilight" class="hero-bg-image">
-    <!-- Cinematic Vignette Overlay -->
-    <div class="hero-overlay"></div>
+  <main class="landing-hero-container">
+    <!-- Authentic High-Definition Offshore Oil Rig Fitted Background Image -->
+    <img src="../assets/offshore_oil_rig.jpg" alt="Offshore Oil Rig Exploration Platform" class="landing-hero-img-bg" onerror="this.src='../assets/frame_1409899.jpg'">
+    <div class="landing-hero-overlay"></div>
 
-    <!-- Text & Controls on Top -->
-    <div class="hero-content">
-      <div class="hero-kicker">
-        🛡️ Ministry of Petroleum &amp; Natural Gas &bull; DGMS &amp; OISD-156 Aligned &bull; SIH 2026
+    <!-- Centered Mission Briefing & Navigation Portal -->
+    <div class="landing-hero-content">
+      <div class="landing-kicker">
+        🛡️ Ministry of Petroleum &amp; Natural Gas &bull; DGMS &amp; OISD-156 Compliant &bull; SIH 2026
       </div>
 
-      <div class="hero-text">
-        <h1>
-          AI-Powered Serious Injury &amp; Fatality (SIF)<br>
-          <span class="hero-highlight">Precursor Detection Platform</span>
-        </h1>
-        <p class="hero-bilingual">ऑयल इंडिया लिमिटेड — अग्रिम सुरक्षा विश्लेषण एवं पूर्ववर्ती जोखिम पहचान प्रणाली</p>
-        <p class="hero-desc">
-          A mission-critical safety intelligence system for Oil India Limited frontline operations — analyzing unstructured field hazard observations, near-miss narratives, and SCADA anomalies to proactively detect high-energy SIF precursor events before catastrophic escalations occur.
-        </p>
+      <h1>
+        AI-Powered Serious Injury &amp; Fatality (SIF)<br>
+        <span class="hero-highlight">Precursor Detection Platform</span>
+      </h1>
+      <p class="hero-bilingual">ऑयल इंडिया लिमिटेड — अग्रिम सुरक्षा विश्लेषण एवं पूर्ववर्ती जोखिम पहचान प्रणाली</p>
+      
+      <p class="hero-desc">
+        A mission-critical safety intelligence system for Oil India Limited frontline operations — analyzing unstructured field hazard observations, near-miss narratives, and SCADA telemetry to proactively detect high-energy SIF precursor events before catastrophic escalations occur.
+      </p>
 
-        <div class="hero-badges">
-          <span class="hero-badge">🛡️ DGMS &amp; OISD-156 Compliant</span>
-          <span class="hero-badge">🤖 Real-time NLP Inference</span>
-          <span class="hero-badge">📊 SHAP Explainability Engine</span>
-          <span class="hero-badge">🛢️ 4,200+ KM Pipeline Monitored</span>
-          <span class="hero-badge">🎯 Zero Harm SIF Target</span>
-        </div>
+      <div class="hero-badges">
+        <span class="hero-badge">🛡️ DGMS &amp; OISD-156 Compliant</span>
+        <span class="hero-badge">🤖 Real-time NLP Inference</span>
+        <span class="hero-badge">📊 SHAP Explainability Engine</span>
+        <span class="hero-badge">🛢️ 4,200+ KM Pipeline Monitored</span>
+        <span class="hero-badge">🎯 Zero Harm SIF Objective</span>
+      </div>
 
-        <div class="hero-actions">
-          <a href="#submitSection" class="btn btn-primary" style="font-size:14px; padding:11px 26px; border-radius:4px; font-weight:700;">
-            📝 Submit Hazard Report Below ↓
-          </a>
-          <a href="#dashboardSection" class="btn btn-ghost" style="font-size:14px; padding:10px 22px; border-radius:4px;">
-            📊 View Reports Dashboard
-          </a>
-          <button class="btn" style="background:rgba(2,132,199,0.85); color:#fff; border:1px solid #38BDF8; font-size:13px; padding:10px 18px; border-radius:4px;" onclick="quickDemoLogin()">
-            ⚡ Quick Field Worker Demo
-          </button>
-        </div>
-
-        <!-- Scroll Down Hint Indicator -->
-        <a href="#submitSection" class="hero-scroll-hint" aria-label="Scroll to Safety Reporting Form">
-          <span>Scroll Down to Report Hazard &amp; View Live Telemetry</span>
-          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+      <div class="hero-actions">
+        <a href="report.html" class="btn btn-primary" style="font-size:13px; padding:8px 22px; border-radius:4px; font-weight:700;">
+          📝 Submit Safety Report &rarr;
         </a>
+        <a href="dashboard.html" class="btn btn-ghost" style="font-size:13px; padding:7.5px 18px; border-radius:4px;">
+          📊 Open Surveillance Dashboard &rarr;
+        </a>
+        <button class="btn" style="background:rgba(2,132,199,0.88); color:#fff; border:1px solid #38BDF8; font-size:12px; padding:7.5px 15px; border-radius:4px;" onclick="quickDemoLogin()">
+          ⚡ Quick Field Worker Demo
+        </button>
       </div>
     </div>
-  </section>
-
-  <!-- ======================================================================
-       INFINITE SCROLLING GOVERNMENT & PSU LOGO MARQUEE CAROUSEL
-       ====================================================================== -->
-  <section class="psu-marquee-section" id="partnersSection">
-    <div class="marquee-header">
-      <div class="marquee-header-left">
-        <span class="marquee-pulse-dot"></span>
-        <span class="marquee-title-text">AFFILIATED MINISTRIES, REGULATORY BODIES &amp; PETROLEUM PSUs</span>
-        <span class="marquee-hi-text">| संबद्ध मंत्रालय, नियामक एवं सार्वजनिक उपक्रम</span>
-      </div>
-      <div class="marquee-header-right">
-        <span class="marquee-tag">● 11 INTEGRATED ENTITIES &bull; LIVE ECOSYSTEM</span>
-      </div>
-    </div>
-
-    <div class="marquee-track-wrapper">
-      <div class="marquee-track">
-        <!-- Set 1: 11 Logos -->
-        <!-- 1. Oil India Limited -->
-        <div class="psu-logo-card" title="Oil India Limited (Primary Host PSU)">
-          <img src="../assets/logos/oil_logo.svg" alt="Oil India Limited">
-        </div>
-        <!-- 2. IndianOil (IOCL) -->
-        <div class="psu-logo-card" title="Indian Oil Corporation Limited">
-          <img src="../assets/logos/iocl_logo.svg" alt="IndianOil">
-        </div>
-        <!-- 3. ONGC -->
-        <div class="psu-logo-card" title="Oil and Natural Gas Corporation">
-          <img src="../assets/logos/ongc_logo.svg" alt="ONGC">
-        </div>
-        <!-- 4. GAIL (India) Limited -->
-        <div class="psu-logo-card" title="GAIL (India) Limited - Gas Authority of India">
-          <img src="../assets/logos/gail_logo.svg" alt="GAIL India">
-        </div>
-        <!-- 5. Bharat Petroleum (BPCL) -->
-        <div class="psu-logo-card" title="Bharat Petroleum Corporation Limited">
-          <img src="../assets/logos/bpcl_logo.svg" alt="Bharat Petroleum">
-        </div>
-        <!-- 6. Hindustan Petroleum (HPCL) -->
-        <div class="psu-logo-card" title="Hindustan Petroleum Corporation Limited">
-          <img src="../assets/logos/hpcl_logo.svg" alt="HPCL">
-        </div>
-        <!-- 7. DGMS (Directorate General of Mines Safety) -->
-        <div class="psu-logo-card" title="Directorate General of Mines Safety (DGMS India)">
-          <img src="../assets/logos/dgms_logo.svg" alt="DGMS India">
-        </div>
-        <!-- 8. Ministry of Petroleum & Natural Gas -->
-        <div class="psu-logo-card" title="Ministry of Petroleum & Natural Gas, Govt of India">
-          <img src="../assets/logos/mopng_logo.svg" alt="Ministry of Petroleum & Natural Gas">
-        </div>
-        <!-- 9. OISD (Oil Industry Safety Directorate) -->
-        <div class="psu-logo-card" title="Oil Industry Safety Directorate">
-          <img src="../assets/logos/oisd_logo.svg" alt="OISD">
-        </div>
-        <!-- 10. Smart India Hackathon 2026 -->
-        <div class="psu-logo-card" title="Smart India Hackathon 2026 - Problem #1776">
-          <img src="../assets/logos/sih2026_logo.svg" alt="Smart India Hackathon 2026">
-        </div>
-        <!-- 11. SIF Suraksha AI (Our System) -->
-        <div class="psu-logo-card our-system-card" title="SIF Precursor AI Intelligence Platform (Our System)">
-          <img src="../assets/logos/sif_suraksha_logo.svg" alt="SIF Suraksha AI Platform">
-        </div>
-
-        <!-- Set 2: Duplicate 11 Logos for Seamless Infinite Loop -->
-        <div class="psu-logo-card" title="Oil India Limited (Primary Host PSU)">
-          <img src="../assets/logos/oil_logo.svg" alt="Oil India Limited">
-        </div>
-        <div class="psu-logo-card" title="Indian Oil Corporation Limited">
-          <img src="../assets/logos/iocl_logo.svg" alt="IndianOil">
-        </div>
-        <div class="psu-logo-card" title="Oil and Natural Gas Corporation">
-          <img src="../assets/logos/ongc_logo.svg" alt="ONGC">
-        </div>
-        <div class="psu-logo-card" title="GAIL (India) Limited - Gas Authority of India">
-          <img src="../assets/logos/gail_logo.svg" alt="GAIL India">
-        </div>
-        <div class="psu-logo-card" title="Bharat Petroleum Corporation Limited">
-          <img src="../assets/logos/bpcl_logo.svg" alt="Bharat Petroleum">
-        </div>
-        <div class="psu-logo-card" title="Hindustan Petroleum Corporation Limited">
-          <img src="../assets/logos/hpcl_logo.svg" alt="HPCL">
-        </div>
-        <div class="psu-logo-card" title="Directorate General of Mines Safety (DGMS India)">
-          <img src="../assets/logos/dgms_logo.svg" alt="DGMS India">
-        </div>
-        <div class="psu-logo-card" title="Ministry of Petroleum & Natural Gas, Govt of India">
-          <img src="../assets/logos/mopng_logo.svg" alt="Ministry of Petroleum & Natural Gas">
-        </div>
-        <div class="psu-logo-card" title="Oil Industry Safety Directorate">
-          <img src="../assets/logos/oisd_logo.svg" alt="OISD">
-        </div>
-        <div class="psu-logo-card" title="Smart India Hackathon 2026 - Problem #1776">
-          <img src="../assets/logos/sih2026_logo.svg" alt="Smart India Hackathon 2026">
-        </div>
-        <div class="psu-logo-card our-system-card" title="SIF Precursor AI Intelligence Platform (Our System)">
-          <img src="../assets/logos/sif_suraksha_logo.svg" alt="SIF Suraksha AI Platform">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================================
-       MAIN CONTENT: RESTORED SIF REPORT SUBMISSION CONSOLE (COMMIT ad25296)
-       ====================================================================== -->
-  <main class="main-wrapper">
-
-    <!-- SUBMIT REPORT SECTION (Directly Accessible On Main Portal) -->
-    <div class="sif-core-grid" id="submitSection">
-      <!-- Submission Form Column -->
-      <div>
-        <div class="gov-card">
-          <div class="gov-card-header">
-            <span>📝 Submit Safety Report for Instant AI Risk Analysis</span>
-            <span style="font-size:11px; font-weight:normal; opacity:0.9;">DGMS Format Compliant</span>
-          </div>
-          <div class="gov-card-body">
-            <div id="reportAlert" class="alert"></div>
-
-            <div class="form-group">
-              <label class="form-label" for="repType">Report Type <span class="required">*</span></label>
-              <select id="repType" class="form-control">
-                <option value="Near Miss">Near Miss (High-Potential Precursor)</option>
-                <option value="Hazard Observation">Hazard Observation / Unsafe Condition</option>
-                <option value="Unsafe Act">Unsafe Act / Operational Deviation</option>
-                <option value="Equipment Failure">Equipment Failure / Pressure Surge Trip</option>
-                <option value="Leakage">Gas / Hydrocarbon Leakage Alert</option>
-              </select>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <div class="form-group">
-                <label class="form-label" for="repLocation">Asset / Facility Location <span class="required">*</span></label>
-                <input id="repLocation" class="form-control" placeholder="e.g. Rig Floor, Tank Farm, Duliajan" value="Rig Floor - Drill Rig 4">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="repDept">Operational Department <span class="required">*</span></label>
-                <input id="repDept" class="form-control" placeholder="e.g. Drilling, Production, HSE" value="Drilling & Well Servicing">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="repText">Report Description (Observations &amp; Precursor Signals) <span class="required">*</span></label>
-              <textarea id="repText" class="form-control" rows="5"
-                placeholder="Describe the unsafe act / condition / near-miss in detail. Example: High pressure gas kick observed on drill pipe, pressure gauge fluctuating wildly near blowout preventer..."
-                oninput="onReportTextInput()"></textarea>
-              <!-- Autocomplete suggestions dropdown -->
-              <div id="suggestBox" class="suggest-dropdown"></div>
-            </div>
-
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-              <button class="btn btn-primary" id="submitReportBtn" onclick="submitReportFromPortal()" style="padding:10px 24px; font-size:14px;">
-                ⚡ Analyze &amp; Submit Safety Report
-              </button>
-              <span id="authStatusHint" style="font-size:11.5px; color:var(--text-muted);">
-                Submitting as: <strong id="activeUserLabel">field_worker</strong>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- RESTORED PREDICTION RESULT BOX (Matching Commit ad25296) -->
-        <div id="predictResult" style="display:none;"></div>
-      </div>
-
-      <!-- Sidebar: Guidelines & Regulatory Assistance -->
-      <div>
-        <div class="gov-card">
-          <div class="gov-card-header">ℹ️ Core SIF Precursor Signals</div>
-          <div class="gov-card-body" style="font-size:12px; line-height:1.7;">
-            <ul style="padding-left:16px;">
-              <li><strong>High Energy Release:</strong> Uncontrolled pressure spikes, gas blowouts, heavy dropped objects.</li>
-              <li><strong>Missing Barrier:</strong> Inactive pressure relief valves, bypass of interlocks, uncertified lifting slings.</li>
-              <li><strong>Toxic Exposure:</strong> H2S detection, flammable hydrocarbon vapor accumulation.</li>
-              <li><strong>Audit Assurance:</strong> All submissions are processed through the trained NLP model with SHAP factor verification.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="gov-card">
-          <div class="gov-card-header" style="background:#0F766E;">📞 Emergency &amp; Control Desk</div>
-          <div class="gov-card-body" style="font-size:12px; line-height:1.8;">
-            <div><strong>OIL Emergency Control (Duliajan):</strong><br>1800-345-6789 (Toll Free)</div>
-            <div style="margin-top:6px;"><strong>DGMS Directorate Guwahati:</strong><br>+91-361-2236547</div>
-            <div style="margin-top:6px;"><strong>HSE Helpdesk:</strong><br>hse@oilindia.in</div>
-            <div style="margin-top:8px; padding:6px; background:#FDECEA; color:#7F0000; border-radius:2px; font-size:11.5px;">
-              🚨 For life-threatening emergencies, dial <strong>112</strong> immediately.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ====================================================================
-         REPORTS SURVEILLANCE DASHBOARD (Directly Accessible On Main Portal)
-         ==================================================================== -->
-    <div class="gov-card" id="dashboardSection">
-      <div class="gov-card-header">
-        <h3 id="dashboardTitle" style="font-size:14px; font-weight:700;">📊 Reports Surveillance Dashboard</h3>
-        <button class="btn btn-ghost" style="padding:3px 10px; font-size:11.5px;" onclick="loadReports()">↻ Refresh Live Table</button>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Location / Dept</th>
-              <th>Observation Text</th>
-              <th>AI Risk Triage &amp; SHAP Drivers</th>
-              <th>Reported By</th>
-            </tr>
-          </thead>
-          <tbody id="reportsTableBody">
-            <tr><td colspan="5" class="empty-state">Loading reports from secure database...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
   </main>
 
   <!-- ======================================================================
-       FLOATING SAFETY AI CHATBOT WIDGET
+       DOCKED INFINITE SCROLLING PSU & REGULATORY LOGO MARQUEE (Screen Bottom)
        ====================================================================== -->
-  <!-- Floating Launch Button -->
+  <footer class="landing-marquee-dock">
+    <div class="marquee-header" style="padding: 5px 20px;">
+      <div class="marquee-header-left">
+        <span class="marquee-pulse-dot"></span>
+        <span class="marquee-title-text" style="font-size:10px;">AFFILIATED MINISTRIES, REGULATORY AUTHORITIES &amp; PETROLEUM PSUs</span>
+        <span class="marquee-hi-text" style="font-size:10px;">| संबद्ध मंत्रालय, नियामक एवं सार्वजनिक उपक्रम</span>
+      </div>
+      <div class="marquee-header-right">
+        <span class="marquee-tag" style="font-size:9px; padding:1px 6px;">● 11 INTEGRATED ENTITIES &bull; LIVE ECOSYSTEM</span>
+      </div>
+    </div>
+
+    <div class="marquee-track-wrapper" style="padding: 8px 0;">
+      <div class="marquee-track">
+        <!-- Set 1: 11 Logos -->
+        <div class="psu-logo-card" title="Oil India Limited (Primary Host PSU)">
+          <img src="../assets/logos/oil_logo.svg" alt="Oil India Limited">
+        </div>
+        <div class="psu-logo-card" title="Indian Oil Corporation Limited">
+          <img src="../assets/logos/iocl_logo.svg" alt="IndianOil">
+        </div>
+        <div class="psu-logo-card" title="Oil and Natural Gas Corporation">
+          <img src="../assets/logos/ongc_logo.svg" alt="ONGC">
+        </div>
+        <div class="psu-logo-card" title="GAIL (India) Limited - Gas Authority of India">
+          <img src="../assets/logos/gail_logo.svg" alt="GAIL India">
+        </div>
+        <div class="psu-logo-card" title="Bharat Petroleum Corporation Limited">
+          <img src="../assets/logos/bpcl_logo.svg" alt="Bharat Petroleum">
+        </div>
+        <div class="psu-logo-card" title="Hindustan Petroleum Corporation Limited">
+          <img src="../assets/logos/hpcl_logo.svg" alt="HPCL">
+        </div>
+        <div class="psu-logo-card" title="Directorate General of Mines Safety (DGMS India)">
+          <img src="../assets/logos/dgms_logo.svg" alt="DGMS India">
+        </div>
+        <div class="psu-logo-card" title="Ministry of Petroleum &amp; Natural Gas, Govt of India">
+          <img src="../assets/logos/mopng_logo.svg" alt="Ministry of Petroleum &amp; Natural Gas">
+        </div>
+        <div class="psu-logo-card" title="Oil Industry Safety Directorate">
+          <img src="../assets/logos/oisd_logo.svg" alt="OISD">
+        </div>
+        <div class="psu-logo-card" title="Smart India Hackathon 2026 - Problem #1776">
+          <img src="../assets/logos/sih2026_logo.svg" alt="Smart India Hackathon 2026">
+        </div>
+        <div class="psu-logo-card our-system-card" title="SIF Precursor AI Intelligence Platform (Our System)">
+          <img src="../assets/logos/sif_suraksha_logo.svg" alt="SIF Suraksha AI Platform">
+        </div>
+
+        <!-- Set 2: Duplicate for Continuous Loop -->
+        <div class="psu-logo-card" title="Oil India Limited (Primary Host PSU)">
+          <img src="../assets/logos/oil_logo.svg" alt="Oil India Limited">
+        </div>
+        <div class="psu-logo-card" title="Indian Oil Corporation Limited">
+          <img src="../assets/logos/iocl_logo.svg" alt="IndianOil">
+        </div>
+        <div class="psu-logo-card" title="Oil and Natural Gas Corporation">
+          <img src="../assets/logos/ongc_logo.svg" alt="ONGC">
+        </div>
+        <div class="psu-logo-card" title="GAIL (India) Limited - Gas Authority of India">
+          <img src="../assets/logos/gail_logo.svg" alt="GAIL India">
+        </div>
+        <div class="psu-logo-card" title="Bharat Petroleum Corporation Limited">
+          <img src="../assets/logos/bpcl_logo.svg" alt="Bharat Petroleum">
+        </div>
+        <div class="psu-logo-card" title="Hindustan Petroleum Corporation Limited">
+          <img src="../assets/logos/hpcl_logo.svg" alt="HPCL">
+        </div>
+        <div class="psu-logo-card" title="Directorate General of Mines Safety (DGMS India)">
+          <img src="../assets/logos/dgms_logo.svg" alt="DGMS India">
+        </div>
+        <div class="psu-logo-card" title="Ministry of Petroleum &amp; Natural Gas, Govt of India">
+          <img src="../assets/logos/mopng_logo.svg" alt="Ministry of Petroleum &amp; Natural Gas">
+        </div>
+        <div class="psu-logo-card" title="Oil Industry Safety Directorate">
+          <img src="../assets/logos/oisd_logo.svg" alt="OISD">
+        </div>
+        <div class="psu-logo-card" title="Smart India Hackathon 2026 - Problem #1776">
+          <img src="../assets/logos/sih2026_logo.svg" alt="Smart India Hackathon 2026">
+        </div>
+        <div class="psu-logo-card our-system-card" title="SIF Precursor AI Intelligence Platform (Our System)">
+          <img src="../assets/logos/sif_suraksha_logo.svg" alt="SIF Suraksha AI Platform">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+       FLOATING SAFETY AI CHATBOT WIDGET ("OIL Suraksha Sahayak")
+       ====================================================================== -->
   <button id="oilChatbotToggle" class="oil-chatbot-toggle" onclick="toggleChatbot()" aria-label="Open Safety AI Assistant">
     <span class="bot-avatar">🤖</span>
     <span class="bot-label">
@@ -403,7 +262,6 @@
     </span>
   </button>
 
-  <!-- Floating Chat Window -->
   <div id="oilChatbotWindow" class="oil-chatbot-window" role="dialog" aria-label="Safety AI Assistant Chat">
     <div class="chatbot-header">
       <div class="chatbot-header-info">
@@ -436,20 +294,6 @@
       <button type="submit" class="chatbot-send-btn">➤</button>
     </form>
   </div>
-
-  <!-- ======================================================================
-       SLIM GOVERNMENT FOOTER
-       ====================================================================== -->
-  <footer class="gov-footer">
-    <div class="footer-links">
-      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
-      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
-      <a href="https://petroleum.nic.in" target="_blank" rel="noopener">Ministry of Petroleum</a>
-      <a href="https://sih.gov.in" target="_blank" rel="noopener">SIH 2026</a>
-      <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">API Docs</a>
-    </div>
-    <div>&copy; 2026 Oil India Limited. All Rights Reserved. | SIH 2026 Problem No. 1776 | Government of India</div>
-  </footer>
 
   <!-- Scripts -->
   <script src="js/auth.js"></script>
