@@ -36,6 +36,9 @@ preprocessor: SIFPreprocessor = SIFPreprocessor.load("sif_preprocessor.pkl")
 model = joblib.load("sif_model.pkl")
 explainer = joblib.load("sif_explainer.pkl")
 
+with open("suggestion_bank.json") as f:
+    SUGGESTION_BANK = json.load(f)
+
 
 @app.on_event("startup")
 def on_startup():
@@ -179,6 +182,25 @@ def list_users(
 ):
     users = db.query(User).all()
     return [{"id": u.id, "username": u.username, "role": u.role} for u in users]
+
+
+@app.get("/suggest")
+def suggest(q: str = ""):
+    """
+    Autocomplete suggestions for the report-writing textarea, like Google
+    search suggestions. Matches against a bank of hazard-keyword phrases +
+    real hazard-related clauses pulled from the training dataset.
+    No auth required - it's just writing assistance, not sensitive data.
+    """
+    q = q.strip().lower()
+    if len(q) < 2:
+        return {"suggestions": []}
+
+    starts_with = [s for s in SUGGESTION_BANK if s.lower().startswith(q)]
+    contains = [s for s in SUGGESTION_BANK if q in s.lower() and s not in starts_with]
+
+    results = (starts_with + contains)[:8]
+    return {"suggestions": results}
 
 
 @app.get("/")
