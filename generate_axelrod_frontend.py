@@ -1,5 +1,6 @@
 html_content = r'''<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@ html_content = r'''<!DOCTYPE html>
   <link rel="icon" type="image/png" href="assets/oil_safety_logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
 
   <style>
     /* =========================================================
@@ -22,9 +25,10 @@ html_content = r'''<!DOCTYPE html>
       --deep-space: #070D18;
       --card-glass-dark: rgba(11, 23, 44, 0.78);
       --card-glass-light: rgba(255, 255, 255, 0.90);
+
       --border-glass-dark: rgba(200, 223, 219, 0.22);
       --border-glass-light: rgba(51, 104, 160, 0.25);
-      
+
       --bg-main: #070D18;
       --text-main: #F2EFE7;
       --text-muted: #C8DFDB;
@@ -60,7 +64,8 @@ html_content = r'''<!DOCTYPE html>
       -webkit-font-smoothing: antialiased;
     }
 
-    html, body {
+    html,
+    body {
       width: 100vw;
       height: 100vh;
       overflow: hidden;
@@ -113,14 +118,14 @@ html_content = r'''<!DOCTYPE html>
       width: 100%;
       height: 100%;
       background: radial-gradient(circle at 75% 30%, rgba(7, 13, 24, 0.35) 0%, rgba(7, 13, 24, 0.85) 75%),
-                  linear-gradient(90deg, rgba(7, 13, 24, 0.92) 0%, rgba(7, 13, 24, 0.65) 45%, rgba(7, 13, 24, 0.82) 100%);
+        linear-gradient(90deg, rgba(7, 13, 24, 0.92) 0%, rgba(7, 13, 24, 0.65) 45%, rgba(7, 13, 24, 0.82) 100%);
       pointer-events: none;
       transition: background 0.4s ease;
     }
 
     [data-theme="light"] .video-overlay-gradient {
       background: radial-gradient(circle at 75% 30%, rgba(242, 239, 231, 0.45) 0%, rgba(242, 239, 231, 0.88) 75%),
-                  linear-gradient(90deg, rgba(242, 239, 231, 0.95) 0%, rgba(242, 239, 231, 0.72) 50%, rgba(242, 239, 231, 0.9) 100%);
+        linear-gradient(90deg, rgba(242, 239, 231, 0.95) 0%, rgba(242, 239, 231, 0.72) 50%, rgba(242, 239, 231, 0.9) 100%);
     }
 
     /* Subtle High-Tech Telemetry Scanline */
@@ -336,7 +341,8 @@ html_content = r'''<!DOCTYPE html>
       font-family: inherit;
     }
 
-    .lang-option-item:hover, .lang-option-item.active {
+    .lang-option-item:hover,
+    .lang-option-item.active {
       background: rgba(102, 163, 191, 0.22);
       color: var(--soft-mint);
     }
@@ -944,7 +950,9 @@ html_content = r'''<!DOCTYPE html>
       letter-spacing: 0.04em;
     }
 
-    .input-field, .select-field, .textarea-field {
+    .input-field,
+    .select-field,
+    .textarea-field {
       width: 100%;
       padding: 12px 14px;
       background: var(--input-bg);
@@ -957,7 +965,9 @@ html_content = r'''<!DOCTYPE html>
       transition: all 0.25s ease;
     }
 
-    .input-field:focus, .select-field:focus, .textarea-field:focus {
+    .input-field:focus,
+    .select-field:focus,
+    .textarea-field:focus {
       border-color: var(--accent-sky);
       box-shadow: 0 0 0 3px rgba(102, 163, 191, 0.25);
     }
@@ -989,7 +999,7 @@ html_content = r'''<!DOCTYPE html>
     .login-pill-opt.active {
       background: var(--primary-navy);
       color: #ffffff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     .submit-primary-btn {
@@ -1119,24 +1129,53 @@ html_content = r'''<!DOCTYPE html>
 
     /* Keyframe Animations */
     @keyframes pulseGreen {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
     }
 
     @keyframes heroSlideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes heroSlideRight {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     @keyframes dropdownFade {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Autocomplete & User Session UI */
@@ -1155,6 +1194,7 @@ html_content = r'''<!DOCTYPE html>
       backdrop-filter: blur(14px);
       margin-top: 4px;
     }
+
     .suggest-item {
       padding: 9px 12px;
       cursor: pointer;
@@ -1163,9 +1203,11 @@ html_content = r'''<!DOCTYPE html>
       color: var(--text-main);
       transition: background 0.15s ease;
     }
+
     .suggest-item:hover {
       background: rgba(102, 163, 191, 0.25);
     }
+
     .user-session-bar {
       display: none;
       align-items: center;
@@ -1177,6 +1219,7 @@ html_content = r'''<!DOCTYPE html>
       border: 1px solid rgba(102, 163, 191, 0.35);
       font-size: 11.5px;
     }
+
     .user-badge-role {
       font-size: 9.5px;
       font-weight: 700;
@@ -1187,6 +1230,7 @@ html_content = r'''<!DOCTYPE html>
       color: #fff;
       text-transform: uppercase;
     }
+
     .btn-logout-mini {
       background: transparent;
       border: 1px solid var(--card-border);
@@ -1197,6 +1241,7 @@ html_content = r'''<!DOCTYPE html>
       cursor: pointer;
       transition: all 0.2s;
     }
+
     .btn-logout-mini:hover {
       background: rgba(239, 68, 68, 0.2);
       border-color: #ef4444;
@@ -1205,11 +1250,17 @@ html_content = r'''<!DOCTYPE html>
 
     /* Responsive adjustments */
     @media (max-width: 1100px) {
-      .hero-imagery-column { display: none; }
-      .axelrod-hero-bottom-tagline { display: none; }
+      .hero-imagery-column {
+        display: none;
+      }
+
+      .axelrod-hero-bottom-tagline {
+        display: none;
+      }
     }
   </style>
 </head>
+
 <body data-theme="dark">
 
   <!-- FULLSCREEN VIEWPORT CONTAINER -->
@@ -1239,8 +1290,10 @@ html_content = r'''<!DOCTYPE html>
       <div class="nav-right-controls">
         <ul class="nav-links-menu">
           <li><button class="nav-link-item" onclick="openOverlay('login')" data-i18n="nav_about">ABOUT</button></li>
-          <li><button class="nav-link-item" onclick="openOverlay('login')" data-i18n="nav_framework">FRAMEWORK</button></li>
-          <li><button class="nav-link-item" onclick="openOverlay('report')" data-i18n="nav_dgms">DGMS COMPLIANCE</button></li>
+          <li><button class="nav-link-item" onclick="openOverlay('login')" data-i18n="nav_framework">FRAMEWORK</button>
+          </li>
+          <li><button class="nav-link-item" onclick="openOverlay('report')" data-i18n="nav_dgms">DGMS
+              COMPLIANCE</button></li>
         </ul>
 
         <!-- All Languages Dropdown Selector -->
@@ -1318,7 +1371,7 @@ html_content = r'''<!DOCTYPE html>
 
     <!-- HERO MAIN WORKSPACE (Screen-Fitted Axelrod Placement) -->
     <main class="hero-center-workspace">
-      
+
       <!-- Left Column: Massive Headline & Subtitle -->
       <section class="hero-typography-column">
         <div class="telemetry-live-badge">
@@ -1333,7 +1386,8 @@ html_content = r'''<!DOCTYPE html>
         </h1>
 
         <p class="hero-subtitle-p" data-i18n="hero_sub">
-          AI-powered precursor intelligence detecting micro-anomalies, pipeline stress, and hazardous flare events before incidents occur across upstream and downstream energy infrastructure.
+          AI-powered precursor intelligence detecting micro-anomalies, pipeline stress, and hazardous flare events
+          before incidents occur across upstream and downstream energy infrastructure.
         </p>
 
         <div class="hero-cta-actions-group">
@@ -1359,7 +1413,8 @@ html_content = r'''<!DOCTYPE html>
         </div>
 
         <!-- 1. Offshore Rig -->
-        <div class="hud-asset-card" onclick="openImageModal('assets/offshore_oil_rig.jpg', 'Offshore Deepwater Drilling Platform Alpha', 'Pressure: 3,420 PSI · Flare: Normal · DGMS Safe')">
+        <div class="hud-asset-card"
+          onclick="openImageModal('assets/offshore_oil_rig.jpg', 'Offshore Deepwater Drilling Platform Alpha', 'Pressure: 3,420 PSI · Flare: Normal · DGMS Safe')">
           <div class="hud-card-thumb-container">
             <img src="assets/offshore_oil_rig.jpg" alt="Offshore Drilling Rig" class="hud-card-thumb">
           </div>
@@ -1373,7 +1428,8 @@ html_content = r'''<!DOCTYPE html>
         </div>
 
         <!-- 2. Duliajan Safety Control Room -->
-        <div class="hud-asset-card" onclick="openImageModal('assets/safety_control_room.jpg', 'Duliajan Central SCADA & Safety Control Hub', 'Telemetry Grid: 128 Nodes · Precursor Risk: 0.04 (Low)')">
+        <div class="hud-asset-card"
+          onclick="openImageModal('assets/safety_control_room.jpg', 'Duliajan Central SCADA & Safety Control Hub', 'Telemetry Grid: 128 Nodes · Precursor Risk: 0.04 (Low)')">
           <div class="hud-card-thumb-container">
             <img src="assets/safety_control_room.jpg" alt="Safety Control Room" class="hud-card-thumb">
           </div>
@@ -1387,7 +1443,8 @@ html_content = r'''<!DOCTYPE html>
         </div>
 
         <!-- 3. Pipeline Telemetry Sensors -->
-        <div class="hud-asset-card" onclick="openImageModal('assets/pipeline_telemetry_sensors.jpg', 'Assam-Barauni Trunk Pipeline Corridor (4,200 KM)', 'Vibration: Normal · Acoustic Sensors: 100% Operational')">
+        <div class="hud-asset-card"
+          onclick="openImageModal('assets/pipeline_telemetry_sensors.jpg', 'Assam-Barauni Trunk Pipeline Corridor (4,200 KM)', 'Vibration: Normal · Acoustic Sensors: 100% Operational')">
           <div class="hud-card-thumb-container">
             <img src="assets/pipeline_telemetry_sensors.jpg" alt="Pipeline Telemetry Grid" class="hud-card-thumb">
           </div>
@@ -1401,7 +1458,8 @@ html_content = r'''<!DOCTYPE html>
         </div>
 
         <!-- 4. Field Hazard & Safety Inspection -->
-        <div class="hud-asset-card" onclick="openImageModal('assets/field_safety_inspection.jpg', 'Hazard Inspection & PPE Compliance Protocol', 'AI Vision Check: 99.2% Helmet/Vest Compliance · Zero Violations')">
+        <div class="hud-asset-card"
+          onclick="openImageModal('assets/field_safety_inspection.jpg', 'Hazard Inspection & PPE Compliance Protocol', 'AI Vision Check: 99.2% Helmet/Vest Compliance · Zero Violations')">
           <div class="hud-card-thumb-container">
             <img src="assets/field_safety_inspection.jpg" alt="Field Safety Inspection" class="hud-card-thumb">
           </div>
@@ -1449,7 +1507,7 @@ html_content = r'''<!DOCTYPE html>
   <!-- SLIDE-OVER OVERLAY DRAWER: AUTH & INCIDENT REPORTING -->
   <div class="slide-over-backdrop" id="slideOverBackdrop" onclick="handleBackdropClick(event)">
     <div class="slide-over-drawer" id="slideOverDrawer">
-      
+
       <!-- Drawer Header -->
       <div class="drawer-header">
         <div class="drawer-brand">
@@ -1474,18 +1532,22 @@ html_content = r'''<!DOCTYPE html>
 
       <!-- Drawer Tabs -->
       <div class="drawer-tabs-nav">
-        <button class="drawer-tab-btn active" id="tabBtnLogin" onclick="switchDrawerTab('login')" data-i18n="tab_login">LOGIN</button>
-        <button class="drawer-tab-btn" id="tabBtnRegister" onclick="switchDrawerTab('register')" data-i18n="tab_register">CREATE ACCOUNT</button>
-        <button class="drawer-tab-btn" id="tabBtnReport" onclick="switchDrawerTab('report')" data-i18n="tab_report">REPORT INCIDENT</button>
+        <button class="drawer-tab-btn active" id="tabBtnLogin" onclick="switchDrawerTab('login')"
+          data-i18n="tab_login">LOGIN</button>
+        <button class="drawer-tab-btn" id="tabBtnRegister" onclick="switchDrawerTab('register')"
+          data-i18n="tab_register">CREATE ACCOUNT</button>
+        <button class="drawer-tab-btn" id="tabBtnReport" onclick="switchDrawerTab('report')"
+          data-i18n="tab_report">REPORT INCIDENT</button>
       </div>
 
       <!-- Drawer Body Content -->
       <div class="drawer-body-content">
-        
+
         <!-- Tab 1: LOGIN -->
         <div id="sectionLogin">
           <div class="login-mode-toggle-pills">
-            <button class="login-pill-opt active" id="pillLoginUsername" onclick="setLoginMethod('username')">Username</button>
+            <button class="login-pill-opt active" id="pillLoginUsername"
+              onclick="setLoginMethod('username')">Username</button>
             <button class="login-pill-opt" id="pillLoginPhone" onclick="setLoginMethod('phone')">Phone Number</button>
           </div>
 
@@ -1494,7 +1556,8 @@ html_content = r'''<!DOCTYPE html>
           <form id="loginForm" onsubmit="handleLoginSubmit(event)">
             <div class="form-group" id="groupLoginUsername">
               <label class="form-label" data-i18n="label_username">Username</label>
-              <input type="text" id="loginUsernameInput" class="input-field" placeholder="e.g. duliajan_officer" required>
+              <input type="text" id="loginUsernameInput" class="input-field" placeholder="e.g. duliajan_officer"
+                required>
             </div>
 
             <div class="form-group" id="groupLoginPhone" style="display: none;">
@@ -1507,7 +1570,8 @@ html_content = r'''<!DOCTYPE html>
               <input type="password" id="loginPasswordInput" class="input-field" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="submit-primary-btn" data-i18n="btn_login_submit">Sign In to Safety Portal</button>
+            <button type="submit" class="submit-primary-btn" data-i18n="btn_login_submit">Sign In to Safety
+              Portal</button>
           </form>
         </div>
 
@@ -1518,11 +1582,13 @@ html_content = r'''<!DOCTYPE html>
           <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
             <div class="form-group">
               <label class="form-label" data-i18n="label_fullname">Full Name</label>
-              <input type="text" id="regFullNameInput" class="input-field" placeholder="e.g. Ramesh Chandra Baruah" required>
+              <input type="text" id="regFullNameInput" class="input-field" placeholder="e.g. Ramesh Chandra Baruah"
+                required>
             </div>
 
             <div class="form-group" style="margin-top: 12px;">
-              <label class="form-label" data-i18n="label_phone_required">Phone Number (Required for SMS Safety Alerts)</label>
+              <label class="form-label" data-i18n="label_phone_required">Phone Number (Required for SMS Safety
+                Alerts)</label>
               <input type="tel" id="regPhoneInput" class="input-field" placeholder="+91 98765 43210" required>
             </div>
 
@@ -1533,7 +1599,8 @@ html_content = r'''<!DOCTYPE html>
 
             <div class="form-group" style="margin-top: 12px;">
               <label class="form-label" data-i18n="label_password">Secure Password</label>
-              <input type="password" id="regPasswordInput" class="input-field" placeholder="Minimum 6 characters" required>
+              <input type="password" id="regPasswordInput" class="input-field" placeholder="Minimum 6 characters"
+                required>
             </div>
 
             <div class="form-group" style="margin-top: 12px;">
@@ -1553,12 +1620,16 @@ html_content = r'''<!DOCTYPE html>
         <div id="sectionReport" style="display: none;">
           <div id="reportAlert" class="auth-alert-message"></div>
 
-          <div id="unauthReportBanner" style="display: none; padding: 12px; border-radius: 8px; background: rgba(102, 163, 191, 0.15); border: 1px solid var(--accent-sky); font-size: 12px; margin-bottom: 14px;">
+          <div id="unauthReportBanner"
+            style="display: none; padding: 12px; border-radius: 8px; background: rgba(102, 163, 191, 0.15); border: 1px solid var(--accent-sky); font-size: 12px; margin-bottom: 14px;">
             ⚠️ <strong>Please sign in</strong> above to submit verified DGMS precursor incident reports.
           </div>
 
-          <div id="roleRestrictionNotice" style="display: none; padding: 12px; border-radius: 8px; background: rgba(51, 104, 160, 0.2); border: 1px solid var(--primary-navy); font-size: 12px; margin-bottom: 14px;">
-            🛡️ <strong>Safety Oversight Mode:</strong> You are logged in with <span id="roleNoticeBadge" class="user-badge-role"></span> privileges. Officers and Administrators oversee live risk telemetry. Ground observation filing is restricted to Field Workers.
+          <div id="roleRestrictionNotice"
+            style="display: none; padding: 12px; border-radius: 8px; background: rgba(51, 104, 160, 0.2); border: 1px solid var(--primary-navy); font-size: 12px; margin-bottom: 14px;">
+            🛡️ <strong>Safety Oversight Mode:</strong> You are logged in with <span id="roleNoticeBadge"
+              class="user-badge-role"></span> privileges. Officers and Administrators oversee live risk telemetry.
+            Ground observation filing is restricted to Field Workers.
           </div>
 
           <form id="incidentForm" onsubmit="handleReportSubmit(event)">
@@ -1595,17 +1666,22 @@ html_content = r'''<!DOCTYPE html>
             <div class="form-group" style="margin-top: 12px;">
               <label class="form-label" data-i18n="label_hazard_text">Detailed Observation & Precursor Signals</label>
               <div style="position: relative;">
-                <textarea id="reportTextInput" class="textarea-field" rows="3" placeholder="Describe abnormal vibration, gas scent, micro-leak, valve stiffness, or safety barrier degradation..." required oninput="onReportTextInput()"></textarea>
+                <textarea id="reportTextInput" class="textarea-field" rows="3"
+                  placeholder="Describe abnormal vibration, gas scent, micro-leak, valve stiffness, or safety barrier degradation..."
+                  required oninput="onReportTextInput()"></textarea>
                 <div id="suggestBox" class="suggest-box" style="display: none;"></div>
               </div>
             </div>
 
-            <button type="submit" class="submit-primary-btn" data-i18n="btn_submit_report">Submit to AI Precursor Classifier</button>
+            <button type="submit" class="submit-primary-btn" data-i18n="btn_submit_report">Submit to AI Precursor
+              Classifier</button>
           </form>
 
           <!-- Live AI Prediction Output Display -->
-          <div id="predictionResultCard" style="display: none; margin-top: 18px; padding: 14px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);">
-            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--accent-sky);">AI Precursor Risk Assessment</h4>
+          <div id="predictionResultCard"
+            style="display: none; margin-top: 18px; padding: 14px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);">
+            <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--accent-sky);">AI Precursor
+              Risk Assessment</h4>
             <div id="predRiskStatus" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;"></div>
             <div id="predProbMeter" style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;"></div>
             <div id="predShapFactors" style="font-size: 11px; line-height: 1.4;"></div>
@@ -1613,7 +1689,9 @@ html_content = r'''<!DOCTYPE html>
 
           <!-- Recent Incident Feed -->
           <div style="margin-top: 24px;">
-            <h4 id="recentReportsTitle" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-sky); margin-bottom: 10px;" data-i18n="title_recent_reports">Recent Monitored Reports</h4>
+            <h4 id="recentReportsTitle"
+              style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-sky); margin-bottom: 10px;"
+              data-i18n="title_recent_reports">Recent Monitored Reports</h4>
             <div id="recentReportsList" style="display: flex; flex-direction: column; gap: 10px;">
               <div style="font-size: 12px; color: var(--text-muted);">Loading live incident telemetry...</div>
             </div>
@@ -1630,10 +1708,12 @@ html_content = r'''<!DOCTYPE html>
       <img id="modalImgTag" src="" alt="Facility Inspection Preview" class="image-modal-img">
       <div class="image-modal-content">
         <div>
-          <h3 id="modalTitle" style="font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;"></h3>
+          <h3 id="modalTitle" style="font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
+          </h3>
           <p id="modalDesc" style="font-size: 13px; color: var(--accent-sky);"></p>
         </div>
-        <button class="submit-primary-btn" style="width: auto; padding: 10px 20px;" onclick="closeImageModal()">Dismiss</button>
+        <button class="submit-primary-btn" style="width: auto; padding: 10px 20px;"
+          onclick="closeImageModal()">Dismiss</button>
       </div>
     </div>
   </div>
@@ -2326,7 +2406,7 @@ html_content = r'''<!DOCTYPE html>
     function changeAppLanguage(langCode, labelText) {
       document.getElementById('currentLangLabel').innerText = labelText;
       const dict = I18N[langCode] || I18N['en'];
-      
+
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (dict[key]) {
@@ -2675,15 +2755,15 @@ html_content = r'''<!DOCTYPE html>
         const isPrecursor = (data.predicted_label ?? data.sif_prediction) === 1;
         const probability = ((data.predicted_probability ?? data.sif_probability ?? 0) * 100).toFixed(1);
 
-        statusEl.innerHTML = isPrecursor 
-          ? `<span style="color: #EF4444; font-weight:800;">⚠️ CRITICAL PRECURSOR DETECTED (High SIF Risk)</span>` 
+        statusEl.innerHTML = isPrecursor
+          ? `<span style="color: #EF4444; font-weight:800;">⚠️ CRITICAL PRECURSOR DETECTED (High SIF Risk)</span>`
           : `<span style="color: #10B981; font-weight:800;">✅ BENIGN OBSERVATION (Low Precursor Risk)</span>`;
-        
+
         probEl.innerText = `Calculated SIF Probability: ${probability}%`;
 
         let factors = [];
         if (typeof data.top_factors === 'string') {
-          try { factors = JSON.parse(data.top_factors); } catch(e) {}
+          try { factors = JSON.parse(data.top_factors); } catch (e) { }
         } else if (Array.isArray(data.top_factors)) {
           factors = data.top_factors;
         }
@@ -2691,7 +2771,7 @@ html_content = r'''<!DOCTYPE html>
         let factorsHtml = `<strong>Top Precursor Contributing Drivers:</strong><div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:6px;">`;
         if (factors && factors.length) {
           factors.forEach(f => {
-            const cleanName = f.feature.replace('flag_','').replace('count_','').replace('tfidf_','');
+            const cleanName = f.feature.replace('flag_', '').replace('count_', '').replace('tfidf_', '');
             factorsHtml += `<span class="chip-tag" style="font-size:10px; padding:2px 6px;">${cleanName} (${f.impact > 0 ? '+' : ''}${f.impact})</span>`;
           });
         } else {
@@ -2743,10 +2823,10 @@ html_content = r'''<!DOCTYPE html>
           const prob = ((r.predicted_probability ?? r.sif_probability ?? 0) * 100).toFixed(0);
           const dateStr = r.created_at ? new Date(r.created_at).toLocaleString() : 'Recent';
           const author = r.submitted_by_username ? `By: ${r.submitted_by_username}` : '';
-          
+
           let factors = [];
           if (typeof r.top_factors === 'string') {
-            try { factors = JSON.parse(r.top_factors || '[]'); } catch(e) {}
+            try { factors = JSON.parse(r.top_factors || '[]'); } catch (e) { }
           } else if (Array.isArray(r.top_factors)) {
             factors = r.top_factors;
           }
@@ -2810,10 +2890,8 @@ html_content = r'''<!DOCTYPE html>
     });
   </script>
 </body>
-</html>
-'''
+
+</html>'''
 
 with open('frontend.html', 'w', encoding='utf-8') as f:
     f.write(html_content)
-
-print('Generated frontend.html successfully! Size:', len(html_content))
