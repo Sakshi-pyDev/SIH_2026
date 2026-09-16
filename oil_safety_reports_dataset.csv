@@ -1,0 +1,122 @@
+report_id,report_type,location,department,report_text,potential_severity,actual_outcome,is_sif_precursor
+OIL-2026-0001,Unsafe Act,Drilling Rig - Rig Floor,Drilling,"Roughneck observed handling drill pipe tongs without wearing hand gloves during connection making, citing gloves as 'too bulky' for quick work.",High,,1
+OIL-2026-0002,Unsafe Act,Tank Farm - Crude Storage,Production,"Contract worker seen climbing storage tank staircase carrying tools in both hands, not using the handrail, while tank gauging was in progress.",Medium,,0
+OIL-2026-0003,Unsafe Act,Gas Compressor Station,Gas Processing,Operator bypassed the lockout-tagout procedure and attempted to clear a minor gas leak on a live compressor line using a wrench while the unit was still running.,Critical,,1
+OIL-2026-0004,Unsafe Act,Workover Rig,Well Services,"Crew member stood directly under a suspended load while rigging up the traveling block, instead of staying clear of the red zone marked on the rig floor.",High,,1
+OIL-2026-0005,Unsafe Act,Plant Road,Logistics,"Tanker driver was found using mobile phone while reversing the crude oil tanker near the loading bay, ignoring the banksman's signals.",High,,1
+OIL-2026-0006,Unsafe Act,Welding Bay,Maintenance,Welder carried out hot work near an open drum of solvent without obtaining a valid hot work permit or checking for flammable vapours.,Critical,,1
+OIL-2026-0007,Unsafe Act,Pump House,Production,Technician removed the safety guard from a rotating pump coupling to 'inspect alignment' while the pump motor was still energized.,Critical,Minor Injury,1
+OIL-2026-0008,Unsafe Act,Office Building,Admin,Employee was seen using a swivel chair as a step stool to reach files on a top shelf instead of using the designated ladder.,Low,,0
+OIL-2026-0009,Unsafe Act,Wellhead Area,Production,"Field operator opened a wellhead valve manually without confirming with the control room, causing a brief pressure surge in the flowline.",High,,1
+OIL-2026-0010,Unsafe Act,Warehouse,Materials,"Forklift operator was seen carrying a pallet load higher than recommended height, obstructing forward visibility while moving through the aisle.",Medium,,0
+OIL-2026-0011,Unsafe Act,Chemical Storage Shed,HSE,"Worker mixed two different chemical containers without checking compatibility labels, resulting in mild fumes; no proper ventilation was used.",High,Minor Injury,1
+OIL-2026-0012,Unsafe Act,Rig Floor,Drilling,Derrick man skipped the pre-climb inspection of the fall-arrest harness before ascending to the monkey board for pipe racking.,Critical,,1
+OIL-2026-0013,Unsafe Act,Electrical Substation,Electrical,"Electrician attempted minor repair on a control panel without de-energizing the circuit, relying on rubber gloves alone for protection.",Critical,,1
+OIL-2026-0014,Unsafe Act,Gas Plant Walkway,Gas Processing,"Employee took a shortcut by walking across a pipe rack instead of using the designated walkway, risking a trip near live process lines.",Medium,,0
+OIL-2026-0015,Unsafe Act,Loading Bay,Logistics,Helper was observed standing on the tanker's catwalk without a fall-arrest lanyard while opening the manhole cover for sampling.,High,,1
+OIL-2026-0016,Unsafe Act,Workshop,Maintenance,"Fitter used a damaged grinding wheel with a visible crack, continuing the job as a replacement was 'not readily available'.",High,,1
+OIL-2026-0017,Unsafe Act,Camp Kitchen,Admin,"Kitchen staff carried a hot oil container without using heat-resistant gloves, resulting in slight discomfort but no burn.",Low,,0
+OIL-2026-0018,Unsafe Act,Rig Floor,Drilling,Crew skipped the toolbox talk before starting a critical lifting operation involving the traveling block and top drive assembly.,Medium,,0
+OIL-2026-0019,Unsafe Act,Flowline Right of Way,Pipeline,"Excavator operator dug near a marked flowline crossing without calling for a line locate or standby supervision, as per one-call procedure.",Critical,,1
+OIL-2026-0020,Unsafe Act,Tank Farm,Production,"Operator opened a tank dip hatch without testing for flammable gas concentration first, standing directly over the opening.",High,,1
+OIL-2026-0021,Unsafe Condition,Rig Floor,Drilling,"The derrick board fall-arrest anchor point was found with a loose bolt during routine inspection, reducing its rated holding capacity.",Critical,,1
+OIL-2026-0022,Unsafe Condition,Gas Compressor Station,Gas Processing,A small gas leak was detected at a flange joint near the compressor discharge line using a portable gas detector during routine rounds.,Critical,,1
+OIL-2026-0023,Unsafe Condition,Tank Farm,Production,"Corroded handrail on the storage tank staircase was noticed, with visible thinning at the base weld point.",High,,1
+OIL-2026-0024,Unsafe Condition,Warehouse,Materials,"Oil spill on the warehouse floor near the dispensing area was not cleaned up promptly, creating a slip hazard for pedestrian traffic.",Medium,,0
+OIL-2026-0025,Unsafe Condition,Electrical Substation,Electrical,"An open junction box with exposed live wiring was found near the walkway, without any barricading or warning signage.",Critical,,1
+OIL-2026-0026,Unsafe Condition,Office Building,Admin,"A ceiling tile in the corridor was found sagging and partially detached, posing a minor risk of falling debris.",Low,,0
+OIL-2026-0027,Unsafe Condition,Wellhead Area,Production,"Pressure gauge on the wellhead christmas tree was found stuck and not reflecting actual line pressure, last calibrated over a year ago.",High,,1
+OIL-2026-0028,Unsafe Condition,Workshop,Maintenance,Fire extinguisher near the welding bay was found with an expired inspection tag and low pressure gauge reading.,Medium,,0
+OIL-2026-0029,Unsafe Condition,Plant Road,Logistics,"Speed breaker near the tanker loading area was found damaged and barely visible due to faded paint markings, increasing collision risk.",Medium,,0
+OIL-2026-0030,Unsafe Condition,Confined Space - Vessel,Maintenance,Ventilation blower for a confined space vessel entry was found non-functional just before a scheduled internal inspection job.,Critical,,1
+OIL-2026-0031,Unsafe Condition,Rig Floor,Drilling,"Non-slip matting on the rig floor near the mud pit was found torn and curling at the edges, creating a trip hazard.",Medium,,0
+OIL-2026-0032,Unsafe Condition,Gas Plant,Gas Processing,"H2S alarm sensor near the sweetening unit was found reading inconsistently during calibration checks, with possible sensor drift.",Critical,,1
+OIL-2026-0033,Unsafe Condition,Camp Area,Admin,"Street light near the camp pathway was non-functional for several nights, reducing visibility for night-shift workers walking to quarters.",Low,,0
+OIL-2026-0034,Unsafe Condition,Pipeline Right of Way,Pipeline,"Exposed pipeline section was found with reduced soil cover following recent rains, close to a public access road.",High,,1
+OIL-2026-0035,Unsafe Condition,Loading Bay,Logistics,Earthing/bonding cable at the tanker loading gantry was found frayed and not making proper contact during static discharge testing.,Critical,,1
+OIL-2026-0036,Unsafe Condition,Workover Rig,Well Services,Wire rope on the auxiliary winch was found with several broken strands during pre-job inspection.,High,,1
+OIL-2026-0037,Unsafe Condition,Tank Farm,Production,"Bund wall around the diesel storage tank was found cracked in multiple places, reducing secondary containment capacity in case of leak.",Medium,,0
+OIL-2026-0038,Unsafe Condition,Workshop,Maintenance,"Compressed air hose in the workshop was found with a worn-out coupling that leaked air on connection, causing a hissing noise.",Low,,0
+OIL-2026-0039,Unsafe Condition,Gas Compressor Station,Gas Processing,Emergency shutdown (ESD) pushbutton near the compressor skid was found painted over and partially obstructed by stored material.,Critical,,1
+OIL-2026-0040,Unsafe Condition,Crude Oil Jetty,Marine/Logistics,"Mooring rope at the jetty was found significantly frayed, raising concern over its load-bearing capacity during vessel loading.",High,,1
+OIL-2026-0041,Near Miss,Rig Floor,Drilling,A wrench fell from the monkey board and landed on the rig floor narrowly missing a crew member standing below; no tool tethering was in use.,Critical,,1
+OIL-2026-0042,Near Miss,Tank Farm,Production,A vapour cloud briefly formed near the tank dip hatch during gauging when wind direction shifted suddenly; no ignition source was nearby.,Critical,,1
+OIL-2026-0043,Near Miss,Gas Compressor Station,Gas Processing,"Pressure relief valve lifted unexpectedly during a routine startup, venting gas briefly before the operator isolated the line.",High,,1
+OIL-2026-0044,Near Miss,Plant Road,Logistics,A light vehicle nearly collided with a reversing crude tanker at the junction near the security gate; both drivers braked in time.,High,,1
+OIL-2026-0045,Near Miss,Workshop,Maintenance,"Grinding wheel disintegrated during use, with fragments striking the operator's face shield; the shield prevented any injury.",Critical,,1
+OIL-2026-0046,Near Miss,Warehouse,Materials,"A stacked pallet toppled from the racking system moments after a worker walked past the aisle, landing in the empty walkway.",High,,1
+OIL-2026-0047,Near Miss,Office Building,Admin,An employee slipped on a wet floor near the pantry but managed to grab the railing and avoided falling.,Low,,0
+OIL-2026-0048,Near Miss,Wellhead Area,Production,A sudden pressure spike caused a flowline connection to rattle loose slightly during a well test; the crew shut in the well immediately.,High,,1
+OIL-2026-0049,Near Miss,Workover Rig,Well Services,"The traveling block's load line showed signs of slipping during a lift, but the operator halted the lift before the load could drop.",Critical,,1
+OIL-2026-0050,Near Miss,Confined Space - Vessel,Maintenance,A worker began confined space entry before atmospheric testing was complete; the standby attendant stopped him at the entry point in time.,Critical,,1
+OIL-2026-0051,Near Miss,Electrical Substation,Electrical,An arc flash was briefly observed while opening a breaker panel; the technician was wearing appropriate PPE and was unharmed.,Critical,,1
+OIL-2026-0052,Near Miss,Camp Area,Admin,A minor kitchen gas cylinder leak was detected by smell before ignition; staff evacuated the area and ventilated the kitchen.,Medium,,0
+OIL-2026-0053,Near Miss,Pipeline Right of Way,Pipeline,A third-party excavator struck the warning tape above a buried flowline but stopped before reaching the pipe itself.,Critical,,1
+OIL-2026-0054,Near Miss,Loading Bay,Logistics,"Static discharge caused a small spark during tanker loading, but the vapour concentration was below the flammable range at the time.",Critical,,1
+OIL-2026-0055,Near Miss,Rig Floor,Drilling,"A section of drill pipe swung unexpectedly while being racked, coming close to striking a roughneck who stepped back just in time.",High,,1
+OIL-2026-0056,Near Miss,Gas Plant,Gas Processing,An H2S alarm briefly triggered near the sweetening unit due to a transient reading; personnel evacuated as per procedure and no exposure occurred.,High,,1
+OIL-2026-0057,Near Miss,Crude Oil Jetty,Marine/Logistics,A mooring line snapped under tension during vessel berthing and whipped across the deck; no personnel were in the line's path at the time.,Critical,,1
+OIL-2026-0058,Near Miss,Workshop,Maintenance,A compressed air hose disconnected under pressure and whipped briefly before the technician shut off the supply valve.,Medium,,0
+OIL-2026-0059,Near Miss,Tank Farm,Production,A forklift nearly reversed into a stationary drum stack near the tank farm entrance; the operator noticed the spotter's signal in time.,Medium,,0
+OIL-2026-0060,Near Miss,Plant Road,Logistics,A pedestrian crossing near the security gate was nearly struck by a light vehicle that failed to stop at the marked crossing.,Medium,,0
+OIL-2026-0061,Unsafe Act,Workshop,Maintenance,"Fitter attempted to free a jammed tool from a running lathe without switching it off, resulting in a minor hand laceration.",Critical,Minor Injury,1
+OIL-2026-0062,Unsafe Condition,Rig Floor,Drilling,"Loose grating on the rig floor walkway gave way under a crew member's foot, causing a minor ankle sprain during shift change.",High,Minor Injury,1
+OIL-2026-0063,Near Miss,Loading Bay,Logistics,A pinch point between the tanker coupling and hose connector caught a worker's glove momentarily; the glove tore but the hand was withdrawn in time.,High,,1
+OIL-2026-0064,Unsafe Act,Camp Kitchen,Admin,"Staff member sliced their finger while using a knife without the designated cutting board, resulting in a small cut treated with first aid.",Low,Minor Injury,0
+OIL-2026-0065,Unsafe Condition,Warehouse,Materials,A worker twisted their ankle stepping into a small pothole in the warehouse floor that had gone unrepaired for several weeks.,Low,Minor Injury,0
+OIL-2026-0066,Unsafe Act,Workshop,Maintenance,Contractor wore high-visibility vest slightly unzipped while walking through the general admin area.,Low,,0
+OIL-2026-0067,Unsafe Act,Welding Bay,Maintenance,"Worker used a shortcut path between two low-risk storage sheds instead of the paved route, during daylight hours.",Medium,,0
+OIL-2026-0068,Near Miss,Tank Farm,Production,"A worker nearly walked into a clearly marked temporary barrier while looking at a clipboard, stopped just in time.",Medium,,0
+OIL-2026-0069,Near Miss,Crude Oil Jetty,Marine/Logistics,An employee almost sat on a chair with a slightly loose leg but noticed it before sitting and reported it.,Medium,,0
+OIL-2026-0070,Unsafe Condition,Gas Plant Walkway,Gas Processing,"A minor gap was observed in the perimeter hedge near the camp kitchen, gardening team notified.",Medium,,0
+OIL-2026-0071,Unsafe Act,Chemical Storage Shed,HSE,"Worker took a longer route around a puddle in the yard instead of the marked walkway, in a low-traffic zone.",Low,,0
+OIL-2026-0072,Near Miss,Flowline Right of Way,Pipeline,"A worker nearly dropped an empty crate while stacking in the warehouse but adjusted grip in time, no incident occurred.",Low,,0
+OIL-2026-0073,Unsafe Act,Rig Floor,Drilling,Staff member took a short break sitting on an unmarked bench near the canteen instead of the designated rest area.,Medium,,0
+OIL-2026-0074,Unsafe Condition,Loading Bay,Logistics,"A small puddle from routine washdown was observed in a low-traffic area of the workshop floor, drying naturally.",Low,,0
+OIL-2026-0075,Unsafe Condition,Camp Kitchen,Admin,"A first-aid kit in the warehouse was noted to have two items nearing expiry, replacement requested.",Low,,0
+OIL-2026-0076,Unsafe Condition,Tank Farm - Crude Storage,Production,"A signboard direction arrow near the workshop was slightly faded, repainting scheduled.",Medium,,0
+OIL-2026-0077,Near Miss,Electrical Substation,Electrical,"During routine housekeeping, a mop bucket was almost left in a walkway but was moved aside before anyone passed.",Low,,0
+OIL-2026-0078,Unsafe Condition,Camp Area,Admin,"A ceiling tile in the admin office showed minor water staining from an old, already-repaired leak.",Low,,0
+OIL-2026-0079,Unsafe Act,Pump House,Production,"Operator filled out the daily log a few minutes late after shift handover, causing minor delay in records update.",Medium,,0
+OIL-2026-0080,Unsafe Act,Warehouse,Materials,"Staff member took a phone call while walking through the admin corridor, slightly distracted but away from moving equipment.",Low,,0
+OIL-2026-0081,Unsafe Act,Gas Compressor Station,Gas Processing,Technician wore safety shoes with slightly worn soles that were due for replacement next week per schedule.,Low,,0
+OIL-2026-0082,Unsafe Condition,Pipeline Right of Way,Pipeline,"A section of boundary fencing in the camp area showed minor rust, flagged for routine maintenance.",Medium,,0
+OIL-2026-0083,Unsafe Condition,Plant Road,Logistics,"A spare parts shelf label in the warehouse had faded text, relabeling scheduled during stock check.",Low,,0
+OIL-2026-0084,Unsafe Condition,Confined Space - Vessel,Maintenance,"A small crack was seen on a non-structural office window pane, replacement scheduled during next maintenance window.",Low,,0
+OIL-2026-0085,Unsafe Condition,Office Building,Admin,"A washroom tap in the office building had a slow drip, plumbing team informed for routine fix.",Medium,,0
+OIL-2026-0086,Unsafe Act,Wellhead Area,Production,Worker left a small tool bag unattended near the walkway for a few minutes while fetching supplies.,Medium,,0
+OIL-2026-0087,Unsafe Condition,Drilling Rig - Rig Floor,Drilling,"A parking area speed bump had slightly faded paint markings, repainting added to routine schedule.",Medium,,0
+OIL-2026-0088,Near Miss,Workover Rig,Well Services,"During shift change, a worker almost left a drawer open in a low-traffic office area but closed it upon leaving.",Medium,,0
+OIL-2026-0089,Unsafe Condition,Gas Plant,Gas Processing,"A notice board glass cover in the corridor had a minor scratch, cosmetic issue only.",Medium,,0
+OIL-2026-0090,Unsafe Act,Workshop,Maintenance,Staff member left a chair pulled out slightly into a walkway in the office for a short period.,Low,,0
+OIL-2026-0091,Unsafe Act,Welding Bay,Maintenance,Employee used a slightly faster typing posture at the desk without adjusting the chair height first.,Medium,,0
+OIL-2026-0092,Unsafe Act,Tank Farm,Production,"Worker used the stairs instead of the lift during a fire drill, though the lift was also functional and permitted.",Medium,,0
+OIL-2026-0093,Unsafe Act,Crude Oil Jetty,Marine/Logistics,Contractor's helmet strap was slightly loose while walking through a low-risk section of the yard.,Low,,0
+OIL-2026-0094,Unsafe Condition,Gas Plant Walkway,Gas Processing,"One light fixture in the office corridor was flickering intermittently, work order raised for replacement.",Low,,0
+OIL-2026-0095,Near Miss,Chemical Storage Shed,HSE,"A worker almost set down a light tool on a slightly uneven surface but repositioned it after a second look, no drop occurred.",Low,,0
+OIL-2026-0096,Near Miss,Flowline Right of Way,Pipeline,"An employee nearly missed a step on a well-lit staircase due to a brief distraction but recovered balance immediately, no fall occurred.",Low,,0
+OIL-2026-0097,Unsafe Condition,Rig Floor,Drilling,"A garden hose near the camp area was coiled slightly untidily, housekeeping note raised.",Medium,,0
+OIL-2026-0098,Unsafe Condition,Loading Bay,Logistics,"A low-use storage cabinet door hinge in the office was slightly squeaky, lubrication scheduled.",Low,,0
+OIL-2026-0099,Unsafe Act,Camp Kitchen,Admin,"Employee ate a snack at the workstation in the office area, against the general housekeeping guideline.",Medium,,0
+OIL-2026-0100,Unsafe Condition,Tank Farm - Crude Storage,Production,"A drinking water dispenser in the break room was making a slightly unusual noise, technician informed.",Low,,0
+OIL-2026-0101,Unsafe Act,Electrical Substation,Electrical,"Staff member used a personal phone briefly while walking between office buildings, not near any operating equipment.",Medium,,0
+OIL-2026-0102,Unsafe Act,Camp Area,Admin,Employee stacked light empty cartons slightly higher than the recommended two-layer limit in the warehouse.,Medium,,0
+OIL-2026-0103,Unsafe Condition,Pump House,Production,"A shaded walkway canopy had a small tear, patch repair scheduled with facilities.",Low,,0
+OIL-2026-0104,Unsafe Act,Warehouse,Materials,Worker briefly leaned against a designated non-load-bearing railing while chatting during a break.,Medium,,0
+OIL-2026-0105,Unsafe Condition,Gas Compressor Station,Gas Processing,"A minor gap in floor tile grouting was observed in the canteen, maintenance ticket logged.",Low,,0
+OIL-2026-0106,Unsafe Condition,Pipeline Right of Way,Pipeline,"A minor paint chip was noticed on a designated walkway marking in the parking area, scheduled for repainting.",Low,,0
+OIL-2026-0107,Unsafe Act,Plant Road,Logistics,Worker propped a door open with a small stone instead of using the designated door stop in a low-traffic corridor.,Low,,0
+OIL-2026-0108,Unsafe Act,Confined Space - Vessel,Maintenance,Contractor parked a vehicle a few feet outside the marked bay in the admin parking area.,Medium,,0
+OIL-2026-0109,Near Miss,Office Building,Admin,A technician almost mislabeled a low-risk sample but caught the error during self-check before submission.,Medium,,0
+OIL-2026-0110,Unsafe Act,Wellhead Area,Production,"Staff member left office lights on during a short break, contrary to energy-saving guidance.",Medium,,0
+OIL-2026-0111,Unsafe Act,Drilling Rig - Rig Floor,Drilling,Worker carried a light cardboard box using one hand while holding a handrail with the other on a low staircase.,Low,,0
+OIL-2026-0112,Near Miss,Workover Rig,Well Services,A staff member almost tripped over a low doorstop in a rarely used corridor but stepped over it after noticing.,Low,,0
+OIL-2026-0113,Unsafe Act,Gas Plant,Gas Processing,Employee left a coffee cup on the edge of a desk near the office pantry area.,Medium,,0
+OIL-2026-0114,Unsafe Condition,Workshop,Maintenance,"A noticeboard in the admin building had a loose corner, minor repair noted for facilities team.",Medium,,0
+OIL-2026-0115,Near Miss,Welding Bay,Maintenance,"During a routine walk-around, a supervisor noticed loose gravel on a low-traffic path and had it cleared before anyone passed.",Low,,0
+OIL-2026-0116,Unsafe Act,Tank Farm,Production,"Technician labeled a sample container slightly off from the standard format, corrected upon review.",Medium,,0
+OIL-2026-0117,Near Miss,Crude Oil Jetty,Marine/Logistics,A staff member reached for a light box on a shelf and briefly wobbled but regained grip without dropping it.,Low,,0
+OIL-2026-0118,Unsafe Act,Gas Plant Walkway,Gas Processing,"Employee walked past the designated crossing point to save time, taking a slightly longer but low-traffic route through the yard.",Low,,0
+OIL-2026-0119,Near Miss,Chemical Storage Shed,HSE,A driver approaching the admin gate slowed slightly late for the speed bump but braked comfortably in time.,Low,,0
+OIL-2026-0120,Unsafe Act,Flowline Right of Way,Pipeline,"Technician noted a minor discrepancy in a routine inventory count, resolved after recount.",Low,,0
+OIL-2026-0121,Unsafe Condition,Rig Floor,Drilling,"A spare tire storage rack in the workshop had one loose bolt, tightened during routine inspection.",Low,,0

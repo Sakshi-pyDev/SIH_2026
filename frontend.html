@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SIH26165 - SIF Precursor Detection</title>
+<style>
+  :root {
+    --bg: #0f172a; --panel: #1e293b; --accent: #f97316; --accent2: #22c55e;
+    --danger: #ef4444; --text: #e2e8f0; --muted: #94a3b8; --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); }
+  header { background: var(--panel); padding: 16px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+  header h1 { font-size: 18px; margin:0; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .container { max-width: 900px; margin: 30px auto; padding: 0 16px; }
+  .card { background: var(--panel); border:1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+  input, select, textarea, button { width:100%; padding: 10px; margin: 6px 0 14px; border-radius: 6px; border:1px solid var(--border); background:#0f172a; color: var(--text); font-size:14px; }
+  textarea { min-height: 90px; resize: vertical; }
+  label { font-size: 13px; color: var(--muted); }
+  button { cursor:pointer; background: var(--accent); color:#0f172a; font-weight:600; border:none; transition: opacity .2s; }
+  button:hover { opacity:0.85; }
+  button.secondary { background: transparent; border:1px solid var(--border); color: var(--text); }
+  .tabs { display:flex; gap:8px; margin-bottom:20px; }
+  .tabs button { width:auto; padding:8px 16px; background:transparent; border:1px solid var(--border); color:var(--muted); }
+  .tabs button.active { background: var(--accent); color:#0f172a; border-color:var(--accent); }
+  table { width:100%; border-collapse: collapse; font-size:13px; }
+  th, td { text-align:left; padding:10px; border-bottom:1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight:600; }
+  .badge { padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+  .badge.high { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .badge.low { background: rgba(34,197,94,0.15); color: var(--accent2); }
+  .factors { font-size:11px; color: var(--muted); margin-top:4px; }
+  .factor-chip { display:inline-block; background:#0f172a; border:1px solid var(--border); border-radius:4px; padding:2px 6px; margin:2px 2px 0 0; }
+  .error { color: var(--danger); font-size:13px; margin-top:-8px; margin-bottom:10px; }
+  .hidden { display:none !important; }
+  .result-box { margin-top: 16px; padding:16px; border-radius:8px; border:1px solid var(--border); }
+  .userbar { display:flex; align-items:center; gap:12px; font-size:13px; color: var(--muted); }
+  .role-pill { background:#0f172a; border:1px solid var(--border); padding:3px 10px; border-radius:10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🛢️ SIF Precursor Detection Platform</h1>
+    <div class="sub">SIH26165 - Oil India Limited</div>
+  </div>
+  <div id="userbar" class="userbar hidden">
+    <span class="role-pill" id="roleLabel"></span>
+    <span id="usernameLabel"></span>
+    <button class="secondary" style="width:auto;padding:6px 14px;" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- LOGIN / REGISTER -->
+  <div id="authSection" class="card">
+    <div class="tabs">
+      <button id="loginTab" class="active" onclick="showAuthTab('login')">Login</button>
+      <button id="registerTab" onclick="showAuthTab('register')">Register</button>
+    </div>
+
+    <div id="loginForm">
+      <label>Username</label>
+      <input id="loginUsername" placeholder="e.g. worker1">
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="password">
+      <div class="error hidden" id="loginError"></div>
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div id="registerForm" class="hidden">
+      <label>Username</label>
+      <input id="regUsername" placeholder="choose a username">
+      <label>Password</label>
+      <input id="regPassword" type="password" placeholder="choose a password">
+      <label>Role</label>
+      <select id="regRole">
+        <option value="field_worker">Field Worker</option>
+        <option value="safety_officer">Safety Officer</option>
+        <option value="admin">Admin</option>
+      </select>
+      <div class="error hidden" id="regError"></div>
+      <button onclick="register()">Create Account</button>
+    </div>
+  </div>
+
+  <!-- SUBMIT REPORT (everyone) -->
+  <div id="submitSection" class="card hidden">
+    <h3>📝 Submit Safety Report</h3>
+    <label>Report Type</label>
+    <select id="repType">
+      <option>Unsafe Act</option>
+      <option>Unsafe Condition</option>
+      <option>Near Miss</option>
+    </select>
+    <label>Location</label>
+    <input id="repLocation" placeholder="e.g. Rig Floor, Tank Farm">
+    <label>Department</label>
+    <input id="repDept" placeholder="e.g. Drilling, Production, HSE">
+    <label>Report Description</label>
+    <textarea id="repText" placeholder="Describe the unsafe act / condition / near-miss in detail..."></textarea>
+    <button onclick="submitReport()">Analyze & Submit</button>
+    <div id="predictResult" class="hidden"></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardSection" class="card hidden">
+    <h3 id="dashboardTitle">📊 Reports Dashboard</h3>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Location / Dept</th><th>Text</th><th>Prediction</th><th>By</th></tr>
+      </thead>
+      <tbody id="reportsTableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+let token = null;
+let role = null;
+let username = null;
+
+function showAuthTab(tab) {
+  document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+  document.getElementById('registerTab').classList.toggle('active', tab === 'register');
+  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+}
+
+async function register() {
+  const errEl = document.getElementById('regError');
+  errEl.classList.add('hidden');
+  const body = {
+    username: document.getElementById('regUsername').value,
+    password: document.getElementById('regPassword').value,
+    role: document.getElementById('regRole').value,
+  };
+  try {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Registration failed");
+    onAuthSuccess(data.access_token, data.role, body.username);
+  } catch (e) {
+    errEl.textContent = e.message; errEl.classList.remove('hidden');
+  }
+}
+
+async function login() {
+  const errEl = document.getElementById('loginError');
+  errEl.classList.add('hidden');
+  const uname = document.getElementById('loginUsername').value;
+  const pwd = document.getElementById('loginPassword').value;
+  try {
+    const form = new URLSearchParams();
+    form.append("username", uname);
+    form.append("password", pwd);
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST", headers: {"Content-Type":"application/x-www-form-urlencoded"}, body: form
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Login failed");
+    onAuthSuccess(data.access_token, data.role, uname);
+  } catch (e) {
+    errEl.textContent = e.message; errEl.classList.remove('hidden');
+  }
+}
+
+function onAuthSuccess(tok, r, uname) {
+  token = tok; role = r; username = uname;
+  document.getElementById('authSection').classList.add('hidden');
+  // Only field workers submit reports from the ground. Safety Officers /
+  // Admins only monitor the dashboard - their job is oversight, not filing.
+  if (role === 'field_worker') {
+    document.getElementById('submitSection').classList.remove('hidden');
+  }
+  document.getElementById('userbar').classList.remove('hidden');
+  document.getElementById('roleLabel').textContent = role.replace('_',' ').toUpperCase();
+  document.getElementById('usernameLabel').textContent = username;
+
+  document.getElementById('dashboardSection').classList.remove('hidden');
+  document.getElementById('dashboardTitle').textContent =
+    role === 'field_worker' ? '📋 My Submitted Reports' : '📊 All Reports Dashboard';
+  loadReports();
+}
+
+function logout() {
+  token = null; role = null; username = null;
+  document.getElementById('authSection').classList.remove('hidden');
+  document.getElementById('submitSection').classList.add('hidden');
+  document.getElementById('dashboardSection').classList.add('hidden');
+  document.getElementById('userbar').classList.add('hidden');
+}
+
+async function submitReport() {
+  const body = {
+    report_type: document.getElementById('repType').value,
+    location: document.getElementById('repLocation').value,
+    department: document.getElementById('repDept').value,
+    report_text: document.getElementById('repText').value,
+  };
+  const res = await fetch(`${API_BASE}/reports`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json", "Authorization": `Bearer ${token}`},
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (!res.ok) { alert(data.detail || "Submission failed"); return; }
+
+  const resultEl = document.getElementById('predictResult');
+  resultEl.classList.remove('hidden');
+  const isHigh = data.predicted_label === 1;
+  const factors = JSON.parse(data.top_factors || "[]");
+  resultEl.innerHTML = `
+    <div class="result-box" style="border-color:${isHigh ? '#ef4444' : '#22c55e'}">
+      <strong>${isHigh ? '⚠️ SIF PRECURSOR DETECTED' : '✅ Low Risk'}</strong>
+      &nbsp; (confidence: ${(data.predicted_probability*100).toFixed(1)}%)
+      <div class="factors">Top contributing factors:
+        ${factors.map(f => `<span class="factor-chip">${f.feature.replace('flag_','').replace('count_','').replace('tfidf_','word: ')} (${f.impact>0?'+':''}${f.impact})</span>`).join('')}
+      </div>
+    </div>`;
+
+  document.getElementById('repText').value = "";
+  loadReports();
+}
+
+async function loadReports() {
+  const res = await fetch(`${API_BASE}/reports`, { headers: {"Authorization": `Bearer ${token}`} });
+  const data = await res.json();
+  const tbody = document.getElementById('reportsTableBody');
+  if (!res.ok) { tbody.innerHTML = `<tr><td colspan="5">Failed to load reports</td></tr>`; return; }
+
+  tbody.innerHTML = data.map(r => {
+    const isHigh = r.predicted_label === 1;
+    const factors = JSON.parse(r.top_factors || "[]").slice(0,3);
+    return `<tr>
+      <td>${r.report_type}</td>
+      <td>${r.location}<br><span style="color:var(--muted)">${r.department}</span></td>
+      <td style="max-width:260px">${r.report_text}</td>
+      <td>
+        <span class="badge ${isHigh ? 'high' : 'low'}">${isHigh ? 'SIF RISK' : 'LOW RISK'}</span>
+        <div class="factors">${(r.predicted_probability*100).toFixed(1)}% &middot;
+          ${factors.map(f => `<span class="factor-chip">${f.feature.replace('flag_','').replace('count_','').replace('tfidf_','')}</span>`).join('')}
+        </div>
+      </td>
+      <td>${r.submitted_by_username || '-'}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
