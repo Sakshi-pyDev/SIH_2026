@@ -1,130 +1,2344 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<title>SIH26165 - SIF Precursor Detection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>SIF Precursor Intelligence — Oil India Limited · SIH 2026</title>
+<meta name="description" content="AI Operating Layer for Serious Injury and Fatality (SIF) Precursor Identification in Oil & Gas Operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg: #0f172a; --panel: #1e293b; --accent: #f97316; --accent2: #22c55e;
-    --danger: #ef4444; --text: #e2e8f0; --muted: #94a3b8; --border: #334155;
+/* ===================================================
+   COLOR PALETTE TOKENS (#3368A0, #66A3BF, #C8DFDB, #F2EFE7)
+=================================================== */
+:root, [data-theme="light"] {
+  --navy: #3368A0;
+  --navy-dark: #244e78;
+  --sky: #66A3BF;
+  --mint: #C8DFDB;
+  --cream: #F2EFE7;
+  
+  --bg-app: #F2EFE7;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #f7f5ef;
+  --bg-overlay: rgba(24, 40, 56, 0.6);
+  --bg-panel: #ffffff;
+  --bg-pill: rgba(51, 104, 160, 0.08);
+  --bg-input: #ffffff;
+
+  --text-primary: #152536;
+  --text-secondary: #486278;
+  --text-muted: #728b9e;
+  --text-inverse: #ffffff;
+
+  --border-color: #d4e0dd;
+  --border-subtle: rgba(51, 104, 160, 0.12);
+
+  --shadow-sm: 0 2px 8px rgba(51, 104, 160, 0.08);
+  --shadow-md: 0 10px 30px rgba(51, 104, 160, 0.14);
+  --shadow-lg: 0 20px 60px rgba(51, 104, 160, 0.22);
+  --glow: 0 0 24px rgba(102, 163, 191, 0.35);
+
+  --danger: #c0392b;
+  --danger-bg: rgba(192, 57, 43, 0.10);
+  --ok: #237b58;
+  --ok-bg: rgba(35, 123, 88, 0.10);
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+  --trans: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* DARK THEME - WITH LIGHT TEXT FROM USER PALETTE */
+[data-theme="dark"] {
+  --navy: #66A3BF;
+  --navy-dark: #3368A0;
+  --sky: #C8DFDB;
+  --mint: #223c52;
+  --cream: #101a26;
+
+  --bg-app: #0c1520;
+  --bg-card: #142232;
+  --bg-card-subtle: #19293d;
+  --bg-overlay: rgba(5, 10, 16, 0.78);
+  --bg-panel: #142232;
+  --bg-pill: rgba(200, 223, 219, 0.14);
+  --bg-input: #0f1a26;
+
+  /* Explicit light text from palette */
+  --text-primary: #F2EFE7;
+  --text-secondary: #C8DFDB;
+  --text-muted: #8baec1;
+  --text-inverse: #0c1520;
+
+  --border-color: rgba(200, 223, 219, 0.18);
+  --border-subtle: rgba(200, 223, 219, 0.08);
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 36px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 20px 70px rgba(0, 0, 0, 0.75);
+  --glow: 0 0 28px rgba(102, 163, 191, 0.28);
+
+  --danger: #ff7566;
+  --danger-bg: rgba(255, 117, 102, 0.16);
+  --ok: #4fd19b;
+  --ok-bg: rgba(79, 209, 155, 0.16);
+}
+
+/* ===================================================
+   BASE & SCREEN-FITTED VIEWPORT SETUP
+=================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* STRICTLY SCREEN FITTED - NO SCROLLBAR */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-app);
+  transition: background-color var(--trans), color var(--trans);
+}
+
+.app-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* TYPOGRAPHY */
+h1, h2, h3, .serif-font {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.mono-font {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideRight { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+@keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: 0.7; } }
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.6); }
+  70% { box-shadow: 0 0 0 9px rgba(192, 57, 43, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+}
+
+/* ===================================================
+   STICKY NAVBAR / HEADER
+=================================================== */
+header.app-header {
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-app);
+  z-index: 100;
+  transition: background-color var(--trans), border-color var(--trans);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.brand-logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #3368A0, #66A3BF);
+  color: #F2EFE7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(51, 104, 160, 0.28);
+  flex-shrink: 0;
+}
+.brand-title-group {
+  display: flex;
+  flex-direction: column;
+}
+.brand-name {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+.brand-subtitle {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Header Right Utilities */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Multi-language Selector */
+.lang-selector-wrap {
+  position: relative;
+}
+.lang-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--trans);
+}
+.lang-btn:hover {
+  border-color: var(--navy);
+  background: var(--bg-pill);
+}
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 190px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: none;
+  flex-direction: column;
+  padding: 6px 0;
+  z-index: 1000;
+  animation: fadeUp 0.2s ease both;
+}
+.lang-menu.show { display: flex; }
+.lang-item {
+  padding: 8px 16px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background var(--trans);
+}
+.lang-item:hover {
+  background: var(--bg-pill);
+  color: var(--navy);
+}
+.lang-item.active {
+  font-weight: 700;
+  color: var(--navy);
+  background: var(--bg-pill);
+}
+
+/* Theme Toggle */
+.theme-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all var(--trans);
+}
+.theme-btn:hover {
+  border-color: var(--navy);
+  color: var(--text-primary);
+}
+.theme-track {
+  width: 30px;
+  height: 16px;
+  border-radius: 12px;
+  background: var(--border-color);
+  position: relative;
+  transition: background var(--trans);
+}
+.theme-dot {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform var(--trans);
+}
+[data-theme="dark"] .theme-track { background: var(--navy); }
+[data-theme="dark"] .theme-dot { transform: translateX(14px); }
+
+/* Launch Portal CTA button */
+.btn-cta-launch {
+  background: var(--navy);
+  color: #ffffff;
+  border: none;
+  padding: 7px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--trans);
+}
+.btn-cta-launch:hover {
+  background: var(--navy-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(51, 104, 160, 0.3);
+}
+
+/* User Badge when authenticated */
+.header-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border-color);
+}
+.user-role-pill {
+  background: var(--navy);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+.user-name-lbl {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.btn-signout {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.btn-signout:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ===================================================
+   SCREEN-FITTED HERO CONTAINER (SPLIT SCREEN)
+=================================================== */
+main.screen-fitted-main {
+  flex: 1;
+  min-height: 0; /* Prevents overflow */
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  padding: 24px 32px 18px;
+  gap: 32px;
+  overflow: hidden;
+}
+
+/* LEFT COLUMN: EDITORIAL CONTENT */
+.editorial-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  overflow-y: auto; /* Graceful scroll if tiny screen */
+  padding-right: 12px;
+  animation: slideRight 0.6s ease both;
+}
+.editorial-col::-webkit-scrollbar { width: 4px; }
+.editorial-col::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+.project-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-pill);
+  border: 1px solid var(--border-subtle);
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  width: fit-content;
+}
+.pill-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sky);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.main-title {
+  font-size: clamp(28px, 3.4vw, 46px);
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+.main-title em {
+  font-style: italic;
+  color: var(--navy);
+}
+
+.main-desc {
+  font-size: clamp(13px, 1.05vw, 15px);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 22px;
+  max-width: 580px;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.btn-primary-action {
+  background: var(--navy);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(51, 104, 160, 0.25);
+  transition: all var(--trans);
+}
+.btn-primary-action:hover {
+  background: var(--navy-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(51, 104, 160, 0.35);
+}
+.btn-secondary-action {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--trans);
+}
+.btn-secondary-action:hover {
+  border-color: var(--navy);
+  background: var(--bg-pill);
+  transform: translateY(-2px);
+}
+
+/* Feature Metric Badges Grid (Axelrod Mini-Tiles) */
+.metric-tiles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  max-width: 540px;
+}
+.metric-tile {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--trans);
+}
+.metric-tile:hover {
+  transform: translateY(-2px);
+  border-color: var(--navy);
+}
+.tile-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.tile-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.tile-caption {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+/* RIGHT COLUMN: SCREEN-FITTED IMAGE CAROUSEL */
+.carousel-col {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  animation: scaleIn 0.6s ease both;
+}
+
+.carousel-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-slide-item {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: scale(1.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.carousel-slide-item.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+/* High-res Photo Background */
+.slide-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Gradient Scrim for crisp readability */
+.slide-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 18, 28, 0.15) 0%,
+    rgba(10, 18, 28, 0.45) 45%,
+    rgba(10, 18, 28, 0.92) 100%
+  );
+  z-index: 1;
+}
+
+/* Slide Info Card Overlay */
+.slide-caption-box {
+  position: relative;
+  z-index: 2;
+  padding: 24px 28px 20px;
+  color: #ffffff;
+}
+.slide-category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(102, 163, 191, 0.25);
+  border: 1px solid rgba(200, 223, 219, 0.4);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C8DFDB;
+  margin-bottom: 8px;
+}
+.slide-heading {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(20px, 1.8vw, 28px);
+  line-height: 1.2;
+  margin-bottom: 6px;
+  color: #F2EFE7;
+}
+.slide-sub {
+  font-size: 12.5px;
+  color: #d8e5ec;
+  line-height: 1.45;
+  margin-bottom: 12px;
+  max-width: 520px;
+}
+
+/* Slide HUD Chip Badges */
+.slide-hud-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.hud-chip {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: #C8DFDB;
+}
+.hud-chip.alert-high {
+  border-color: rgba(255, 117, 102, 0.6);
+  color: #ff8c7d;
+  background: rgba(192, 57, 43, 0.35);
+}
+
+/* Carousel Control Footer Bar */
+.carousel-footer-bar {
+  height: 52px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.carousel-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.carousel-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--trans);
+  font-size: 13px;
+}
+.carousel-nav-btn:hover {
+  background: var(--navy);
+  color: #ffffff;
+  border-color: var(--navy);
+}
+
+.carousel-indicators-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.carousel-bar-dot {
+  width: 8px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-color);
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.carousel-bar-dot.active {
+  width: 26px;
+  background: var(--navy);
+}
+
+.slide-counter-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+/* ===================================================
+   BOTTOM STATUS STRIP (AXELROD FOOTER STRIP)
+=================================================== */
+footer.app-status-bar {
+  height: 38px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-app);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.status-green-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: pulseDot 2s infinite;
+}
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.footer-link-action {
+  color: var(--navy);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+.footer-link-action:hover {
+  text-decoration: underline;
+}
+
+/* ===================================================
+   AXELROD-STYLE SLIDE-OVER OVERLAY (PORTAL & DASHBOARD)
+=================================================== */
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  display: flex;
+  justify-content: flex-end;
+}
+.overlay-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.slide-over-panel {
+  width: 100%;
+  max-width: 640px;
+  height: 100%;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.overlay-backdrop.open .slide-over-panel {
+  transform: translateX(0);
+}
+
+.panel-header {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.panel-title-area {
+  display: flex;
+  flex-direction: column;
+}
+.panel-headline {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+.panel-subline {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.btn-close-overlay {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-pill);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.btn-close-overlay:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.panel-body-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+}
+
+/* TABS IN OVERLAY */
+.tab-row {
+  display: flex;
+  margin-bottom: 24px;
+  border-bottom: 1.5px solid var(--border-color);
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  padding: 8px 0;
+  margin-right: 28px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.tab-btn.active {
+  color: var(--navy);
+  border-bottom-color: var(--navy);
+}
+
+/* FORMS */
+.f-group {
+  margin-bottom: 18px;
+}
+.f-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.login-type-switch {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.login-type-btn {
+  flex: 1;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 7px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.login-type-btn.active {
+  background: var(--bg-pill);
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
+.phone-input-row {
+  display: flex;
+  gap: 8px;
+}
+.phone-prefix {
+  width: 72px !important;
+  text-align: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all var(--trans);
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(102, 163, 191, 0.22);
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2366A3BF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.f-error {
+  font-size: 12px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  display: none;
+}
+.f-error.show { display: block; }
+.f-hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.btn-primary-form {
+  width: 100%;
+  background: var(--navy);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--trans);
+}
+.btn-primary-form:hover {
+  background: var(--navy-dark);
+}
+.btn-primary-form:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* DASHBOARD STATS ROW */
+.stats-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.stat-card-box {
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 16px 12px;
+  text-align: center;
+}
+.stat-card-num {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 26px;
+  color: var(--navy);
+  line-height: 1;
+}
+.stat-card-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* DASHBOARD TABLE */
+.dash-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card-subtle);
+}
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+  color: var(--text-primary);
+}
+tr:last-child td { border-bottom: none; }
+
+.badge-risk {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.badge-risk.high { background: var(--danger-bg); color: var(--danger); }
+.badge-risk.high .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--danger); animation: pulseRing 2s infinite; }
+.badge-risk.low { background: var(--ok-bg); color: var(--ok); }
+.badge-risk.low .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); }
+
+.chip-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  background: var(--mint);
+  color: #122536;
+  border-radius: 12px;
+  padding: 2px 7px;
+  font-weight: 600;
+}
+
+.empty-row {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.hidden { display: none !important; }
+
+/* RESPONSIVE FOR TABLET / LAPTOP */
+@media (max-width: 1024px) {
+  main.screen-fitted-main {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
   }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); }
-  header { background: var(--panel); padding: 16px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
-  header h1 { font-size: 18px; margin:0; }
-  header .sub { color: var(--muted); font-size: 12px; }
-  .container { max-width: 900px; margin: 30px auto; padding: 0 16px; }
-  .card { background: var(--panel); border:1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
-  input, select, textarea, button { width:100%; padding: 10px; margin: 6px 0 14px; border-radius: 6px; border:1px solid var(--border); background:#0f172a; color: var(--text); font-size:14px; }
-  textarea { min-height: 90px; resize: vertical; }
-  label { font-size: 13px; color: var(--muted); }
-  button { cursor:pointer; background: var(--accent); color:#0f172a; font-weight:600; border:none; transition: opacity .2s; }
-  button:hover { opacity:0.85; }
-  button.secondary { background: transparent; border:1px solid var(--border); color: var(--text); }
-  .tabs { display:flex; gap:8px; margin-bottom:20px; }
-  .tabs button { width:auto; padding:8px 16px; background:transparent; border:1px solid var(--border); color:var(--muted); }
-  .tabs button.active { background: var(--accent); color:#0f172a; border-color:var(--accent); }
-  table { width:100%; border-collapse: collapse; font-size:13px; }
-  th, td { text-align:left; padding:10px; border-bottom:1px solid var(--border); vertical-align: top; }
-  th { color: var(--muted); font-weight:600; }
-  .badge { padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700; }
-  .badge.high { background: rgba(239,68,68,0.15); color: var(--danger); }
-  .badge.low { background: rgba(34,197,94,0.15); color: var(--accent2); }
-  .factors { font-size:11px; color: var(--muted); margin-top:4px; }
-  .factor-chip { display:inline-block; background:#0f172a; border:1px solid var(--border); border-radius:4px; padding:2px 6px; margin:2px 2px 0 0; }
-  .error { color: var(--danger); font-size:13px; margin-top:-8px; margin-bottom:10px; }
-  .hidden { display:none !important; }
-  .result-box { margin-top: 16px; padding:16px; border-radius:8px; border:1px solid var(--border); }
-  .userbar { display:flex; align-items:center; gap:12px; font-size:13px; color: var(--muted); }
-  .role-pill { background:#0f172a; border:1px solid var(--border); padding:3px 10px; border-radius:10px; }
+  html, body {
+    overflow-y: auto;
+  }
+  .carousel-col {
+    min-height: 400px;
+  }
+}
+@media (max-width: 640px) {
+  header.app-header { padding: 0 16px; }
+  main.screen-fitted-main { padding: 16px; }
+  .metric-tiles-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>🛢️ SIF Precursor Detection Platform</h1>
-    <div class="sub">SIH26165 - Oil India Limited</div>
-  </div>
-  <div id="userbar" class="userbar hidden">
-    <span class="role-pill" id="roleLabel"></span>
-    <span id="usernameLabel"></span>
-    <button class="secondary" style="width:auto;padding:6px 14px;" onclick="logout()">Logout</button>
-  </div>
-</header>
+<div class="app-wrapper">
 
-<div class="container">
-
-  <!-- LOGIN / REGISTER -->
-  <div id="authSection" class="card">
-    <div class="tabs">
-      <button id="loginTab" class="active" onclick="showAuthTab('login')">Login</button>
-      <button id="registerTab" onclick="showAuthTab('register')">Register</button>
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-wrap" onclick="openOverlay(false)">
+        <div class="brand-logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-title-group">
+          <span class="brand-name">SIF Intelligence</span>
+          <span class="brand-subtitle" data-i18n="hdr_sub">Oil India Limited · SIH 2026</span>
+        </div>
+      </div>
     </div>
 
-    <div id="loginForm">
-      <label>Username</label>
-      <input id="loginUsername" placeholder="e.g. worker1">
-      <label>Password</label>
-      <input id="loginPassword" type="password" placeholder="password">
-      <div class="error hidden" id="loginError"></div>
-      <button onclick="login()">Login</button>
+    <div class="header-right">
+      <!-- ALL LANGUAGES DROPDOWN -->
+      <div class="lang-selector-wrap">
+        <button class="lang-btn" onclick="toggleLangMenu(event)" id="langDropdownBtn">
+          <span>🌐</span>
+          <span id="currentLangLabel">English</span>
+          <span style="font-size: 9px;">▼</span>
+        </button>
+        <div class="lang-menu" id="langMenu">
+          <div class="lang-item active" onclick="setLanguage('en')">🇬🇧 English</div>
+          <div class="lang-item" onclick="setLanguage('hi')">🇮🇳 हिन्दी (Hindi)</div>
+          <div class="lang-item" onclick="setLanguage('as')">🇮🇳 অসমীয়া (Assamese)</div>
+          <div class="lang-item" onclick="setLanguage('bn')">🇮🇳 বাংলা (Bengali)</div>
+          <div class="lang-item" onclick="setLanguage('gu')">🇮🇳 ગુજરાતી (Gujarati)</div>
+          <div class="lang-item" onclick="setLanguage('mr')">🇮🇳 मराठी (Marathi)</div>
+          <div class="lang-item" onclick="setLanguage('ta')">🇮🇳 தமிழ் (Tamil)</div>
+          <div class="lang-item" onclick="setLanguage('te')">🇮🇳 తెలుగు (Telugu)</div>
+          <div class="lang-item" onclick="setLanguage('es')">🇪🇸 Español</div>
+          <div class="lang-item" onclick="setLanguage('fr')">🇫🇷 Français</div>
+          <div class="lang-item" onclick="setLanguage('ar')">🇸🇦 العربية</div>
+        </div>
+      </div>
+
+      <!-- THEME TOGGLE -->
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">
+        <span id="themeIcon">☀️</span>
+        <div class="theme-track"><div class="theme-dot"></div></div>
+      </button>
+
+      <!-- AUTH / LAUNCH CTA -->
+      <div id="headerAuthBtn">
+        <button class="btn-cta-launch" onclick="openOverlay(true, 'login')">
+          <span data-i18n="btn_portal">Safety Portal</span> &rarr;
+        </button>
+      </div>
+
+      <!-- AUTH USERBAR (WHEN LOGGED IN) -->
+      <div id="headerUserBar" class="header-user-badge hidden">
+        <span class="user-role-pill" id="userRoleBadge">WORKER</span>
+        <span class="user-name-lbl" id="userNameBadge">worker1</span>
+        <button class="btn-signout" onclick="logout()" data-i18n="btn_signout">Sign Out</button>
+      </div>
     </div>
+  </header>
 
-    <div id="registerForm" class="hidden">
-      <label>Username</label>
-      <input id="regUsername" placeholder="choose a username">
-      <label>Password</label>
-      <input id="regPassword" type="password" placeholder="choose a password">
-      <label>Role</label>
-      <select id="regRole">
-        <option value="field_worker">Field Worker</option>
-        <option value="safety_officer">Safety Officer</option>
-        <option value="admin">Admin</option>
-      </select>
-      <div class="error hidden" id="regError"></div>
-      <button onclick="register()">Create Account</button>
+  <!-- SCREEN-FITTED MAIN BODY (NO SCROLL ON DESKTOP) -->
+  <main class="screen-fitted-main">
+
+    <!-- LEFT COLUMN: EDITORIAL CONTENT -->
+    <section class="editorial-col">
+      <div class="project-pill">
+        <div class="pill-live-dot"></div>
+        <span data-i18n="pill_text">Oil India Limited · SIH 2026 Innovation</span>
+      </div>
+
+      <h1 class="main-title" data-i18n="hero_title">
+        Predict Latent Hazards Before They Become <em>Fatalities.</em>
+      </h1>
+
+      <p class="main-desc" data-i18n="hero_desc">
+        An enterprise AI operating layer designed for upstream drilling rigs, production facilities, and transport pipelines. Isolating Serious Injury &amp; Fatality (SIF) precursors from raw safety logs with real-time NLP and transparent SHAP root-cause explainability.
+      </p>
+
+      <div class="action-row">
+        <button class="btn-primary-action" onclick="openOverlay(true, 'login')">
+          <span data-i18n="btn_launch_portal">Launch Safety Portal</span> &rarr;
+        </button>
+        <button class="btn-secondary-action" onclick="openOverlay(true, 'register')">
+          <span data-i18n="btn_create_account">Create Account</span>
+        </button>
+      </div>
+
+      <!-- MINI METRIC TILES -->
+      <div class="metric-tiles-grid">
+        <div class="metric-tile">
+          <span class="tile-icon">⚡</span>
+          <div>
+            <div class="tile-title" data-i18n="m1_val">94.8% Accuracy</div>
+            <div class="tile-caption" data-i18n="m1_lbl">SIF Precursor Recall</div>
+          </div>
+        </div>
+
+        <div class="metric-tile">
+          <span class="tile-icon">🛡️</span>
+          <div>
+            <div class="tile-title" data-i18n="m2_val">DGMS &amp; OSHA</div>
+            <div class="tile-caption" data-i18n="m2_lbl">Compliance Audit Ready</div>
+          </div>
+        </div>
+
+        <div class="metric-tile">
+          <span class="tile-icon">🧠</span>
+          <div>
+            <div class="tile-title" data-i18n="m3_val">TreeSHAP Explainable</div>
+            <div class="tile-caption" data-i18n="m3_lbl">Zero Black-Box Decisions</div>
+          </div>
+        </div>
+
+        <div class="metric-tile">
+          <span class="tile-icon">🛢️</span>
+          <div>
+            <div class="tile-title" data-i18n="m4_val">&lt; 120ms Inference</div>
+            <div class="tile-caption" data-i18n="m4_lbl">Real-Time Rig Triage</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: SCREEN-FITTED PHOTOGRAPHY CAROUSEL -->
+    <section class="carousel-col" onmouseenter="pauseCarousel()" onmouseleave="resumeCarousel()">
+      <div class="carousel-viewport" id="carouselViewport">
+
+        <!-- Slide 1: Offshore Oil Rig -->
+        <div class="carousel-slide-item active" data-slide="0">
+          <img class="slide-bg-img" src="./assets/offshore_oil_rig.jpg" alt="Offshore Drilling Rig Platform">
+          <div class="slide-overlay-scrim"></div>
+          <div class="slide-caption-box">
+            <div class="slide-category-tag">
+              <span>●</span>
+              <span data-i18n="s1_tag">Offshore &amp; Rig Drilling Operations</span>
+            </div>
+            <h2 class="slide-heading" data-i18n="s1_title">Automated SIF Precursor Detection</h2>
+            <p class="slide-sub" data-i18n="s1_desc">Real-time NLP models parse unstructured drilling logs and near-misses to flag critical blowout and falling-object hazards.</p>
+            <div class="slide-hud-tags">
+              <span class="hud-chip alert-high">SIF Precursor Alert</span>
+              <span class="hud-chip">94.8% Recall</span>
+              <span class="hud-chip">Rig 04 Telemetry</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Safety Operations Control Room -->
+        <div class="carousel-slide-item" data-slide="1">
+          <img class="slide-bg-img" src="./assets/safety_control_room.jpg" alt="Safety Operations Control Room">
+          <div class="slide-overlay-scrim"></div>
+          <div class="slide-caption-box">
+            <div class="slide-category-tag">
+              <span>●</span>
+              <span data-i18n="s2_tag">Central HSE Telemetry Command</span>
+            </div>
+            <h2 class="slide-heading" data-i18n="s2_title">Centralized Risk Telemetry Board</h2>
+            <p class="slide-sub" data-i18n="s2_desc">HSE officers supervise real-time pressure spikes, gas detection heatmaps, and priority incidents across all refinery zones.</p>
+            <div class="slide-hud-tags">
+              <span class="hud-chip">Live Video Wall</span>
+              <span class="hud-chip">Multi-Zone Triage</span>
+              <span class="hud-chip">Audit Logging</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Field Safety Inspection -->
+        <div class="carousel-slide-item" data-slide="2">
+          <img class="slide-bg-img" src="./assets/field_safety_inspection.jpg" alt="Field HSE Safety Inspection">
+          <div class="slide-overlay-scrim"></div>
+          <div class="slide-caption-box">
+            <div class="slide-category-tag">
+              <span>●</span>
+              <span data-i18n="s3_tag">Field Worker Triage &amp; PPE</span>
+            </div>
+            <h2 class="slide-heading" data-i18n="s3_title">Ruggedized Mobile Hazard Ingestion</h2>
+            <p class="slide-sub" data-i18n="s3_desc">Field crew members log unsafe acts and mechanical anomalies directly from wellheads with immediate risk scoring.</p>
+            <div class="slide-hud-tags">
+              <span class="hud-chip">Zero Friction</span>
+              <span class="hud-chip">Offline Cache</span>
+              <span class="hud-chip">PPE Compliance</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Pipeline Telemetry & Sensors -->
+        <div class="carousel-slide-item" data-slide="3">
+          <img class="slide-bg-img" src="./assets/pipeline_telemetry_sensors.jpg" alt="Pipeline Telemetry Sensors">
+          <div class="slide-overlay-scrim"></div>
+          <div class="slide-caption-box">
+            <div class="slide-category-tag">
+              <span>●</span>
+              <span data-i18n="s4_tag">Transport Pipeline &amp; BOP Sensors</span>
+            </div>
+            <h2 class="slide-heading" data-i18n="s4_title">Explainable SHAP Root-Cause Matrix</h2>
+            <p class="slide-sub" data-i18n="s4_desc">Transparent factor attribution pinpoints high-pressure valve leaks, H2S pockets, and flange fatigue for preemptive shut-offs.</p>
+            <div class="slide-hud-tags">
+              <span class="hud-chip">TreeSHAP Engine</span>
+              <span class="hud-chip">&lt; 120ms Latency</span>
+              <span class="hud-chip">BOP Status Secure</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CAROUSEL FOOTER CONTROLS -->
+      <div class="carousel-footer-bar">
+        <div class="carousel-btn-group">
+          <button class="carousel-nav-btn" onclick="prevSlide()" title="Previous slide">&#8592;</button>
+          <button class="carousel-nav-btn" onclick="nextSlide()" title="Next slide">&#8594;</button>
+        </div>
+        <div class="carousel-indicators-bar" id="carouselIndicators">
+          <div class="carousel-bar-dot active" onclick="goToSlide(0)"></div>
+          <div class="carousel-bar-dot" onclick="goToSlide(1)"></div>
+          <div class="carousel-bar-dot" onclick="goToSlide(2)"></div>
+          <div class="carousel-bar-dot" onclick="goToSlide(3)"></div>
+        </div>
+        <div class="slide-counter-text" id="slideCounterText">01 / 04</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SCREEN-FITTED STATUS BAR (AXELROD STYLE) -->
+  <footer class="app-status-bar">
+    <div class="status-left">
+      <div class="status-green-dot"></div>
+      <span data-i18n="status_text">AI Operating Layer Active · Zero-Harm Protocol · Oil India Limited</span>
     </div>
-  </div>
+    <div class="status-right">
+      <span>SIH26165</span>
+      <a class="footer-link-action" onclick="openOverlay(true, 'login')" data-i18n="btn_portal_access">Portal Access &rarr;</a>
+    </div>
+  </footer>
 
-  <!-- SUBMIT REPORT (everyone) -->
-  <div id="submitSection" class="card hidden">
-    <h3>📝 Submit Safety Report</h3>
-    <label>Report Type</label>
-    <select id="repType">
-      <option>Unsafe Act</option>
-      <option>Unsafe Condition</option>
-      <option>Near Miss</option>
-    </select>
-    <label>Location</label>
-    <input id="repLocation" placeholder="e.g. Rig Floor, Tank Farm">
-    <label>Department</label>
-    <input id="repDept" placeholder="e.g. Drilling, Production, HSE">
-    <label>Report Description</label>
-    <textarea id="repText" placeholder="Describe the unsafe act / condition / near-miss in detail..."></textarea>
-    <button onclick="submitReport()">Analyze & Submit</button>
-    <div id="predictResult" class="hidden"></div>
-  </div>
+  <!-- ===================================================
+       AXELROD-STYLE SLIDE-OVER OVERLAY (PORTAL & DASHBOARD)
+  =================================================== -->
+  <div class="overlay-backdrop" id="portalOverlay" onclick="handleOverlayBackdropClick(event)">
+    <div class="slide-over-panel" id="slideOverPanel">
 
-  <!-- DASHBOARD -->
-  <div id="dashboardSection" class="card hidden">
-    <h3 id="dashboardTitle">📊 Reports Dashboard</h3>
-    <table>
-      <thead>
-        <tr><th>Type</th><th>Location / Dept</th><th>Text</th><th>Prediction</th><th>By</th></tr>
-      </thead>
-      <tbody id="reportsTableBody"></tbody>
-    </table>
+      <div class="panel-header">
+        <div class="panel-title-area">
+          <span class="panel-headline" id="panelHeadline" data-i18n="panel_title">Safety Portal</span>
+          <span class="panel-subline" data-i18n="panel_sub">Oil India Limited · Secure Telemetry &amp; Reporting</span>
+        </div>
+        <button class="btn-close-overlay" onclick="openOverlay(false)">
+          <span data-i18n="btn_close">Close</span> ✕
+        </button>
+      </div>
+
+      <div class="panel-body-scroll">
+
+        <!-- AUTH TABS & FORMS -->
+        <div id="authSection">
+          <div class="tab-row">
+            <button id="loginTab" class="tab-btn active" onclick="showAuthTab('login')" data-i18n="tab_login">Sign In</button>
+            <button id="registerTab" class="tab-btn" onclick="showAuthTab('register')" data-i18n="tab_register">Create Account</button>
+          </div>
+
+          <!-- LOGIN -->
+          <div id="loginForm">
+            <div class="login-type-switch">
+              <button id="loginByUserBtn" class="login-type-btn active" onclick="setLoginType('username')">👤 <span data-i18n="lbl_username">Username</span></button>
+              <button id="loginByPhoneBtn" class="login-type-btn" onclick="setLoginType('phone')">📱 <span data-i18n="lbl_phone">Phone</span></button>
+            </div>
+
+            <div class="f-group" id="loginUsernameGroup">
+              <label class="f-label" for="loginIdentifier" data-i18n="lbl_username">Username</label>
+              <input id="loginIdentifier" type="text" placeholder="e.g. worker1 or admin" autocomplete="username">
+            </div>
+
+            <div class="f-group" id="loginPhoneGroup" style="display:none">
+              <label class="f-label" for="loginPhone" data-i18n="lbl_phone">Phone Number</label>
+              <div class="phone-input-row">
+                <input class="phone-prefix" id="loginPhonePrefix" value="+91" maxlength="5">
+                <input id="loginPhone" type="tel" placeholder="98765 43210" autocomplete="tel">
+              </div>
+              <p class="f-hint" data-i18n="hint_phone_lookup">Lookup registered username on device.</p>
+            </div>
+
+            <div class="f-group">
+              <label class="f-label" for="loginPassword" data-i18n="lbl_password">Password</label>
+              <input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password">
+            </div>
+
+            <div class="f-error" id="loginError"></div>
+            <button class="btn-primary-form" onclick="login()">
+              <span data-i18n="btn_signin">Sign In to Safety Portal</span> &rarr;
+            </button>
+          </div>
+
+          <!-- REGISTER -->
+          <div id="registerForm" class="hidden">
+            <div class="f-group">
+              <label class="f-label" for="regUsername" data-i18n="lbl_reg_username">Username</label>
+              <input id="regUsername" type="text" placeholder="Choose a username" autocomplete="username">
+            </div>
+            <div class="f-group">
+              <label class="f-label" for="regPassword" data-i18n="lbl_password">Password</label>
+              <input id="regPassword" type="password" placeholder="Choose a password" autocomplete="new-password">
+            </div>
+            <div class="f-group">
+              <label class="f-label" for="regPhone"><span data-i18n="lbl_phone">Phone Number</span> <span style="font-weight:400;">(optional)</span></label>
+              <div class="phone-input-row">
+                <input class="phone-prefix" id="regPhonePrefix" value="+91" maxlength="5">
+                <input id="regPhone" type="tel" placeholder="98765 43210" autocomplete="tel">
+              </div>
+            </div>
+            <div class="f-group">
+              <label class="f-label" for="regRole" data-i18n="lbl_role">Designation / Role</label>
+              <select id="regRole">
+                <option value="field_worker">Field Worker (Drilling &amp; Rig Stations)</option>
+                <option value="safety_officer">Safety Officer (HSE Inspection)</option>
+                <option value="admin">Administrator (Executive Safety Board)</option>
+              </select>
+            </div>
+            <div class="f-error" id="regError"></div>
+            <button class="btn-primary-form" onclick="register()">
+              <span data-i18n="btn_register">Create Account</span> &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- SUBMIT SECTION (FIELD WORKERS) -->
+        <div id="submitSection" class="hidden">
+          <h3 style="font-size:20px; margin-bottom:4px;" data-i18n="sub_report_title">Submit Incident Hazard Report</h3>
+          <p style="font-size:12px; color:var(--text-secondary); margin-bottom:20px;" data-i18n="sub_report_desc">
+            Describe the unsafe act, condition, or near-miss. Real-time SIF inference will evaluate fatality risk.
+          </p>
+
+          <div class="f-group">
+            <label class="f-label" for="repType" data-i18n="lbl_rep_type">Report Type</label>
+            <select id="repType">
+              <option>Unsafe Act</option>
+              <option>Unsafe Condition</option>
+              <option>Near Miss</option>
+            </select>
+          </div>
+
+          <div class="f-group">
+            <label class="f-label" for="repLocation" data-i18n="lbl_rep_loc">Location / Asset</label>
+            <input id="repLocation" type="text" placeholder="e.g. Rig 04 Floor, Wellhead Valve, Tank Farm B">
+          </div>
+
+          <div class="f-group">
+            <label class="f-label" for="repDept" data-i18n="lbl_rep_dept">Department</label>
+            <input id="repDept" type="text" placeholder="e.g. Drilling, Production, Maintenance, HSE">
+          </div>
+
+          <div class="f-group">
+            <label class="f-label" for="repText" data-i18n="lbl_rep_text">Hazard Description</label>
+            <textarea id="repText" placeholder="Describe the incident narrative, observed gas leaks, electrical faults, or fall risks in detail..."></textarea>
+          </div>
+
+          <button class="btn-primary-form" id="submitBtn" onclick="submitReport()">
+            <span data-i18n="btn_analyse_submit">Analyse Precursor &amp; Submit</span> &rarr;
+          </button>
+
+          <div id="predictResult" class="hidden" style="margin-top:18px;"></div>
+        </div>
+
+        <!-- REPORTS DASHBOARD (OFFICER & ADMIN / FIELD WORKER) -->
+        <div id="dashboardSection" class="hidden" style="margin-top:24px;">
+          <!-- LIVE STATS ROW -->
+          <div class="stats-cards-row" id="statsRow" style="display:none">
+            <div class="stat-card-box">
+              <div class="stat-card-num" id="statTotal">-</div>
+              <div class="stat-card-lbl" data-i18n="stat_total">Total Reports</div>
+            </div>
+            <div class="stat-card-box">
+              <div class="stat-card-num" id="statHigh" style="color:var(--danger)">-</div>
+              <div class="stat-card-lbl" data-i18n="stat_sif">SIF Risk</div>
+            </div>
+            <div class="stat-card-box">
+              <div class="stat-card-num" id="statLow" style="color:var(--ok)">-</div>
+              <div class="stat-card-lbl" data-i18n="stat_low">Low Risk</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <span style="font-family:'DM Serif Display', Georgia, serif; font-size:18px;" id="dashTitle" data-i18n="dash_heading">Telemetry Log</span>
+            <span style="font-size:11px; color:var(--text-secondary); font-weight:600;" id="reportCount"></span>
+          </div>
+
+          <div class="dash-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="th_type">Type</th>
+                  <th data-i18n="th_loc">Location</th>
+                  <th data-i18n="th_desc">Description</th>
+                  <th data-i18n="th_risk">Risk &amp; Factors</th>
+                  <th data-i18n="th_by">By</th>
+                </tr>
+              </thead>
+              <tbody id="reportsTableBody">
+                <tr><td colspan="5"><div class="empty-row"><span style="font-size:24px;">⌛</span><br>Loading reports...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
 </div>
 
+<!-- JAVASCRIPT APP LOGIC -->
 <script>
 const API_BASE = "http://127.0.0.1:8000";
-let token = null;
-let role = null;
-let username = null;
+let token = null, role = null, username = null, loginType = 'username';
+let currentLang = localStorage.getItem('sif-lang') || 'en';
 
+/* ===================================================
+   COMPREHENSIVE MULTILINGUAL DICTIONARY (11 LANGUAGES)
+=================================================== */
+const I18N = {
+  en: {
+    lang_name: "English",
+    hdr_sub: "Oil India Limited · SIH 2026",
+    pill_text: "Oil India Limited · SIH 2026 Innovation",
+    hero_title: "Predict Latent Hazards Before They Become <em>Fatalities.</em>",
+    hero_desc: "An enterprise AI operating layer designed for upstream drilling rigs, production facilities, and transport pipelines. Isolating Serious Injury & Fatality (SIF) precursors from raw safety logs with real-time NLP and transparent SHAP root-cause explainability.",
+    btn_portal: "Safety Portal",
+    btn_launch_portal: "Launch Safety Portal",
+    btn_create_account: "Create Account",
+    btn_portal_access: "Portal Access",
+    m1_val: "94.8% Accuracy",
+    m1_lbl: "SIF Precursor Recall",
+    m2_val: "DGMS & OSHA",
+    m2_lbl: "Compliance Audit Ready",
+    m3_val: "TreeSHAP Explainable",
+    m3_lbl: "Zero Black-Box Decisions",
+    m4_val: "< 120ms Inference",
+    m4_lbl: "Real-Time Rig Triage",
+    s1_tag: "Offshore & Rig Drilling Operations",
+    s1_title: "Automated SIF Precursor Detection",
+    s1_desc: "Real-time NLP models parse unstructured drilling logs and near-misses to flag critical blowout and falling-object hazards.",
+    s2_tag: "Central HSE Telemetry Command",
+    s2_title: "Centralized Risk Telemetry Board",
+    s2_desc: "HSE officers supervise real-time pressure spikes, gas detection heatmaps, and priority incidents across all refinery zones.",
+    s3_tag: "Field Worker Triage & PPE",
+    s3_title: "Ruggedized Mobile Hazard Ingestion",
+    s3_desc: "Field crew members log unsafe acts and mechanical anomalies directly from wellheads with immediate risk scoring.",
+    s4_tag: "Transport Pipeline & BOP Sensors",
+    s4_title: "Explainable SHAP Root-Cause Matrix",
+    s4_desc: "Transparent factor attribution pinpoints high-pressure valve leaks, H2S pockets, and flange fatigue for preemptive shut-offs.",
+    status_text: "AI Operating Layer Active · Zero-Harm Protocol · Oil India Limited",
+    panel_title: "Safety Portal",
+    panel_sub: "Oil India Limited · Secure Telemetry & Reporting",
+    btn_close: "Close",
+    tab_login: "Sign In",
+    tab_register: "Create Account",
+    lbl_username: "Username",
+    lbl_phone: "Phone",
+    lbl_password: "Password",
+    hint_phone_lookup: "Lookup registered username on device.",
+    btn_signin: "Sign In to Safety Portal",
+    lbl_reg_username: "Username",
+    lbl_role: "Designation / Role",
+    btn_register: "Create Account",
+    sub_report_title: "Submit Incident Hazard Report",
+    sub_report_desc: "Describe the unsafe act, condition, or near-miss. Real-time SIF inference will evaluate fatality risk.",
+    lbl_rep_type: "Report Type",
+    lbl_rep_loc: "Location / Asset",
+    lbl_rep_dept: "Department",
+    lbl_rep_text: "Hazard Description",
+    btn_analyse_submit: "Analyse Precursor & Submit",
+    stat_total: "Total Reports",
+    stat_sif: "SIF Risk",
+    stat_low: "Low Risk",
+    dash_heading: "Telemetry Log",
+    th_type: "Type",
+    th_loc: "Location",
+    th_desc: "Description",
+    th_risk: "Risk & Factors",
+    th_by: "By",
+    btn_signout: "Sign Out"
+  },
+
+  hi: {
+    lang_name: "हिन्दी (Hindi)",
+    hdr_sub: "ऑयल इंडिया लिमिटेड · SIH 2026",
+    pill_text: "ऑयल इंडिया लिमिटेड · SIH 2026 नवाचार",
+    hero_title: "गंभीर दुर्घटनाओं के घटित होने से पहले <em>पूर्ववर्ती खतरों</em> को पहचानें।",
+    hero_desc: "तेल रिग, रिफाइनरी और पाइपलाइन संचालन के लिए तैयार किया गया एंटरप्राइज AI ऑपरेटिंग सिस्टम। वास्तविक समय के NLP और पारदर्शी SHAP व्याख्यात्मकता के साथ सुरक्षा रिपोर्टों से SIF संकेतों की पहचान करता है।",
+    btn_portal: "सुरक्षा पोर्टल",
+    btn_launch_portal: "सुरक्षा पोर्टल शुरू करें",
+    btn_create_account: "खाता बनाएं",
+    btn_portal_access: "पोर्टल एक्सेस",
+    m1_val: "94.8% सटीकता",
+    m1_lbl: "SIF पूर्ववर्ती रिकॉल दर",
+    m2_val: "DGMS एवं OSHA",
+    m2_lbl: "नियामक अनुपालन तैयार",
+    m3_val: "ट्री-SHAP व्याख्यात्मक",
+    m3_lbl: "पारदर्शी AI निर्णय",
+    m4_val: "< 120ms लेटेंसी",
+    m4_lbl: "रीयल-टाइम रिग विश्लेषण",
+    s1_tag: "ऑफशोर एवं रिग ड्रिलिंग संचालन",
+    s1_title: "स्वचालित SIF पूर्ववर्ती पहचान",
+    s1_desc: "रीयल-टाइम NLP मॉडल ड्रिलिंग लॉग्स और नियर-मिस रिपोर्टों का विश्लेषण करके संभावित ब्लोआउट और भारी वस्तुओं के गिरने के जोखिमों को समय रहते पहचानते हैं।",
+    s2_tag: "केंद्रीय HSE टेलीमेट्री कमांड",
+    s2_title: "केंद्रीकृत जोखिम टेलीमेट्री बोर्ड",
+    s2_desc: "HSE सुरक्षा अधिकारी रिफाइनरी के सभी क्षेत्रों में दबाव वृद्धि, गैस रिसाव हीटमैप और उच्च-प्राथमिकता वाले खतरों की लाइव निगरानी करते हैं।",
+    s3_tag: "फील्ड कर्मचारी रिपोर्टिंग एवं PPE",
+    s3_title: "रग्ड मोबाइल खतरा रिपोर्टिंग",
+    s3_desc: "फील्ड क्रू के सदस्य वेलहेड से सीधे असुरक्षित स्थितियों और यांत्रिक दोषों को दर्ज करते हैं, जहां तुरंत जोखिम स्कोर प्राप्त होता है।",
+    s4_tag: "पाइपलाइन एवं BOP सेंसर",
+    s4_title: "SHAP मूल-कारण विश्लेषण मैट्रिक्स",
+    s4_desc: "पारदर्शी कारक विश्लेषण वाल्व रिसाव, H2S गैस की उपस्थिति और फ्लैंज दबाव की सटीक पहचान करता है ताकि समय से पहले शट-ऑफ किया जा सके।",
+    status_text: "AI ऑपरेटिंग लेयर सक्रिय · शून्य-हानि सुरक्षा प्रोटोकॉल · ऑयल इंडिया लिमिटेड",
+    panel_title: "सुरक्षा पोर्टल",
+    panel_sub: "ऑयल इंडिया लिमिटेड · सुरक्षित टेलीमेट्री और रिपोर्टिंग",
+    btn_close: "बंद करें",
+    tab_login: "लॉगिन करें",
+    tab_register: "खाता बनाएं",
+    lbl_username: "उपयोगकर्ता नाम",
+    lbl_phone: "फ़ोन नंबर",
+    lbl_password: "पासवर्ड",
+    hint_phone_lookup: "डिवाइस पर पंजीकृत खाते की पहचान करता है।",
+    btn_signin: "सुरक्षा पोर्टल में प्रवेश करें",
+    lbl_reg_username: "उपयोगकर्ता नाम चुनें",
+    lbl_role: "पद / भूमिका",
+    btn_register: "खाता बनाएं",
+    sub_report_title: "सुरक्षा खतरा रिपोर्ट सबमिट करें",
+    sub_report_desc: "असुरक्षित कार्य, स्थिति या नियर-मिस का विवरण दें। AI मॉडल तुरंत जानलेवा जोखिम का मूल्यांकन करेगा।",
+    lbl_rep_type: "रिपोर्ट प्रकार",
+    lbl_rep_loc: "स्थान / परिसंपत्ति",
+    lbl_rep_dept: "विभाग",
+    lbl_rep_text: "खतरे का विवरण",
+    btn_analyse_submit: "जोखिम का विश्लेषण करें एवं सबमिट करें",
+    stat_total: "कुल रिपोर्ट",
+    stat_sif: "SIF जोखिम",
+    stat_low: "कम जोखिम",
+    dash_heading: "टेलीमेट्री लॉग",
+    th_type: "प्रकार",
+    th_loc: "स्थान",
+    th_desc: "विवरण",
+    th_risk: "जोखिम एवं कारक",
+    th_by: "द्वारा",
+    btn_signout: "साइन आउट"
+  },
+
+  as: {
+    lang_name: "অসমীয়া (Assamese)",
+    hdr_sub: "অইল ইণ্ডিয়া লিমিটেড · SIH 2026",
+    pill_text: "অইল ইণ্ডিয়া লিমিটেড · SIH 2026 উদ্ভাৱন",
+    hero_title: "দুৰ্ঘটনা ঘটাৰ পূৰ্বেই <em>গুৰুতৰ বিপদ</em> চিনাক্ত কৰক।",
+    hero_desc: "তেল খনন ৰিগ আৰু পাইপলাইনৰ বাবে আধুনিক AI প্ৰণালী। বাস্তৱ সময়ৰ NLP আৰু SHAP দ্বাৰা জীৱন বিপদাপন্ন কৰা পূৰ্বৱৰ্তী কাৰকসমূহ চিনাক্ত কৰে।",
+    btn_portal: "সুৰক্ষা পৰ্টেল",
+    btn_launch_portal: "সুৰক্ষা পৰ্টেল আৰম্ভ কৰক",
+    btn_create_account: "একাউণ্ট খোলক",
+    btn_portal_access: "পৰ্টেল প্ৰৱেশ",
+    m1_val: "94.8% সঠিকতা",
+    m1_lbl: "SIF পূৰ্বৱৰ্তী চিনাক্তকৰণ",
+    m2_val: "DGMS আৰু OSHA",
+    m2_lbl: "আইনী নিৰাপত্তা নিয়ম",
+    m3_val: "TreeSHAP স্বচ্ছ AI",
+    m3_lbl: "নিৰ্ভুল কাৰণ বিশ্লেষণ",
+    m4_val: "< 120ms সময়",
+    m4_lbl: "তাৎক্ষণিক ৰিগ বিশ্লেষণ",
+    s1_tag: "অফশ্ব'ৰ আৰু ৰিগ খনন কাম",
+    s1_title: "স্বয়ংক্ৰিয় SIF সংকেত চিনাক্তকৰণ",
+    s1_desc: "বাস্তৱ সময়ৰ NLP প্ৰযুক্তিয়ে খনন লগসমূহ বিশ্লেষণ কৰি সম্ভাৱ্য বিপদ চিনাক্ত কৰে।",
+    s2_tag: "কেন্দ্ৰীয় HSE কমাণ্ড চেণ্টাৰ",
+    s2_title: "কেন্দ্ৰীভূত নিৰাপত্তা ফলক",
+    s2_desc: "বিষয়া সকলে সকলো অঞ্চলৰ গেছ নিৰ্গমন আৰু চাপ বৃদ্ধিৰ লাইভ নিৰীক্ষণ কৰে।",
+    s3_tag: "ফিল্ড কৰ্মচাৰী আৰু PPE সুৰক্ষা",
+    s3_title: "মোবাইল বিপদ দাখিল ব্যৱস্থা",
+    s3_desc: "কৰ্মচাৰীসকলে পোনপটীয়াকৈ বিপজ্জনক অৱস্থাৰ তথ্য দাখিল কৰিব পাৰে।",
+    s4_tag: "পাইপলাইন আৰু BOP নিৰাপত্তা",
+    s4_title: "SHAP মূল কাৰণ মেট্ৰিক্স",
+    s4_desc: "স্বচ্ছ কাৰণ বিশ্লেষণে উচ্চ চাপৰ ভাল্ভ আৰু গেছ লিক আদি আগতীয়াকৈ জানিবলৈ দিয়ে।",
+    status_text: "AI কাৰ্যকৰী হৈ আছে · শূন্য ক্ষতি নীতি · অইল ইণ্ডিয়া লিমিটেড",
+    panel_title: "সুৰক্ষা পৰ্টেল",
+    panel_sub: "অইল ইণ্ডিয়া লিমিটেড · নিৰাপদ প্ৰতিবেদন",
+    btn_close: "বন্ধ কৰক",
+    tab_login: "লগ ইন",
+    tab_register: "একাউণ্ট খোলক",
+    lbl_username: "ইউজাৰনেম",
+    lbl_phone: "ফোন নম্বৰ",
+    lbl_password: "পাছৱৰ্ড",
+    hint_phone_lookup: "ডিভাইচত থকা একাউণ্ট অনুসন্ধান।",
+    btn_signin: "পৰ্টেলত প্ৰৱেশ কৰক",
+    lbl_reg_username: "ইউজাৰনেম বাছক",
+    lbl_role: "পদবী / দায়িত্ব",
+    btn_register: "একাউণ্ট খোলক",
+    sub_report_title: "সুৰক্ষা বিপদ দাখিল কৰক",
+    sub_report_desc: "বিপদজনক কাৰ্য বা অৱস্থাৰ বিৱৰণ দিয়ক। AI এ তৎক্ষণাত বিপদৰ সম্ভাৱনা পৰীক্ষা কৰিব।",
+    lbl_rep_type: "প্ৰকাৰ",
+    lbl_rep_loc: "স্থান",
+    lbl_rep_dept: "বিভাগ",
+    lbl_rep_text: "বিপদৰ বিৱৰণ",
+    btn_analyse_submit: "বিশ্লেষণ কৰি দাখিল কৰক",
+    stat_total: "মুঠ প্ৰতিবেদন",
+    stat_sif: "গুৰুতৰ বিপদ",
+    stat_low: "কম বিপদ",
+    dash_heading: "টেলিমেট্ৰী তথ্য",
+    th_type: "প্ৰকাৰ",
+    th_loc: "স্থান",
+    th_desc: "বিৱৰণ",
+    th_risk: "বিপদৰ মাত্ৰা",
+    th_by: "দাখিলকৰ্তা",
+    btn_signout: "লগ আউট"
+  },
+
+  bn: {
+    lang_name: "বাংলা (Bengali)",
+    hdr_sub: "অয়েল ইন্ডিয়া লিমিটেড · SIH 2026",
+    pill_text: "অয়েল ইন্ডিয়া লিমিটেড · SIH 2026 উদ্ভাবন",
+    hero_title: "মারাত্মক দুর্ঘটনা ঘটার আগেই <em>লুকানো বিপদ</em> চিহ্নিত করুন।",
+    hero_desc: "তেল রিগ ও পাইপলাইন পরিচালনার জন্য আধুনিক এআই অপারেটিং সিস্টেম। রিয়েল-টাইম এনএলপি ও শ্যাপের মাধ্যমে প্রাণঘাতী সংকেত চিহ্নিত করে।",
+    btn_portal: "সুরক্ষা পোর্টাল",
+    btn_launch_portal: "সুরক্ষা পোর্টাল চালু করুন",
+    btn_create_account: "অ্যাকাউন্ট তৈরি করুন",
+    btn_portal_access: "পোর্টাল অ্যাক্সেস",
+    m1_val: "94.8% নির্ভুলতা",
+    m1_lbl: "SIF পূর্বাভাস স্মরণ",
+    m2_val: "DGMS ও OSHA",
+    m2_lbl: "নিয়ম নীতি অনুপালন",
+    m3_val: "স্বচ্ছ TreeSHAP",
+    m3_lbl: "সঠিক কারণ বিশ্লেষণ",
+    m4_val: "< 120ms সময়",
+    m4_lbl: "তাৎক্ষণিক বিশ্লেষণ",
+    s1_tag: "খনন ও রিগ পরিচালনা",
+    s1_title: "স্বয়ংক্রিয় SIF পূর্বাভাস চিহ্নিতকরণ",
+    s1_desc: "রিয়েল-টাইম এনএলপি মডেল রিপোর্টের ভাষা বিশ্লেষণ করে সম্ভাব্য ব্লোআউট বিপদ চিহ্নিত করে।",
+    s2_tag: "কেন্দ্রীয় HSE কমান্ড সেন্টার",
+    s2_title: "কেন্দ্রীয় ঝুঁকি পর্যবেক্ষণ বোর্ড",
+    s2_desc: "নিরাপত্তা কর্মকর্তারা সরাসরি গ্যাস লিক ও অতিরিক্ত চাপের পর্যবেক্ষণ করেন।",
+    s3_tag: "ফিল্ড কর্মী ও পিপিই নিরাপত্তা",
+    s3_title: "মোবাইল বিপদ রিপোর্টিং",
+    s3_desc: "কর্মীরা সরাসরি রিগ থেকে অনিয়ম রিপোর্ট করতে পারেন এবং তাৎক্ষণিক ফলাফল পান।",
+    s4_tag: "পাইপলাইন ও বিওপি সেন্সর",
+    s4_title: "SHAP মূল কারণ ম্যাট্রিক্স",
+    s4_desc: "স্বচ্ছ কারণ বিশ্লেষণ উচ্চ চাপ ও ক্ষতিকারক গ্যাসের ঝুঁকি আগেভাগেই জানিয়ে দেয়।",
+    status_text: "এআই অপারেটিং স্তর সক্রিয় · শূন্য-ক্ষতি নীতি · অয়েল ইন্ডিয়া লিমিটেড",
+    panel_title: "সুরক্ষা পোর্টাল",
+    panel_sub: "অয়েল ইন্ডিয়া লিমিটেড · নিরাপদ রিপোর্টিং",
+    btn_close: "বন্ধ করুন",
+    tab_login: "লগইন করুন",
+    tab_register: "অ্যাকাউন্ট তৈরি করুন",
+    lbl_username: "ইউজারনেম",
+    lbl_phone: "ফোন নম্বর",
+    lbl_password: "পাসওয়ার্ড",
+    hint_phone_lookup: "ডিভাইসে নিবন্ধিত অ্যাকাউন্ট খোঁজা হচ্ছে।",
+    btn_signin: "সুরক্ষা পোর্টালে প্রবেশ করুন",
+    lbl_reg_username: "ইউজারনেম নির্বাচন করুন",
+    lbl_role: "পদবী / ভূমিকা",
+    btn_register: "অ্যাকাউন্ট তৈরি করুন",
+    sub_report_title: "বিপদ রিপোর্ট জমা দিন",
+    sub_report_desc: "অনিরাপদ কাজ বা পরিস্থিতির বর্ণনা দিন। এআই তাৎক্ষণিক ঝুঁকি বিশ্লেষণ করবে।",
+    lbl_rep_type: "রিপোর্টের ধরন",
+    lbl_rep_loc: "স্থান",
+    lbl_rep_dept: "বিভাগ",
+    lbl_rep_text: "বিবরণ",
+    btn_analyse_submit: "বিশ্লেষণ ও জমা দিন",
+    stat_total: "মোট রিপোর্ট",
+    stat_sif: "মারাত্মক ঝুঁকি",
+    stat_low: "কম ঝুঁকি",
+    dash_heading: "টেলিমেট্রি লগ",
+    th_type: "ধরন",
+    th_loc: "স্থান",
+    th_desc: "বিবরণ",
+    th_risk: "ঝুঁকি ও কারণ",
+    th_by: "দাখিলকারী",
+    btn_signout: "লগ আউট"
+  },
+
+  gu: {
+    lang_name: "ગુજરાતી (Gujarati)",
+    hdr_sub: "ઓઇલ ઇન્ડિયા લિમિટેડ · SIH 2026",
+    pill_text: "ઓઇલ ઇન્ડિયા લિમિટેડ · SIH 2026 ઇનોવેશન",
+    hero_title: "ગંભીર અકસ્માત થતાં પહેલાં <em>છુપાયેલા જોખમો</em> ઓળખો.",
+    hero_desc: "ઓઇલ રિગ્સ અને પાઇપલાઇન્સ માટે એન્ટરપ્રાઇઝ AI ઓપરેટિંગ સિસ્ટમ. રીઅલ-ટાઇમ NLP અને પારદર્શક SHAP દ્વારા જીવલેણ જોખમોને પકડી પાડે છે.",
+    btn_portal: "સુરક્ષા પોર્ટલ",
+    btn_launch_portal: "સુરક્ષા પોર્ટલ ખોલો",
+    btn_create_account: "ખાતું બનાવો",
+    btn_portal_access: "પોર્ટલ પ્રવેશ",
+    m1_val: "94.8% ચોકસાઈ",
+    m1_lbl: "SIF પૂર્વચેતવણી દર",
+    m2_val: "DGMS અને OSHA",
+    m2_lbl: "નિયમ પાલન સજ્જ",
+    m3_val: "TreeSHAP પારદર્શક",
+    m3_lbl: "સ્પષ્ટ કારણ વિશ્લેષણ",
+    m4_val: "< 120ms સ્પીડ",
+    m4_lbl: "ત્વરિત રિગ વિશ્લેષણ",
+    s1_tag: "ઓફશોર અને રિગ ડ્રિલિંગ",
+    s1_title: "સ્વચાલિત SIF જોખમ શોધ",
+    s1_desc: "વાસ્તવિક સમયના NLP મૉડલ્સ ડ્રિલિંગ લૉગ્સનું વિશ્લેષણ કરીને ગંભીર જોખમોને ઓળખે છે.",
+    s2_tag: "સેન્ટ્રલ HSE કમાન્ડ સેન્ટર",
+    s2_title: "કેન્દ્રિય જોખમ ટેલિમેટ્રી બોર્ડ",
+    s2_desc: "સુરક્ષા અધિકારીઓ ગેસ લીકેજ અને દબાણના ફેરફારોનું જીવંત નિરીક્ષણ કરે છે.",
+    s3_tag: "ફીલ્ડ વર્કર અને PPE સુરક્ષા",
+    s3_title: "મોબાઇલ જોખમ રિપોર્ટિંગ",
+    s3_desc: "કર્મચારીઓ સીધા સ્થળ પરથી અસુરક્ષિત પરિસ્થિતિઓ દાખલ કરી શકે છે.",
+    s4_tag: "પાઇપલાઇન અને BOP સેન્સર્સ",
+    s4_title: "SHAP મૂળ-કારણ મેટ્રિક્સ",
+    s4_desc: "પારદર્શક વિશ્લેષણ વાલ્વ લીક અને ઉચ્ચ દબાણની આગોતરી ચેતવણી આપે છે.",
+    status_text: "AI સિસ્ટમ સક્રિય · શૂન્ય નુકસાન નીતિ · ઓઇલ ઇન્ડિયા લિમિટેડ",
+    panel_title: "સુરક્ષા પોર્ટલ",
+    panel_sub: "ઓઇલ ઇન્ડિયા લિમિટેડ · સુરક્ષિત રિપોર્ટિંગ",
+    btn_close: "બંધ કરો",
+    tab_login: "સાઇન ઇન",
+    tab_register: "ખાતું બનાવો",
+    lbl_username: "યુઝરનેમ",
+    lbl_phone: "ફોન નંબર",
+    lbl_password: "પાસવર્ડ",
+    hint_phone_lookup: "સાધન પર નોંધાયેલ ખાતું શોધે છે.",
+    btn_signin: "પોર્ટલમાં પ્રવેશ કરો",
+    lbl_reg_username: "યુઝરનેમ પસંદ કરો",
+    lbl_role: "હોદ્દો / ભૂમિકા",
+    btn_register: "ખાતું બનાવો",
+    sub_report_title: "જોખમ રિપોર્ટ સબમિટ કરો",
+    sub_report_desc: "અસુરક્ષિત કાર્ય અથવા સ્થિતિનું વર્ણન કરો. AI તુરંત જોખમનું મૂલ્યાંકન કરશે.",
+    lbl_rep_type: "પ્રકાર",
+    lbl_rep_loc: "સ્થળ",
+    lbl_rep_dept: "વિભાગ",
+    lbl_rep_text: "વિગતો",
+    btn_analyse_submit: "વિશ્લેષણ કરી સબમિટ કરો",
+    stat_total: "કુલ રિપોર્ટ્સ",
+    stat_sif: "ગંભીર જોખમ",
+    stat_low: "ઓછું જોખમ",
+    dash_heading: "ટેલિમેટ્રી લૉગ",
+    th_type: "પ્રકાર",
+    th_loc: "સ્થળ",
+    th_desc: "વર્ણન",
+    th_risk: "જોખમ અને પરિબળો",
+    th_by: "દ્વારા",
+    btn_signout: "સાઇન આઉટ"
+  },
+
+  mr: {
+    lang_name: "मराठी (Marathi)",
+    hdr_sub: "ऑईल इंडिया लिमिटेड · SIH 2026",
+    pill_text: "ऑईल इंडिया लिमिटेड · SIH 2026 नवोपक्रम",
+    hero_title: "जीवघेण्या दुर्घटना घडण्यापूर्वीच <em>धोक्याचे संकेत</em> ओळखा.",
+    hero_desc: "तेल विहिरी आणि पाईपलाईन्ससाठी अत्याधुनिक AI ऑपरेटिंग प्रणाली. रिअल-टाइम NLP आणि पारदर्शक SHAP द्वारे प्राणघातक धोके आधीच ओळखते.",
+    btn_portal: "सुरक्षा पोर्टल",
+    btn_launch_portal: "सुरक्षा पोर्टल सुरू करा",
+    btn_create_account: "खाते तयार करा",
+    btn_portal_access: "पोर्टल प्रवेश",
+    m1_val: "94.8% अचूकता",
+    m1_lbl: "SIF पूर्वसंकेत अचूकता",
+    m2_val: "DGMS आणि OSHA",
+    m2_lbl: "नियम पालनासाठी सज्ज",
+    m3_val: "TreeSHAP पारदर्शक AI",
+    m3_lbl: "स्पष्ट कारण विश्लेषण",
+    m4_val: "< 120ms वेग",
+    m4_lbl: "त्वरित रिग विश्लेषण",
+    s1_tag: "ऑफशोर आणि रिग ड्रिलिंग कामे",
+    s1_title: "स्वयंचलित SIF संकेत ओळख",
+    s1_desc: "रिअल-टाइम NLP मॉडेल्स अहवालांचे विश्लेषण करून संभाव्य स्फोट आणि अपघातांचे धोके शोधतात.",
+    s2_tag: "मध्यवर्ती HSE कमांड सेंटर",
+    s2_title: "केंद्रीकृत जोखीम फलक",
+    s2_desc: "सुरक्षा अधिकारी रिफायनरीच्या सर्व भागांतील गॅस गळती आणि दाबाचे थेट निरीक्षण करतात.",
+    s3_tag: "फील्ड कर्मचारी आणि PPE सुरक्षा",
+    s3_title: "मोबाईल धोका अहवाल प्रणाली",
+    s3_desc: "कर्मचारी थेट घटनास्थळावरून धोकादायक परिस्थितीची नोंद करू शकतात.",
+    s4_tag: "पाईपलाईन आणि BOP सेन्सर्स",
+    s4_title: "SHAP मूळ-कारण मॅट्रिक्स",
+    s4_desc: "पारदर्शक विश्लेषण उच्च दाब आणि गळतीची पूर्वसूचना देऊन तत्काळ शट-ऑफ सुचवते.",
+    status_text: "AI ऑपरेटिंग लेयर सक्रिय · शून्य-हानी धोरण · ऑईल इंडिया लिमिटेड",
+    panel_title: "सुरक्षा पोर्टल",
+    panel_sub: "ऑईल इंडिया लिमिटेड · सुरक्षित अहवाल",
+    btn_close: "बंद करा",
+    tab_login: "साइन इन",
+    tab_register: "खाते तयार करा",
+    lbl_username: "वापरकर्ता नाव",
+    lbl_phone: "फोन नंबर",
+    lbl_password: "पासवर्ड",
+    hint_phone_lookup: "डिव्हाइसवर नोंदणीकृत खाते शोधते.",
+    btn_signin: "सुरक्षा पोर्टलमध्ये जा",
+    lbl_reg_username: "वापरकर्ता नाव निवडा",
+    lbl_role: "पद / भूमिका",
+    btn_register: "खाते तयार करा",
+    sub_report_title: "धोका अहवाल सादर करा",
+    sub_report_desc: "धोकादायक कृती किंवा परिस्थितीचे वर्णन करा. AI त्वरित जोखमीचे मूल्यांकन करेल.",
+    lbl_rep_type: "प्रकार",
+    lbl_rep_loc: "ठिकाण",
+    lbl_rep_dept: "विभाग",
+    lbl_rep_text: "वर्णन",
+    btn_analyse_submit: "विश्लेषण करा आणि सादर करा",
+    stat_total: "एकूण अहवाल",
+    stat_sif: "गंभीर जोखीम",
+    stat_low: "कमी जोखीम",
+    dash_heading: "टेलिमेट्री लॉग",
+    th_type: "प्रकार",
+    th_loc: "ठिकाण",
+    th_desc: "वर्णन",
+    th_risk: "जोखीम व घटक",
+    th_by: "नोंदवणारे",
+    btn_signout: "साइन आउट"
+  },
+
+  ta: {
+    lang_name: "தமிழ் (Tamil)",
+    hdr_sub: "ஆயில் இந்தியா லிமிடெட் · SIH 2026",
+    pill_text: "ஆயில் இந்தியா லிமிடெட் · SIH 2026 கண்டுபிடிப்பு",
+    hero_title: "உயிரிழப்புகள் ஏற்படுவதற்கு முன்பே <em>மறைமுக ஆபத்துகளை</em> கணிக்கவும்.",
+    hero_desc: "எண்ணெய் கிணறுகள் மற்றும் குழாய்களுக்கான நவீன AI இயக்க முறைமை. நிகழ்நேர NLP மற்றும் SHAP விளக்கம் மூலம் உயிருக்கு ஆபத்தான காரணிகளை கண்டறியும்.",
+    btn_portal: "பாதுகாப்பு போர்டல்",
+    btn_launch_portal: "பாதுகாப்பு போர்டல் திறக்க",
+    btn_create_account: "கணக்கு தொடங்க",
+    btn_portal_access: "போர்டல் அணுகல்",
+    m1_val: "94.8% துல்லியம்",
+    m1_lbl: "SIF முன் அறிவிப்பு வீதம்",
+    m2_val: "DGMS மற்றும் OSHA",
+    m2_lbl: "விதிமுறைகள் இணக்கம்",
+    m3_val: "TreeSHAP விளக்கம்",
+    m3_lbl: "வெளிப்படையான AI முடிவு",
+    m4_val: "< 120ms வேகம்",
+    m4_lbl: "உடனடி ரிசர்க் பகுப்பாய்வு",
+    s1_tag: "ஆழ்கடல் மற்றும் கிணறு தோண்டுதல்",
+    s1_title: "தானியங்கி SIF ஆபத்து கண்டறிதல்",
+    s1_desc: "நிகழ்நேர NLP மாதிரிகள் தகவல்களை ஆராய்ந்து முக்கியமான ஆபத்துகளை முன்கூட்டியே எச்சரிக்கின்றன.",
+    s2_tag: "மைய HSE கட்டுப்பாட்டு மையம்",
+    s2_title: "மையப்படுத்தப்பட்ட ஆபத்து கண்காணிப்பு",
+    s2_desc: "அதிகாரிகள் வாயு கசிவு மற்றும் அழுத்த மாறுபாடுகளை நேரலையாக கண்காணிக்கிறார்கள்.",
+    s3_tag: "களப் பணியாளர் மற்றும் PPE பாதுகாப்பு",
+    s3_title: "மொபைல் ஆபத்து பதிவு அமைப்பு",
+    s3_desc: "பணியாளர்கள் பணித்தளத்திலிருந்து நேரடியாக பாதுகாப்பற்ற நிலைகளை உடனடியாக பதிவு செய்யலாம்.",
+    s4_tag: "குழாய் மற்றும் BOP சென்சார்கள்",
+    s4_title: "SHAP மூல-காரண மேட்ரிக்ஸ்",
+    s4_desc: "வெளிப்படையான பகுப்பாய்வு அழுத்தம் மற்றும் வாயு கசிவுகளை உடனுக்குடன் தெரிவிக்கிறது.",
+    status_text: "AI இயங்குகிறது · பூஜ்ஜிய ஆபத்து கொள்கை · ஆயில் இந்தியா லிமிடெட்",
+    panel_title: "பாதுகாப்பு போர்டல்",
+    panel_sub: "ஆயில் இந்தியா லிமிடெட் · பாதுகாப்பான பதிவு",
+    btn_close: "மூடு",
+    tab_login: "உள்நுழைக",
+    tab_register: "கணக்கு உருவாக்க",
+    lbl_username: "பயனர்பெயர்",
+    lbl_phone: "தொலைபேசி எண்",
+    lbl_password: "கடவுச்சொல்",
+    hint_phone_lookup: "சாதனத்தில் பதிவு செய்யப்பட்ட கணக்கை தேடுகிறது.",
+    btn_signin: "போர்ட்டலில் நுழைக",
+    lbl_reg_username: "பயனர்பெயர் தேர்வு செய்க",
+    lbl_role: "பதவி / பங்கு",
+    btn_register: "கணக்கு உருவாக்க",
+    sub_report_title: "ஆபத்து அறிக்கை சமர்ப்பிக்க",
+    sub_report_desc: "பாதுகாப்பற்ற செயல் அல்லது நிலையை விவரிக்கவும். AI உடனடியாக ஆபத்தை மதிப்பிடும்.",
+    lbl_rep_type: "வகை",
+    lbl_rep_loc: "இடம்",
+    lbl_rep_dept: "துறை",
+    lbl_rep_text: "விவரம்",
+    btn_analyse_submit: "பகுப்பாய்ந்து சமர்ப்பிக்க",
+    stat_total: "மொத்த அறிக்கைகள்",
+    stat_sif: "தீவிர ஆபத்து",
+    stat_low: "குறைந்த ஆபத்து",
+    dash_heading: "கண்காணிப்பு பதிவு",
+    th_type: "வகை",
+    th_loc: "இடம்",
+    th_desc: "விவரம்",
+    th_risk: "ஆபத்து மற்றும் காரணிகள்",
+    th_by: "வழங்கியவர்",
+    btn_signout: "வெளியேறு"
+  },
+
+  te: {
+    lang_name: "తెలుగు (Telugu)",
+    hdr_sub: "ఆయిల్ ఇండియా లిమిటెడ్ · SIH 2026",
+    pill_text: "ఆయిల్ ఇండియా లిమిటెడ్ · SIH 2026 ఆవిష్కరణ",
+    hero_title: "తీవ్ర ప్రమాదాలు జరగకముందే <em>దాగి ఉన్న ప్రమాదాలను</em> గుర్తించండి.",
+    hero_desc: "చమురు రిగ్గులు మరియు పైప్‌లైన్ల కోసం ఆధునిక AI వ్యవస్థ. రియల్-టైమ్ NLP మరియు SHAP వివరణ ద్వారా ప్రాణాంతక ప్రమాద సంకేతాలను ముందే పసిగడుతుంది.",
+    btn_portal: "భద్రతా పోర్టల్",
+    btn_launch_portal: "భద్రతా పోర్టల్ ప్రారంభించండి",
+    btn_create_account: "ఖాతా సృష్టించండి",
+    btn_portal_access: "పోర్టల్ ప్రవేశం",
+    m1_val: "94.8% ఖచ్చితత్వం",
+    m1_lbl: "SIF ముందస్తు గుర్తింపు",
+    m2_val: "DGMS మరియు OSHA",
+    m2_lbl: "నియమ నిబంధనల సన్నద్ధత",
+    m3_val: "TreeSHAP వివరణాత్మక AI",
+    m3_lbl: "పారదర్శక నిర్ణయాలు",
+    m4_val: "< 120ms వేగం",
+    m4_lbl: "రియల్ టైమ్ రిగ్ విశ్లేషణ",
+    s1_tag: "ఆఫ్‌షోర్ మరియు రిగ్ డ్రిల్లింగ్",
+    s1_title: "ఆటోమేటెడ్ SIF ప్రమాద గుర్తింపు",
+    s1_desc: "రియల్-టైమ్ NLP మోడల్స్ రిగ్ నివేదికలను విశ్లేషించి ప్రమాదాలను ముందే హెచ్చరిస్తాయి.",
+    s2_tag: "కేంద్ర HSE కమాండ్ సెంటర్",
+    s2_title: "కేంద్రీకృత ప్రమాద పర్యవేక్షణ",
+    s2_desc: "అధికారులు గ్యాస్ లీకేజీలు మరియు పీడన మార్పులను లైవ్ గా పరిశీలిస్తారు.",
+    s3_tag: "ఫీల్డ్ వర్కర్ మరియు PPE భద్రత",
+    s3_title: "మొబైల్ ద్వారా ప్రమాద నివేదన",
+    s3_desc: "సిబ్బంది పని ప్రదేశం నుండి నేరుగా అసురక్షిత పరిస్థితులను నమోదు చేయవచ్చు.",
+    s4_tag: "పైప్‌లైన్ మరియు BOP సెన్సార్లు",
+    s4_title: "SHAP మూల-కారణ మ్యాట్రిక్స్",
+    s4_desc: "పారదర్శక విశ్లేషణ వాల్వ్ లీకులు మరియు అధిక పీడనాన్ని ముందే హెచ్చరిస్తుంది.",
+    status_text: "AI వ్యవస్థ క్రియాశీలకం · జీరో-హార్మ్ విధానం · ఆయిల్ ఇండియా లిమిటెడ్",
+    panel_title: "భద్రతా పోర్టల్",
+    panel_sub: "ఆయిల్ ఇండియా లిమిటెడ్ · సురక్షిత నివేదికలు",
+    btn_close: "మూసివేయి",
+    tab_login: "లాగిన్",
+    tab_register: "ఖాతా సృష్టించండి",
+    lbl_username: "యూజర్ నేమ్",
+    lbl_phone: "ఫోన్ నంబర్",
+    lbl_password: "పాస్వర్డ్",
+    hint_phone_lookup: "డివైస్ లో రిజిస్టర్ అయిన ఖాతాను శోధిస్తుంది.",
+    btn_signin: "పోర్టల్ లోకి ప్రవేశించండి",
+    lbl_reg_username: "యూజర్ నేమ్ ఎంచుకోండి",
+    lbl_role: "హోదా / పాత్ర",
+    btn_register: "ఖాతా సృష్టించండి",
+    sub_report_title: "ప్రమాద నివేదిక సమర్పించండి",
+    sub_report_desc: "అసురక్షిత పని లేదా పరిస్థితిని వివరించండి. AI వెంటనే ప్రమాద తీవ్రతను అంచనా వేస్తుంది.",
+    lbl_rep_type: "నివేదిక రకం",
+    lbl_rep_loc: "ప్రాంతం",
+    lbl_rep_dept: "విభాగం",
+    lbl_rep_text: "వివరాలు",
+    btn_analyse_submit: "విశ్లేషించి సమర్పించండి",
+    stat_total: "మొత్తం నివేదికలు",
+    stat_sif: "తీవ్ర ప్రమాదం",
+    stat_low: "తక్కువ ప్రమాదం",
+    dash_heading: "టెలిమెట్రీ లాగ్",
+    th_type: "రకం",
+    th_loc: "ప్రాంతం",
+    th_desc: "వివరణ",
+    th_risk: "ప్రమాదం & కారకాలు",
+    th_by: "సమర్పించిన వారు",
+    btn_signout: "లాగౌట్"
+  },
+
+  es: {
+    lang_name: "Español",
+    hdr_sub: "Oil India Limited · SIH 2026",
+    pill_text: "Innovación Oil India Limited · SIH 2026",
+    hero_title: "Prediga Peligros Ocultos Antes de que Sean <em>Fatalidades.</em>",
+    hero_desc: "Capa operativa de inteligencia artificial diseñada para plataformas de perforación y oleoductos. Aísla precursores de incidentes graves y fatales (SIF) mediante PNL en tiempo real y explicabilidad SHAP.",
+    btn_portal: "Portal de Seguridad",
+    btn_launch_portal: "Abrir Portal de Seguridad",
+    btn_create_account: "Crear Cuenta",
+    btn_portal_access: "Acceso al Portal",
+    m1_val: "94.8% Precisión",
+    m1_lbl: "Detección de Precursores SIF",
+    m2_val: "DGMS y OSHA",
+    m2_lbl: "Cumplimiento Regulatorio",
+    m3_val: "TreeSHAP Explicable",
+    m3_lbl: "Decisiones Transparentes",
+    m4_val: "< 120ms Inferencia",
+    m4_lbl: "Triaje en Tiempo Real",
+    s1_tag: "Operaciones en Plataformas Offshore",
+    s1_title: "Detección Automatizada de Precursores SIF",
+    s1_desc: "Modelos de PNL analizan registros de perforación para alertar sobre peligros de reventones y caída de cargas.",
+    s2_tag: "Comando Central de Telemetría HSE",
+    s2_title: "Panel Centralizado de Telemetría de Riesgo",
+    s2_desc: "Supervisión en tiempo real de picos de presión y mapas térmicos de fugas de gas en refinerías.",
+    s3_tag: "Triaje de Campo y Cumplimiento EPP",
+    s3_title: "Reportes Móviles Resistentes en Campo",
+    s3_desc: "El personal de campo registra anomalías mecánicas con evaluación de riesgo instantánea.",
+    s4_tag: "Oleoductos y Válvulas Preventoras BOP",
+    s4_title: "Matriz Explicable de Causa Raíz SHAP",
+    s4_desc: "Atribución transparente de factores críticos para cortes preventivos de emergencia.",
+    status_text: "Capa Operativa de IA Activa · Protocolo Cero Daño · Oil India Limited",
+    panel_title: "Portal de Seguridad",
+    panel_sub: "Oil India Limited · Telemetría y Reportes Seguros",
+    btn_close: "Cerrar",
+    tab_login: "Iniciar Sesión",
+    tab_register: "Crear Cuenta",
+    lbl_username: "Usuario",
+    lbl_phone: "Teléfono",
+    lbl_password: "Contraseña",
+    hint_phone_lookup: "Busca usuario registrado en el dispositivo.",
+    btn_signin: "Entrar al Portal",
+    lbl_reg_username: "Elija un usuario",
+    lbl_role: "Cargo / Rol",
+    btn_register: "Crear Cuenta",
+    sub_report_title: "Enviar Reporte de Peligro",
+    sub_report_desc: "Describa el acto o condición insegura. La IA evaluará el riesgo de fatalidad al instante.",
+    lbl_rep_type: "Tipo de Reporte",
+    lbl_rep_loc: "Ubicación",
+    lbl_rep_dept: "Departamento",
+    lbl_rep_text: "Descripción del Peligro",
+    btn_analyse_submit: "Analizar y Enviar",
+    stat_total: "Reportes Totales",
+    stat_sif: "Riesgo SIF",
+    stat_low: "Bajo Riesgo",
+    dash_heading: "Registro de Telemetría",
+    th_type: "Tipo",
+    th_loc: "Ubicación",
+    th_desc: "Descripción",
+    th_risk: "Riesgo y Factores",
+    th_by: "Por",
+    btn_signout: "Cerrar Sesión"
+  },
+
+  fr: {
+    lang_name: "Français",
+    hdr_sub: "Oil India Limited · SIH 2026",
+    pill_text: "Innovation Oil India Limited · SIH 2026",
+    hero_title: "Prédisez les Dangers Latents Avant qu'ils ne Deviennent des <em>Fatalités.</em>",
+    hero_desc: "Système d'exploitation IA d'entreprise pour les plates-formes de forage pétrolières et les oléoducs. Isolation des précurseurs d'incidents graves et mortels (SIF) via le TAL en temps réel et l'explicabilité SHAP.",
+    btn_portal: "Portail de Sécurité",
+    btn_launch_portal: "Lancer le Portail",
+    btn_create_account: "Créer un Compte",
+    btn_portal_access: "Accès Portail",
+    m1_val: "94.8% Précision",
+    m1_lbl: "Détection des Précurseurs SIF",
+    m2_val: "DGMS & OSHA",
+    m2_lbl: "Conformité Règlementaire",
+    m3_val: "TreeSHAP Explicable",
+    m3_lbl: "IA Transparente",
+    m4_val: "< 120ms Inférence",
+    m4_lbl: "Triage en Temps Réel",
+    s1_tag: "Opérations de Forage Offshore",
+    s1_title: "Détection Automatisée des Précurseurs SIF",
+    s1_desc: "Les modèles TAL analysent les journaux de forage pour signaler les risques d'éruption de puits et chutes d'objets.",
+    s2_tag: "Centre de Commande Télémétrique HSE",
+    s2_title: "Tableau de Bord Centralisé des Risques",
+    s2_desc: "Surveillance en direct des pics de pression et cartographie thermique des fuites de gaz.",
+    s3_tag: "Triage Terrain & Conformité EPI",
+    s3_title: "Rapports Mobiles Durcis sur le Terrain",
+    s3_desc: "Les équipes de terrain signalent les anomalies directement depuis les têtes de puits avec évaluation instantanée.",
+    s4_tag: "Capteurs Oléoduc & Vannes BOP",
+    s4_title: "Matrice de Causalité Racine SHAP",
+    s4_desc: "Attribution transparente des facteurs critiques pour des arrêts d'urgence préventifs.",
+    status_text: "Couche IA Opérationnelle Active · Protocole Zéro Dommage · Oil India Limited",
+    panel_title: "Portail de Sécurité",
+    panel_sub: "Oil India Limited · Télémétrie Sécurisée",
+    btn_close: "Fermer",
+    tab_login: "Connexion",
+    tab_register: "Créer un Compte",
+    lbl_username: "Nom d'utilisateur",
+    lbl_phone: "Téléphone",
+    lbl_password: "Mot de passe",
+    hint_phone_lookup: "Recherche le compte enregistré sur l'appareil.",
+    btn_signin: "Accéder au Portail",
+    lbl_reg_username: "Choisir un nom d'utilisateur",
+    lbl_role: "Rôle / Fonction",
+    btn_register: "Créer un Compte",
+    sub_report_title: "Soumettre un Rapport de Danger",
+    sub_report_desc: "Décrivez l'acte ou la condition dangereuse. L'IA évaluera immédiatement le risque.",
+    lbl_rep_type: "Type de Rapport",
+    lbl_rep_loc: "Emplacement",
+    lbl_rep_dept: "Département",
+    lbl_rep_text: "Description du Danger",
+    btn_analyse_submit: "Analyser et Soumettre",
+    stat_total: "Total Rapports",
+    stat_sif: "Risque SIF",
+    stat_low: "Faible Risque",
+    dash_heading: "Journal de Télémétrie",
+    th_type: "Type",
+    th_loc: "Emplacement",
+    th_desc: "Description",
+    th_risk: "Risque & Facteurs",
+    th_by: "Par",
+    btn_signout: "Déconnexion"
+  },
+
+  ar: {
+    lang_name: "العربية (Arabic)",
+    hdr_sub: "أويل إنديا ليمتد · SIH 2026",
+    pill_text: "ابتكار أويل إنديا ليمتد · SIH 2026",
+    hero_title: "توقع المخاطر الكامنة قبل أن تتحول إلى <em>وفيات.</em>",
+    hero_desc: "نظام تشغيل ذكي متطور لمنصات حفر النفط وخطوط الأنابيب. عزل مؤشرات الإصابات الخطيرة والوفيات (SIF) في الوقت الفعلي باستخدام معالجة اللغة الطبيعية ونموذج SHAP الشفاف.",
+    btn_portal: "بوابة السلامة",
+    btn_launch_portal: "فتح بوابة السلامة",
+    btn_create_account: "إنشاء حساب",
+    btn_portal_access: "دخول البوابة",
+    m1_val: "94.8% دقة",
+    m1_lbl: "استرجاع مؤشرات SIF",
+    m2_val: "DGMS و OSHA",
+    m2_lbl: "جاهز للتدقيق والامتثال",
+    m3_val: "TreeSHAP شفاف",
+    m3_lbl: "قرارات بدون صناديق سوداء",
+    m4_val: "< 120ms سرعة",
+    m4_lbl: "فرز فوري للمخاطر",
+    s1_tag: "عمليات الحفر البحرية والبرية",
+    s1_title: "كشف تلقائي لمؤشرات SIF الخطيرة",
+    s1_desc: "تحليل سجلات الحفر والتقارير في الوقت الفعلي للتحذير من مخاطر الانفجار وسقوط الأجسام الثقيلة.",
+    s2_tag: "مركز التحكم في قياسات السلامة HSE",
+    s2_title: "لوحة تحكم مركزية لبيانات المخاطر",
+    s2_desc: "مراقبة مستمرة لارتفاع الضغط وخرائط تسرب الغاز عبر جميع قطاعات التكرير.",
+    s3_tag: "تقييم العمال والامتثال لمعدات الوقاية",
+    s3_title: "تسجيل فوري للمخاطر عبر الأجهزة الميدانية",
+    s3_desc: "يقوم عمال الحقل بتسجيل الحالات غير الآمنة مباشرة مع تقييم لحظي للمخاطر.",
+    s4_tag: "مستشعرات خطوط الأنابيب وصمامات BOP",
+    s4_title: "مصفوفة SHAP لتحديد الأسباب الجذرية",
+    s4_desc: "تحديد دقيق لتسربات الضغط العالي وجيوب غاز H2S للإغلاق الوقائي السريع.",
+    status_text: "طبقة الذكاء الاصطناعي نشطة · مبدأ انعدام الضرر · أويل إنديا ليمتد",
+    panel_title: "بوابة السلامة",
+    panel_sub: "أويل إنديا ليمتد · تقارير وقياسات آمنة",
+    btn_close: "إغلاق",
+    tab_login: "تسجيل الدخول",
+    tab_register: "إنشاء حساب",
+    lbl_username: "اسم المستخدم",
+    lbl_phone: "رقم الهاتف",
+    lbl_password: "كلمة المرور",
+    hint_phone_lookup: "البحث عن الحساب المسجل على الجهاز.",
+    btn_signin: "دخول بوابة السلامة",
+    lbl_reg_username: "اختر اسم المستخدم",
+    lbl_role: "المسمى الوظيفي / الدور",
+    btn_register: "إنشاء حساب",
+    sub_report_title: "تقديم تقرير عن حالة خطرة",
+    sub_report_desc: "اوصف الحالة أو التصرف غير الآمن. سيقوم الذكاء الاصطناعي بتقييم خطر الوفاة فوراً.",
+    lbl_rep_type: "نوع التقرير",
+    lbl_rep_loc: "الموقع",
+    lbl_rep_dept: "القسم",
+    lbl_rep_text: "وصف الخطر",
+    btn_analyse_submit: "تحليل وتقديم التقرير",
+    stat_total: "إجمالي التقارير",
+    stat_sif: "مخاطر SIF",
+    stat_low: "مخاطر منخفضة",
+    dash_heading: "سجل القياسات الحية",
+    th_type: "النوع",
+    th_loc: "الموقع",
+    th_desc: "الوصف",
+    th_risk: "الخطر والعوامل",
+    th_by: "بواسطة",
+    btn_signout: "تسجيل الخروج"
+  }
+};
+
+/* ===================================================
+   LANGUAGE SYSTEM
+=================================================== */
+function toggleLangMenu(e) {
+  e.stopPropagation();
+  const menu = document.getElementById('langMenu');
+  menu.classList.toggle('show');
+}
+
+window.addEventListener('click', () => {
+  const menu = document.getElementById('langMenu');
+  if (menu) menu.classList.remove('show');
+});
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('sif-lang', lang);
+  const dict = I18N[lang] || I18N.en;
+
+  // Update button label
+  const curLbl = document.getElementById('currentLangLabel');
+  if (curLbl) curLbl.textContent = dict.lang_name ? dict.lang_name.split(' ')[0] : 'English';
+
+  // Apply all data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+
+  // Active state in dropdown
+  document.querySelectorAll('.lang-item').forEach(item => {
+    const fnStr = item.getAttribute('onclick') || '';
+    item.classList.toggle('active', fnStr.includes(`'${lang}'`));
+  });
+
+  // RTL support for Arabic
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+}
+
+/* ===================================================
+   THEME TOGGLE
+=================================================== */
+(function initTheme() {
+  const t = localStorage.getItem('sif-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  updateThemeUI(t);
+  setLanguage(currentLang);
+})();
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const nxt = cur === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', nxt);
+  localStorage.setItem('sif-theme', nxt);
+  updateThemeUI(nxt);
+}
+
+function updateThemeUI(t) {
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.textContent = t === 'dark' ? '🌙' : '☀️';
+}
+
+/* ===================================================
+   SLIDE-OVER OVERLAY MODAL (AXELROD STYLE)
+=================================================== */
+function openOverlay(show, tab = 'login') {
+  const overlay = document.getElementById('portalOverlay');
+  if (!overlay) return;
+  if (show) {
+    overlay.classList.add('open');
+    if (tab) showAuthTab(tab);
+  } else {
+    overlay.classList.remove('open');
+  }
+}
+
+function handleOverlayBackdropClick(e) {
+  if (e.target.id === 'portalOverlay') {
+    openOverlay(false);
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') openOverlay(false);
+});
+
+/* ===================================================
+   INTERACTIVE CAROUSEL
+=================================================== */
+let activeSlideIndex = 0;
+const totalSlidesCount = 4;
+let carouselInterval = null;
+
+function renderSlide() {
+  const slides = document.querySelectorAll('.carousel-slide-item');
+  slides.forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === activeSlideIndex);
+  });
+  const dots = document.querySelectorAll('#carouselIndicators .carousel-bar-dot');
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === activeSlideIndex);
+  });
+  const counter = document.getElementById('slideCounterText');
+  if (counter) counter.textContent = `0${activeSlideIndex + 1} / 0${totalSlidesCount}`;
+}
+
+function nextSlide() {
+  activeSlideIndex = (activeSlideIndex + 1) % totalSlidesCount;
+  renderSlide();
+}
+
+function prevSlide() {
+  activeSlideIndex = (activeSlideIndex - 1 + totalSlidesCount) % totalSlidesCount;
+  renderSlide();
+}
+
+function goToSlide(idx) {
+  activeSlideIndex = idx;
+  renderSlide();
+}
+
+function startCarousel() {
+  if (carouselInterval) clearInterval(carouselInterval);
+  carouselInterval = setInterval(nextSlide, 5000);
+}
+function pauseCarousel() {
+  if (carouselInterval) clearInterval(carouselInterval);
+}
+function resumeCarousel() {
+  startCarousel();
+}
+
+startCarousel();
+
+/* ===================================================
+   AUTH & DASHBOARD LOGIC (PRESERVING BACKEND APIS)
+=================================================== */
 function showAuthTab(tab) {
   document.getElementById('loginTab').classList.toggle('active', tab === 'login');
   document.getElementById('registerTab').classList.toggle('active', tab === 'register');
@@ -132,126 +2346,261 @@ function showAuthTab(tab) {
   document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
 }
 
+function setLoginType(type) {
+  loginType = type;
+  document.getElementById('loginByUserBtn').classList.toggle('active', type === 'username');
+  document.getElementById('loginByPhoneBtn').classList.toggle('active', type === 'phone');
+  document.getElementById('loginUsernameGroup').style.display = type === 'username' ? 'block' : 'none';
+  document.getElementById('loginPhoneGroup').style.display = type === 'phone' ? 'block' : 'none';
+}
+
 async function register() {
   const errEl = document.getElementById('regError');
-  errEl.classList.add('hidden');
-  const body = {
-    username: document.getElementById('regUsername').value,
-    password: document.getElementById('regPassword').value,
-    role: document.getElementById('regRole').value,
-  };
+  errEl.classList.remove('show');
+  const uname = document.getElementById('regUsername').value.trim();
+  const pwd = document.getElementById('regPassword').value;
+  const r = document.getElementById('regRole').value;
+
+  if (!uname || !pwd) {
+    errEl.textContent = 'Username and password are required.';
+    errEl.classList.add('show');
+    return;
+  }
+
+  const phone = document.getElementById('regPhone').value.trim();
+  if (phone) {
+    localStorage.setItem('sif-ph-' + uname, document.getElementById('regPhonePrefix').value + phone);
+  }
+
   try {
-    const res = await fetch(`${API_BASE}/auth/register`, {
-      method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(body)
+    const res = await fetch(API_BASE + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: uname, password: pwd, role: r })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || "Registration failed");
-    onAuthSuccess(data.access_token, data.role, body.username);
+    if (!res.ok) throw new Error(data.detail || 'Registration failed');
+    onAuthSuccess(data.access_token, data.role, uname);
   } catch (e) {
-    errEl.textContent = e.message; errEl.classList.remove('hidden');
+    errEl.textContent = e.message;
+    errEl.classList.add('show');
   }
 }
 
 async function login() {
   const errEl = document.getElementById('loginError');
-  errEl.classList.add('hidden');
-  const uname = document.getElementById('loginUsername').value;
+  errEl.classList.remove('show');
   const pwd = document.getElementById('loginPassword').value;
+  let uname;
+
+  if (loginType === 'phone') {
+    const prefix = document.getElementById('loginPhonePrefix').value.trim();
+    const num = document.getElementById('loginPhone').value.trim();
+    const key = prefix + num;
+    uname = null;
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('sif-ph-') && localStorage.getItem(k) === key) {
+        uname = k.replace('sif-ph-', '');
+        break;
+      }
+    }
+    if (!uname) {
+      errEl.textContent = 'No account found for that phone number on this device.';
+      errEl.classList.add('show');
+      return;
+    }
+  } else {
+    uname = document.getElementById('loginIdentifier').value.trim();
+  }
+
+  if (!uname || !pwd) {
+    errEl.textContent = 'Please provide both credentials.';
+    errEl.classList.add('show');
+    return;
+  }
+
   try {
     const form = new URLSearchParams();
-    form.append("username", uname);
-    form.append("password", pwd);
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: "POST", headers: {"Content-Type":"application/x-www-form-urlencoded"}, body: form
+    form.append('username', uname);
+    form.append('password', pwd);
+
+    const res = await fetch(API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || "Login failed");
+    if (!res.ok) throw new Error(data.detail || 'Login failed');
     onAuthSuccess(data.access_token, data.role, uname);
   } catch (e) {
-    errEl.textContent = e.message; errEl.classList.remove('hidden');
+    errEl.textContent = e.message;
+    errEl.classList.add('show');
   }
 }
 
 function onAuthSuccess(tok, r, uname) {
-  token = tok; role = r; username = uname;
+  token = tok;
+  role = r;
+  username = uname;
+
   document.getElementById('authSection').classList.add('hidden');
-  // Only field workers submit reports from the ground. Safety Officers /
-  // Admins only monitor the dashboard - their job is oversight, not filing.
+  document.getElementById('headerAuthBtn').classList.add('hidden');
+  document.getElementById('headerUserBar').classList.remove('hidden');
+  document.getElementById('userRoleBadge').textContent = role.replace(/_/g, ' ').toUpperCase();
+  document.getElementById('userNameBadge').textContent = uname;
+
   if (role === 'field_worker') {
     document.getElementById('submitSection').classList.remove('hidden');
+  } else {
+    document.getElementById('submitSection').classList.add('hidden');
+    document.getElementById('statsRow').style.display = 'grid';
   }
-  document.getElementById('userbar').classList.remove('hidden');
-  document.getElementById('roleLabel').textContent = role.replace('_',' ').toUpperCase();
-  document.getElementById('usernameLabel').textContent = username;
 
   document.getElementById('dashboardSection').classList.remove('hidden');
-  document.getElementById('dashboardTitle').textContent =
-    role === 'field_worker' ? '📋 My Submitted Reports' : '📊 All Reports Dashboard';
+  document.getElementById('dashTitle').textContent =
+    role === 'field_worker' ? 'My Submitted Reports' : 'All Incidents Telemetry Dashboard';
+
   loadReports();
 }
 
 function logout() {
-  token = null; role = null; username = null;
+  token = null;
+  role = null;
+  username = null;
+
   document.getElementById('authSection').classList.remove('hidden');
+  document.getElementById('headerAuthBtn').classList.remove('hidden');
+  document.getElementById('headerUserBar').classList.add('hidden');
   document.getElementById('submitSection').classList.add('hidden');
   document.getElementById('dashboardSection').classList.add('hidden');
-  document.getElementById('userbar').classList.add('hidden');
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('predictResult').classList.add('hidden');
 }
 
+/* ===================================================
+   SUBMIT REPORT & LOAD DASHBOARD
+=================================================== */
 async function submitReport() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = 'Analysing Precursor Latency...';
+
   const body = {
     report_type: document.getElementById('repType').value,
     location: document.getElementById('repLocation').value,
     department: document.getElementById('repDept').value,
     report_text: document.getElementById('repText').value,
   };
-  const res = await fetch(`${API_BASE}/reports`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json", "Authorization": `Bearer ${token}`},
-    body: JSON.stringify(body)
-  });
-  const data = await res.json();
-  if (!res.ok) { alert(data.detail || "Submission failed"); return; }
 
-  const resultEl = document.getElementById('predictResult');
-  resultEl.classList.remove('hidden');
-  const isHigh = data.predicted_label === 1;
-  const factors = JSON.parse(data.top_factors || "[]");
-  resultEl.innerHTML = `
-    <div class="result-box" style="border-color:${isHigh ? '#ef4444' : '#22c55e'}">
-      <strong>${isHigh ? '⚠️ SIF PRECURSOR DETECTED' : '✅ Low Risk'}</strong>
-      &nbsp; (confidence: ${(data.predicted_probability*100).toFixed(1)}%)
-      <div class="factors">Top contributing factors:
-        ${factors.map(f => `<span class="factor-chip">${f.feature.replace('flag_','').replace('count_','').replace('tfidf_','word: ')} (${f.impact>0?'+':''}${f.impact})</span>`).join('')}
+  try {
+    const res = await fetch(API_BASE + '/reports', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    btn.disabled = false;
+    btn.innerHTML = '<span>Analyse Precursor &amp; Submit</span> &rarr;';
+
+    if (!res.ok) {
+      alert(data.detail || 'Submission failed');
+      return;
+    }
+
+    const resultEl = document.getElementById('predictResult');
+    resultEl.classList.remove('hidden');
+    const isHigh = data.predicted_label === 1;
+    const factors = JSON.parse(data.top_factors || '[]');
+    const conf = (data.predicted_probability * 100).toFixed(1);
+
+    const chipsHtml = factors.map(f => {
+      const name = f.feature.replace('flag_', '').replace('count_', '').replace('tfidf_', '');
+      const sign = f.impact > 0 ? '+' : '';
+      return `<span class="chip-tag">${name} (${sign}${f.impact})</span>`;
+    }).join(' ');
+
+    resultEl.innerHTML = `
+      <div style="padding:16px; border-radius:8px; border:1.5px solid ${isHigh ? 'var(--danger)' : 'var(--ok)'}; background:${isHigh ? 'var(--danger-bg)' : 'var(--ok-bg)'};">
+        <div style="font-family:'DM Serif Display', Georgia, serif; font-size:17px; color:${isHigh ? 'var(--danger)' : 'var(--ok)'}; margin-bottom:4px;">
+          ${isHigh ? '⚠️ High Potential SIF Precursor Detected' : '✅ Low Risk Event Logged'}
+        </div>
+        <div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
+          Confidence Probability: <strong>${conf}%</strong> ${isHigh ? '— Immediate Barricade Required' : '— Standard Controls'}
+        </div>
+        ${factors.length ? `<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px;">Contributing Factors:</div><div style="display:flex; flex-wrap:wrap; gap:4px;">${chipsHtml}</div>` : ''}
       </div>
-    </div>`;
+    `;
 
-  document.getElementById('repText').value = "";
-  loadReports();
+    document.getElementById('repText').value = '';
+    loadReports();
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>Analyse Precursor &amp; Submit</span> &rarr;';
+    alert('Submission error: ' + e.message);
+  }
 }
 
 async function loadReports() {
-  const res = await fetch(`${API_BASE}/reports`, { headers: {"Authorization": `Bearer ${token}`} });
-  const data = await res.json();
   const tbody = document.getElementById('reportsTableBody');
-  if (!res.ok) { tbody.innerHTML = `<tr><td colspan="5">Failed to load reports</td></tr>`; return; }
+  const countEl = document.getElementById('reportCount');
+  tbody.innerHTML = '<tr><td colspan="5"><div class="empty-row"><span style="font-size:24px;">⌛</span><br>Loading reports...</div></td></tr>';
 
-  tbody.innerHTML = data.map(r => {
-    const isHigh = r.predicted_label === 1;
-    const factors = JSON.parse(r.top_factors || "[]").slice(0,3);
-    return `<tr>
-      <td>${r.report_type}</td>
-      <td>${r.location}<br><span style="color:var(--muted)">${r.department}</span></td>
-      <td style="max-width:260px">${r.report_text}</td>
-      <td>
-        <span class="badge ${isHigh ? 'high' : 'low'}">${isHigh ? 'SIF RISK' : 'LOW RISK'}</span>
-        <div class="factors">${(r.predicted_probability*100).toFixed(1)}% &middot;
-          ${factors.map(f => `<span class="factor-chip">${f.feature.replace('flag_','').replace('count_','').replace('tfidf_','')}</span>`).join('')}
-        </div>
-      </td>
-      <td>${r.submitted_by_username || '-'}</td>
-    </tr>`;
-  }).join('');
+  try {
+    const res = await fetch(API_BASE + '/reports', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="empty-row">Failed to load reports telemetry.</div></td></tr>';
+      return;
+    }
+
+    countEl.textContent = data.length ? `${data.length} report${data.length !== 1 ? 's' : ''}` : '';
+    const high = data.filter(r => r.predicted_label === 1).length;
+
+    document.getElementById('statTotal').textContent = data.length;
+    document.getElementById('statHigh').textContent = high;
+    document.getElementById('statLow').textContent = data.length - high;
+
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="empty-row"><span style="font-size:24px;">📭</span><br>No hazard reports filed yet.</div></td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = data.map(r => {
+      const isHigh = r.predicted_label === 1;
+      const factors = JSON.parse(r.top_factors || '[]').slice(0, 3);
+      const chips = factors.map(f => {
+        const name = f.feature.replace('flag_', '').replace('count_', '').replace('tfidf_', '');
+        return `<span class="chip-tag" style="font-size:9px; padding:1px 6px;">${name}</span>`;
+      }).join(' ');
+
+      return `
+        <tr>
+          <td style="font-weight:600;">${r.report_type}</td>
+          <td>
+            <div style="font-weight:600;">${r.location}</div>
+            <div style="font-size:10.5px; color:var(--text-secondary);">${r.department}</div>
+          </td>
+          <td style="max-width:180px; word-wrap:break-word; font-size:11.5px; color:var(--text-secondary);">${r.report_text}</td>
+          <td>
+            <span class="badge-risk ${isHigh ? 'high' : 'low'}">
+              <span class="dot"></span>${isHigh ? 'SIF Risk' : 'Low Risk'}
+            </span>
+            <div style="font-size:10px; color:var(--text-secondary); margin-top:3px;">${(r.predicted_probability * 100).toFixed(1)}% conf</div>
+            <div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:3px;">${chips}</div>
+          </td>
+          <td style="color:var(--text-secondary); font-size:11px;">${r.submitted_by_username || '—'}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch (e) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-row">Network error connecting to API.</div></td></tr>';
+  }
 }
 </script>
 </body>
