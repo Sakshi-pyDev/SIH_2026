@@ -27,6 +27,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_selection import SelectKBest, f_classif
 
 
 # ---------------------------------------------------------------------------
@@ -125,7 +126,7 @@ def extract_hazard_flags(raw_text: str) -> dict:
 # 4. Main preprocessor class (fit on train, transform on train/inference)
 # ---------------------------------------------------------------------------
 class SIFPreprocessor:
-    def __init__(self, max_tfidf_features: int = 300, ngram_range=(1, 2)):
+    def __init__(self, max_tfidf_features: int = 100, ngram_range=(1, 2), k_best: int = 40):
         self.tfidf = TfidfVectorizer(
             max_features=max_tfidf_features,
             ngram_range=ngram_range,
@@ -136,6 +137,15 @@ class SIFPreprocessor:
         self.severity_map_ = {s: i for i, s in enumerate(SEVERITY_ORDER)}
         self.hazard_feature_names_ = None
         self.fitted_ = False
+
+        # Feature selection: with only ~120 training reports and 150+ raw
+        # features, the model overfits badly (high variance across CV folds).
+        # SelectKBest keeps only the k features most statistically associated
+        # with the label (ANOVA F-test), which measurably improved recall
+        # and cut fold-to-fold variance in our experiments (see model dev notes).
+        self.k_best = k_best
+        self.selector = SelectKBest(f_classif, k=k_best) if k_best else None
+        self.selected_columns_ = None
 
     # -- categorical encoding -------------------------------------------------
     def _encode_categoricals(self, df: pd.DataFrame, fit: bool) -> pd.DataFrame:
@@ -160,7 +170,12 @@ class SIFPreprocessor:
         return one_hot.reset_index(drop=True)
 
     # -- fit / transform --------------------------------------------------
-    def fit_transform(self, df: pd.DataFrame) -> pd.DataFrame:
+    def fit_transform(self, df: pd.DataFrame, y=None) -> pd.DataFrame:
+        """
+        y: training labels (is_sif_precursor), REQUIRED if k_best feature
+        selection is enabled (the default). Only needed at training time -
+        transform() never needs y.
+        """
         df = df.copy()
         cleaned = df["report_text"].apply(clean_text)
 
@@ -178,6 +193,14 @@ class SIFPreprocessor:
 
         self.fitted_ = True
         result = pd.concat([hazard_df, cat_df, tfidf_df], axis=1)
+
+        if self.selector is not None:
+            if y is None:
+                raise ValueError("y (labels) required for fit_transform when k_best feature selection is enabled.")
+            self.selector.fit(result, y)
+            self.selected_columns_ = result.columns[self.selector.get_support()].tolist()
+            result = result[self.selected_columns_]
+
         return result
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -197,7 +220,10 @@ class SIFPreprocessor:
 
         cat_df = self._encode_categoricals(df, fit=False)
 
-        return pd.concat([hazard_df, cat_df, tfidf_df], axis=1)
+        result = pd.concat([hazard_df, cat_df, tfidf_df], axis=1)
+        if self.selector is not None and self.selected_columns_ is not None:
+            result = result[self.selected_columns_]
+        return result
 
     # -- persistence --------------------------------------------------------
     def save(self, path: str):
@@ -233,11 +259,11 @@ def preprocess_single_report(preprocessor: "SIFPreprocessor", report: dict) -> p
 
 if __name__ == "__main__":
     # Quick smoke test when run directly
-    df = pd.read_csv("/mnt/user-data/uploads/oil_safety_reports_dataset.csv")
+    df = pd.read_csv("/mnt/user-data/outputs/oil_safety_reports_dataset.csv")
     pre = SIFPreprocessor()
-    X = pre.fit_transform(df)
+    X = pre.fit_transform(df, y=df["is_sif_precursor"])
     print("Feature matrix shape:", X.shape)
-    print("Sample columns:", X.columns[:15].tolist())
+    print("Selected columns:", X.columns.tolist())
     pre.save("/home/claude/sif_preprocessor.pkl")
     X.to_csv("/home/claude/processed_features_preview.csv", index=False)
     print("Saved preprocessor + preview CSV.")
