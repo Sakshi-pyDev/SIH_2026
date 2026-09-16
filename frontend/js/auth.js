@@ -149,8 +149,26 @@ async function quickAdminLogin() {
 
 function handleLogout() {
   AuthState.clearSession();
-  window.location.href = 'index.html';
+  localStorage.removeItem('oil_sif_token');
+  localStorage.removeItem('oil_sif_role');
+  localStorage.removeItem('oil_sif_username');
+  AuthState.updateUI();
+
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) {
+    window.location.reload();
+  } else {
+    window.location.href = 'index.html';
+  }
 }
+
+// Global click listener for Sign Out buttons
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-nav-logout');
+  if (btn) {
+    e.preventDefault();
+    handleLogout();
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   AuthState.updateUI();

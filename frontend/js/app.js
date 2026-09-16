@@ -473,24 +473,14 @@ async function submitReportFromPortal() {
     return;
   }
 
-  // Ensure authenticated token; auto-acquire worker token if needed
+  // Ensure authenticated token
   let token = AuthState.getToken();
   if (!token) {
-    try {
-      const form = new URLSearchParams();
-      form.append('username', 'worker1');
-      form.append('password', 'password');
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: form
-      });
-      if (res.ok) {
-        const data = await res.json();
-        AuthState.setSession(data.access_token, data.role, 'worker1');
-        token = data.access_token;
-      }
-    } catch (e) { }
+    if (alertEl) {
+      alertEl.textContent = 'Please sign in or click "⚡ Quick Demo Login" in the top bar before submitting a safety report.';
+      alertEl.className = 'alert alert-error show';
+    }
+    return;
   }
 
   // Multi-modal digital evidence capture
@@ -630,31 +620,16 @@ async function submitReportFromPortal() {
 let allLoadedReports = [];
 
 async function loadReports() {
-  let token = AuthState.getToken();
-  
-  // Seamless auto-auth for demo so live database records show immediately
-  if (!token) {
-    try {
-      const form = new URLSearchParams();
-      form.append('username', 'worker1');
-      form.append('password', 'password');
-      const authRes = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: form
-      });
-      if (authRes.ok) {
-        const authData = await authRes.json();
-        AuthState.setSession(authData.access_token, authData.role, 'worker1');
-        token = authData.access_token;
-        updateUserLabel();
-      }
-    } catch (e) {}
-  }
-
-  const headers = token ? { "Authorization": `Bearer ${token}` } : {};
   const tbody = document.getElementById('reportsTableBody');
   if (!tbody) return;
+
+  const token = AuthState.getToken();
+  if (!token) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Please <a href="login.html" style="color:var(--gov-orange); font-weight:700;">Sign in</a> or click <button class="btn" style="background:#0284C7; color:#fff; padding:2px 8px; font-size:11px; margin-left:4px; border-radius:3px;" onclick="quickDemoLogin()">⚡ Quick Demo Login</button> to view live incident surveillance feed.</td></tr>`;
+    return;
+  }
+
+  const headers = { "Authorization": `Bearer ${token}` };
 
   try {
     const res = await fetch(`${API_BASE}/reports`, { headers });
