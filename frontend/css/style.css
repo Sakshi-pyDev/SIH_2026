@@ -1900,3 +1900,272 @@ body.dark-mode .form-control { background: #152238; }
   top: 0; left: 0;
   width: 4px; height: 100%;
 }
+
+/* ==========================================================================
+   EVIDENCE ATTACHMENT PILL & LIGHTBOX MODAL
+   ========================================================================== */
+.evidence-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.3);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0284C7;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.evidence-pill:hover {
+  background: rgba(2, 132, 199, 0.16);
+  border-color: #0284C7;
+  transform: translateY(-1px);
+}
+.evidence-pill .pill-preview {
+  font-size: 9.5px;
+  background: #0284C7;
+  color: #fff;
+  border-radius: 2px;
+  padding: 1px 4px;
+  margin-left: 3px;
+}
+
+/* Upload Progress Bar */
+.upload-progress-container {
+  display: none;
+  margin-top: 8px;
+  background: var(--bg-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 6px;
+  border: 1px solid var(--border-subtle);
+}
+.upload-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gov-orange), #0284C7);
+  transition: width 0.3s ease;
+}
+
+/* Evidence Modal */
+.evidence-modal-backdrop {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.evidence-modal-backdrop.open {
+  display: flex;
+}
+.evidence-modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: modalFadeIn 0.2s ease-out;
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.evidence-modal-header {
+  padding: 12px 18px;
+  background: var(--gov-navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.evidence-modal-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.evidence-modal-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.85;
+}
+.evidence-modal-close:hover { opacity: 1; }
+.evidence-modal-body {
+  padding: 18px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+.evidence-preview-box {
+  background: #0B1728;
+  border-radius: 6px;
+  min-height: 220px;
+  max-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid var(--border-subtle);
+  position: relative;
+}
+.evidence-preview-img {
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+}
+.evidence-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: var(--bg-subtle);
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 12px;
+  font-size: 11.5px;
+}
+.evidence-meta-item strong {
+  color: var(--text-main);
+  display: block;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+.evidence-dgms-stamp {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid #10B981;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #047857;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+body.dark-mode .evidence-dgms-stamp {
+  color: #34D399;
+}
+
+/* ==========================================================================
+   ADMIN PANEL CONSOLE STYLES
+   ========================================================================== */
+.admin-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.admin-badge.role-admin {
+  background: #EDE9FE;
+  color: #6D28D9;
+  border: 1px solid #C4B5FD;
+}
+.admin-badge.role-safety_officer {
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+.admin-badge.role-field_worker {
+  background: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+}
+body.dark-mode .admin-badge.role-admin {
+  background: #3B0764;
+  color: #DDD6FE;
+  border-color: #6D28D9;
+}
+body.dark-mode .admin-badge.role-safety_officer {
+  background: #064E3B;
+  color: #A7F3D0;
+  border-color: #047857;
+}
+body.dark-mode .admin-badge.role-field_worker {
+  background: #0C4A6E;
+  color: #BAE6FD;
+  border-color: #0284C7;
+}
+
+/* Quick Demo Admin Button in Navigation */
+.btn-nav-admin {
+  background: #7C3AED;
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-nav-admin:hover {
+  background: #6D28D9;
+  color: #fff;
+}
+
+/* Chatbot AI Settings Modal & Card Expansion */
+.chatbot-kb-counter {
+  font-size: 9.5px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+.chatbot-ai-toggle-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+.chatbot-ai-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.chatbot-rich-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-left: 3px solid var(--gov-orange);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-top: 6px;
+  font-size: 11.5px;
+}
+.chatbot-rich-card.alert-red {
+  border-left-color: #EF4444;
+  background: #FEF2F2;
+  color: #991B1B;
+}
+body.dark-mode .chatbot-rich-card.alert-red {
+  background: #450A0A;
+  color: #FCA5A5;
+}
+

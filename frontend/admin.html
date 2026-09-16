@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Governance Console — SIF Precursor Detection System | Oil India Limited</title>
+  <meta name="description" content="Administrative User & Role Governance Console for Oil India Limited SIF Detection Platform. DGMS & OISD-156 compliant.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .admin-hero {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+      color: #fff;
+      border-radius: 8px;
+      padding: 24px 30px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+      border-left: 5px solid #8B5CF6;
+    }
+    .admin-hero-text h1 {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-hero-text p {
+      font-size: 12.5px;
+      opacity: 0.85;
+      margin: 0;
+      max-width: 680px;
+      line-height: 1.5;
+    }
+    .admin-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .admin-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .admin-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(3px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .admin-modal-backdrop.open {
+      display: flex;
+    }
+    .admin-modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+    .admin-modal-header {
+      padding: 14px 20px;
+      background: #312E81;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-modal-body {
+      padding: 20px;
+    }
+    .role-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .auth-warning-card {
+      background: #FEF3C7;
+      border: 1px solid #F59E0B;
+      color: #92400E;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+      margin: 30px auto;
+      max-width: 580px;
+    }
+    body.dark-mode .auth-warning-card {
+      background: #451A03;
+      border-color: #B45309;
+      color: #FDE68A;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tricolor Accent Stripe -->
+  <div class="tricolor-bar"></div>
+
+  <!-- Government Standard Header -->
+  <header class="gov-header">
+    <div class="gov-header-left">
+      <img src="https://upload.wikimedia.org/wikipedia/en/3/36/Oil_India_Logo.png" alt="Oil India Limited Logo" class="oil-logo" onerror="this.src='../assets/logos/oil_india_logo.png'">
+      <div class="gov-title-group">
+        <span class="gov-title-hi">ऑयल इंडिया लिमिटेड</span>
+        <h1 class="gov-title-en">OIL INDIA LIMITED</h1>
+        <span class="gov-subtitle">A Navratna Enterprise &bull; Government of India | प्रशासनिक शासन एवं उपयोगकर्ता नियंत्रण</span>
+      </div>
+    </div>
+
+    <div class="gov-header-right">
+      <div class="gov-ministry-text">
+        <span class="hi">पेट्रोलियम एवं प्राकृतिक गैस मंत्रालय</span>
+        <span class="en">Ministry of Petroleum &amp; Natural Gas</span>
+        <span class="sub">Government of India &bull; DGMS Compliant</span>
+      </div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="State Emblem of India" class="gov-emblem" onerror="this.src='../assets/logos/mopng_logo.svg'">
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="gov-nav" aria-label="Main Navigation">
+    <div class="gov-nav-links">
+      <a href="index.html">🏠 Portal Home</a>
+      <a href="report.html" id="navLinkReport">📝 Submit Safety Report</a>
+      <a href="dashboard.html" id="navLinkDashboard">📊 Surveillance Dashboard</a>
+      <a href="admin.html" class="active" id="navLinkAdmin" style="color:#8B5CF6; font-weight:700;">👑 Admin Console</a>
+    </div>
+
+    <div class="gov-nav-right">
+      <div class="nav-auth-buttons">
+        <button class="btn btn-nav-admin" onclick="quickAdminLogin()" title="Auto-authenticate as Administrator">
+          ⚡ Demo Admin Login
+        </button>
+        <a href="login.html" class="btn-nav-login">🔐 Login</a>
+        <a href="register.html" class="btn-nav-register">Register</a>
+      </div>
+
+      <div class="nav-user-session">
+        <span class="user-badge">
+          👤 <span class="user-name-display"></span>
+          <span class="user-role-tag user-role-display"></span>
+        </span>
+        <button class="btn-nav-logout" onclick="handleLogout()">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div style="background:var(--bg-card); border-bottom:1px solid var(--border-subtle); padding:7px 24px; font-size:11.5px; color:var(--text-muted);">
+    <a href="index.html" style="color:var(--gov-orange); text-decoration:none;">Portal Home</a> &rsaquo; 
+    <span style="color:var(--text-main); font-weight:600;">Administrative Governance &amp; Official Role Management</span>
+  </div>
+
+  <!-- Main Content -->
+  <main class="admin-container">
+
+    <!-- Admin Hero Banner -->
+    <div class="admin-hero">
+      <div class="admin-hero-text">
+        <h1>👑 Administrative Governance &amp; Role Management Console</h1>
+        <p>Manage authenticated field personnel, safety inspectors, and central HSE compliance officers across Oil India Limited installations. Enforces strict Role-Based Access Control (RBAC) in compliance with DGMS circulars.</p>
+      </div>
+      <div>
+        <button class="btn btn-nav-admin" onclick="openAddUserModal()" style="padding:9px 18px; font-size:13px; font-weight:700; background:#8B5CF6; box-shadow:0 4px 12px rgba(139,92,246,0.3);">
+          ➕ Register New Official
+        </button>
+      </div>
+    </div>
+
+    <!-- Access Denied Card (Shown when not authenticated as admin) -->
+    <div id="adminAccessDenied" class="auth-warning-card" style="display:none;">
+      <div style="font-size:32px; margin-bottom:8px;">🔒</div>
+      <h3 style="margin:0 0 8px 0; font-size:16px; font-weight:800;">Administrator Access Required</h3>
+      <p style="font-size:12.5px; margin:0 0 16px 0; line-height:1.5;">This console requires verified Administrator credentials. You are currently not signed in with administrative privileges.</p>
+      <button class="btn btn-primary" onclick="quickAdminLogin()" style="background:#7C3AED; border:none; padding:8px 20px; font-size:13px; font-weight:700;">
+        ⚡ Instant Demo Admin Authentication
+      </button>
+    </div>
+
+    <!-- Protected Admin Content -->
+    <div id="adminMainContent">
+      
+      <!-- Metrics Overview Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:22px;">
+        <div class="metric-card">
+          <div class="metric-card-accent" style="background:#8B5CF6;"></div>
+          <div class="metric-card-icon">👥</div>
+          <div class="metric-card-value" id="kpiTotalUsers" style="color:#8B5CF6;">—</div>
+          <div class="metric-card-label">Registered Personnel</div>
+          <div class="metric-card-sub">Active in Oil India Database</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-card-accent" style="background:#0284C7;"></div>
+          <div class="metric-card-icon">👷</div>
+          <div class="metric-card-value" id="kpiFieldWorkers" style="color:#0284C7;">—</div>
+          <div class="metric-card-label">Frontline Field Workers</div>
+          <div class="metric-card-sub">Hazard &amp; Observation Repositories</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-card-accent" style="background:#10B981;"></div>
+          <div class="metric-card-icon">🛡️</div>
+          <div class="metric-card-value" id="kpiSafetyOfficers" style="color:#10B981;">—</div>
+          <div class="metric-card-label">Safety &amp; HSE Officers</div>
+          <div class="metric-card-sub">Surveillance &amp; Triage Observers</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-card-accent" style="background:#F59E0B;"></div>
+          <div class="metric-card-icon">👑</div>
+          <div class="metric-card-value" id="kpiAdmins" style="color:#F59E0B;">—</div>
+          <div class="metric-card-label">System Administrators</div>
+          <div class="metric-card-sub">Full System Governance Clearance</div>
+        </div>
+      </div>
+
+      <!-- Action & Filter Bar -->
+      <div class="gov-card">
+        <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <span>📋 Authenticated Personnel Directory</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="text" id="adminUserFilter" class="form-control" placeholder="Search official username..." style="font-size:11.5px; padding:4px 10px; width:220px;" oninput="filterAdminUsers()">
+            <select id="adminRoleFilter" class="form-control" style="font-size:11.5px; padding:4px 8px; width:150px;" onchange="filterAdminUsers()">
+              <option value="">All Roles</option>
+              <option value="field_worker">Field Worker</option>
+              <option value="safety_officer">Safety Officer</option>
+              <option value="admin">Administrator</option>
+            </select>
+            <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px; color:var(--text-main); border-color:var(--border-input);" onclick="loadAdminUsers()">↻ Refresh</button>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:70px;">ID</th>
+                <th>Official Identity / Username</th>
+                <th style="width:160px;">Assigned Role</th>
+                <th style="width:260px;">DGMS Clearance Level</th>
+                <th style="width:140px;">System Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTableBody">
+              <tr><td colspan="5" class="empty-state">Loading authenticated personnel records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Add Official Modal -->
+  <div id="addUserModal" class="admin-modal-backdrop" onclick="closeAddUserModal(event)">
+    <div class="admin-modal-card" onclick="event.stopPropagation()">
+      <div class="admin-modal-header">
+        <div style="font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:8px;">
+          <span>➕</span> Register New Official Profile
+        </div>
+        <button class="evidence-modal-close" onclick="closeAddUserModal()">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <div id="addUserAlert" class="alert" style="display:none; margin-bottom:12px;"></div>
+        
+        <form id="addUserForm" onsubmit="submitNewUser(event)">
+          <div class="form-group">
+            <label class="form-label" for="newUsername">Official Username / Email <span class="required">*</span></label>
+            <input type="text" id="newUsername" class="form-control" placeholder="e.g. hse_officer_guwahati" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newPassword">Temporary Access Password <span class="required">*</span></label>
+            <input type="password" id="newPassword" class="form-control" placeholder="Minimum 6 characters" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newRole">Designated System Role <span class="required">*</span></label>
+            <select id="newRole" class="form-control" required>
+              <option value="field_worker">👷 Field Worker (Filing Hazard Reports)</option>
+              <option value="safety_officer">🛡️ Safety Officer (Surveillance &amp; Triage Review)</option>
+              <option value="admin">👑 Administrator (Full Platform Governance)</option>
+            </select>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+            <button type="button" class="btn btn-ghost" onclick="closeAddUserModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveUserBtn" style="background:#8B5CF6; border-color:#8B5CF6; font-weight:700;">
+              Create Official Profile
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Government Standard Footer -->
+  <footer class="gov-footer">
+    <div class="footer-links">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener">Oil India Limited</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener">DGMS Portal</a>
+      <a href="https://petroleum.nic.in" target="_blank" rel="noopener">Ministry of Petroleum</a>
+      <a href="index.html">Portal Home</a>
+      <a href="dashboard.html">Surveillance Dashboard</a>
+    </div>
+    <div>&copy; 2026 Oil India Limited. All Rights Reserved. | SIH 2026 Problem No. 1776 | Government of India</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script>
+    let allAdminUsers = [];
+
+    async function loadAdminUsers() {
+      const token = AuthState.getToken();
+      const role = AuthState.getRole();
+
+      const deniedCard = document.getElementById('adminAccessDenied');
+      const mainContent = document.getElementById('adminMainContent');
+      const tbody = document.getElementById('adminUsersTableBody');
+
+      // Check role authorization
+      if (!token || role !== 'admin') {
+        if (deniedCard) deniedCard.style.display = 'block';
+        if (mainContent) mainContent.style.display = 'none';
+        return;
+      }
+
+      if (deniedCard) deniedCard.style.display = 'none';
+      if (mainContent) mainContent.style.display = 'block';
+
+      try {
+        const res = await fetch(`${window.API_BASE}/admin/users`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 403 || res.status === 401) {
+            deniedCard.style.display = 'block';
+            mainContent.style.display = 'none';
+            return;
+          }
+          throw new Error('Failed to load users from API');
+        }
+
+        const users = await res.json();
+        allAdminUsers = Array.isArray(users) ? users : [];
+
+        // Update KPIs
+        document.getElementById('kpiTotalUsers').textContent = allAdminUsers.length;
+        document.getElementById('kpiFieldWorkers').textContent = allAdminUsers.filter(u => u.role === 'field_worker').length;
+        document.getElementById('kpiSafetyOfficers').textContent = allAdminUsers.filter(u => u.role === 'safety_officer').length;
+        document.getElementById('kpiAdmins').textContent = allAdminUsers.filter(u => u.role === 'admin').length;
+
+        renderAdminUsers(allAdminUsers);
+      } catch(err) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Unable to load personnel records: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderAdminUsers(list) {
+      const tbody = document.getElementById('adminUsersTableBody');
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No registered personnel found matching criteria.</td></tr>`;
+        return;
+      }
+
+      const roleBadges = {
+        'admin': '<span class="admin-badge role-admin">👑 Administrator</span>',
+        'safety_officer': '<span class="admin-badge role-safety_officer">🛡️ Safety Officer</span>',
+        'field_worker': '<span class="admin-badge role-field_worker">👷 Field Worker</span>'
+      };
+
+      const clearanceLabels = {
+        'admin': 'Tier 3 &bull; Full SIF Governance &amp; Configuration',
+        'safety_officer': 'Tier 2 &bull; Enterprise Triage &amp; Incident Auditing',
+        'field_worker': 'Tier 1 &bull; Frontline Observation &amp; Precursor Capture'
+      };
+
+      tbody.innerHTML = list.map(u => `
+        <tr>
+          <td><strong>#${u.id}</strong></td>
+          <td>
+            <div style="font-weight:700; color:var(--text-main);">${escapeHtml(u.username)}</div>
+            <div style="font-size:10.5px; color:var(--text-muted);">Assigned ID: OIL-UID-${1000 + u.id}</div>
+          </td>
+          <td>${roleBadges[u.role] || u.role}</td>
+          <td style="font-size:11.5px; color:var(--text-secondary);">${clearanceLabels[u.role] || 'Standard Access'}</td>
+          <td>
+            <span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#10B981;">
+              <span style="width:7px; height:7px; background:#10B981; border-radius:50%;"></span>
+              Active &bull; Verified
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterAdminUsers() {
+      const q = (document.getElementById('adminUserFilter')?.value || '').trim().toLowerCase();
+      const roleFilter = document.getElementById('adminRoleFilter')?.value || '';
+
+      const filtered = allAdminUsers.filter(u => {
+        const matchesQuery = !q || (u.username && u.username.toLowerCase().includes(q));
+        const matchesRole = !roleFilter || (u.role === roleFilter);
+        return matchesQuery && matchesRole;
+      });
+
+      renderAdminUsers(filtered);
+    }
+
+    function openAddUserModal() {
+      document.getElementById('addUserModal')?.classList.add('open');
+      const alertEl = document.getElementById('addUserAlert');
+      if (alertEl) alertEl.style.display = 'none';
+      document.getElementById('newUsername')?.focus();
+    }
+
+    function closeAddUserModal(e) {
+      if (e && e.target && e.target.id !== 'addUserModal') return;
+      document.getElementById('addUserModal')?.classList.remove('open');
+    }
+
+    async function submitNewUser(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById('addUserAlert');
+      const saveBtn = document.getElementById('saveUserBtn');
+
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value;
+      const role = document.getElementById('newRole').value;
+
+      if (!username || !password) return;
+
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Registering Official...';
+      }
+
+      try {
+        const res = await fetch(`${window.API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.detail || 'Registration failed');
+        }
+
+        alertEl.textContent = `Official ${username} registered successfully as ${role.replace('_', ' ')}!`;
+        alertEl.className = 'alert alert-success show';
+        alertEl.style.display = 'block';
+
+        document.getElementById('addUserForm').reset();
+        setTimeout(() => {
+          closeAddUserModal();
+          loadAdminUsers();
+        }, 800);
+      } catch(err) {
+        alertEl.textContent = err.message;
+        alertEl.className = 'alert alert-error show';
+        alertEl.style.display = 'block';
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Create Official Profile';
+        }
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAdminUsers();
+    });
+  </script>
+</body>
+</html>

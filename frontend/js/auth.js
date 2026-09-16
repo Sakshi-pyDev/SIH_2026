@@ -50,6 +50,28 @@ const AuthState = {
     if (activeUser) {
       activeUser.textContent = username ? `${username} (${(role || 'worker').replace('_', ' ')})` : 'worker1 (Field Worker)';
     }
+
+    // Dynamic Admin Console link injection for admin users
+    const navLinks = document.querySelector('.gov-nav-links');
+    if (navLinks) {
+      let adminLink = document.getElementById('navLinkAdmin');
+      if (role === 'admin') {
+        if (!adminLink) {
+          adminLink = document.createElement('a');
+          adminLink.id = 'navLinkAdmin';
+          adminLink.href = 'admin.html';
+          adminLink.innerHTML = '👑 Admin Console';
+          adminLink.style.color = '#8B5CF6';
+          adminLink.style.fontWeight = '700';
+          if (window.location.pathname.endsWith('admin.html')) {
+            adminLink.className = 'active';
+          }
+          navLinks.appendChild(adminLink);
+        }
+      } else if (adminLink) {
+        adminLink.remove();
+      }
+    }
   }
 };
 
@@ -87,6 +109,42 @@ async function handleRegister(username, password, role) {
 
   AuthState.setSession(data.access_token, data.role, username);
   return data;
+}
+
+async function quickAdminLogin() {
+  try {
+    const form = new URLSearchParams();
+    form.append('username', 'admin');
+    form.append('password', 'password');
+
+    let res = await fetch(`${window.API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form
+    });
+
+    // If admin not yet created, register it
+    if (!res.ok) {
+      await fetch(`${window.API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'password', role: 'admin' })
+      });
+      res = await fetch(`${window.API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form
+      });
+    }
+
+    if (res.ok) {
+      const data = await res.json();
+      AuthState.setSession(data.access_token, data.role, 'admin');
+      window.location.href = 'admin.html';
+    }
+  } catch(e) {
+    console.error('Quick admin login failed', e);
+  }
 }
 
 function handleLogout() {

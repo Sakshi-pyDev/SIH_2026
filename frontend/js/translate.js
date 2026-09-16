@@ -49,6 +49,13 @@ const LOCAL_UI_DICTIONARY = {
     btnSubmit: '📝 Submit Safety Report →',
     btnDashboard: '📊 Open Surveillance Dashboard →',
     btnFieldDemo: '⚡ Quick Field Worker Demo',
+    navAdmin: '👑 Admin Console',
+    scenarioBop: '⚡ Gas Kick at BOP (High Energy SIF)',
+    scenarioScaffold: '⚠️ Scaffolding Guardrail Missing',
+    scenarioH2S: '🔥 Toxic H2S Sensor Alert',
+    scenarioCrane: '🛢️ Crane Hoist Wire Fraying',
+    dropzoneTitle: 'Click or Drag & Drop Incident Evidence Files Here',
+    btnSubmitReport: '⚡ Analyze & Submit Safety Report',
     marqueeTitle: 'AFFILIATED MINISTRIES, REGULATORY AUTHORITIES & PETROLEUM PSUs',
     marqueeSub: '| संबद्ध मंत्रालय, नियामक एवं सार्वजनिक उपक्रम',
     marqueeTag: '● 11 INTEGRATED ENTITIES • LIVE ECOSYSTEM'
@@ -57,9 +64,16 @@ const LOCAL_UI_DICTIONARY = {
     navHome: '🏠 पोर्टल होम',
     navReport: '📝 सुरक्षा रिपोर्ट दर्ज करें',
     navDashboard: '📊 निगरानी डैशबोर्ड',
+    navAdmin: '👑 प्रशासनिक कंसोल',
     btnDemo: '⚡ त्वरित डेमो लॉगिन',
     btnLogin: '🔐 लॉगिन करें',
     btnRegister: 'पंजीकरण',
+    scenarioBop: '⚡ बीओपी पर गैस किक (उच्च जोखिम SIF)',
+    scenarioScaffold: '⚠️ मचान पर गार्डरेल गायब (गंभीर खतरा)',
+    scenarioH2S: '🔥 विषैली H2S गैस सेंसर अलर्ट',
+    scenarioCrane: '🛢️ क्रेन होइस्ट वायर रोप कटना',
+    dropzoneTitle: 'घटना साक्ष्य की तस्वीरें व दस्तावेज यहाँ खींचें या क्लिक करें',
+    btnSubmitReport: '⚡ एआई विश्लेषण एवं सुरक्षा रिपोर्ट दर्ज करें',
     heroKicker: '🛡️ पेट्रोलियम एवं प्राकृतिक गैस मंत्रालय • DGMS एवं OISD-156 अनुपालित • SIH 2026',
     heroTitle: 'एआई-संचालित गंभीर चोट एवं घातकता (SIF)',
     heroHighlight: 'पूर्ववर्ती जोखिम पहचान प्रणाली',
@@ -308,11 +322,28 @@ function applyInstantTranslations(langCode) {
   const marqTitle = document.querySelector('.marquee-title-text');
   if (marqTitle && dict.marqueeTitle) marqTitle.textContent = dict.marqueeTitle;
 
-  const marqHi = document.querySelector('.marquee-hi-text');
-  if (marqHi && dict.marqueeSub) marqHi.textContent = dict.marqueeSub;
-
   const marqTag = document.querySelector('.marquee-tag');
   if (marqTag && dict.marqueeTag) marqTag.textContent = dict.marqueeTag;
+
+  // Admin nav link
+  const navAdmin = document.getElementById('navLinkAdmin');
+  if (navAdmin && dict.navAdmin) navAdmin.innerHTML = dict.navAdmin;
+
+  // Report page dropzone & submit button
+  const dropTitle = document.querySelector('.dropzone-title');
+  if (dropTitle && dict.dropzoneTitle) dropTitle.textContent = dict.dropzoneTitle;
+
+  const repBtn = document.getElementById('submitReportBtn');
+  if (repBtn && dict.btnSubmitReport && !repBtn.disabled) repBtn.innerHTML = dict.btnSubmitReport;
+
+  // Preset Scenario Chips
+  const presetChips = document.querySelectorAll('.preset-chip');
+  if (presetChips.length >= 4) {
+    if (dict.scenarioBop) presetChips[0].innerHTML = dict.scenarioBop;
+    if (dict.scenarioScaffold) presetChips[1].innerHTML = dict.scenarioScaffold;
+    if (dict.scenarioH2S) presetChips[2].innerHTML = dict.scenarioH2S;
+    if (dict.scenarioCrane) presetChips[3].innerHTML = dict.scenarioCrane;
+  }
 }
 
 /**

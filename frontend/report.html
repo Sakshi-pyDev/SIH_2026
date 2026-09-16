@@ -173,6 +173,10 @@
               </div>
               <!-- File Previews Container -->
               <div id="filePreviewList" class="file-preview-list"></div>
+              <!-- Upload Progress Bar -->
+              <div id="uploadProgressContainer" class="upload-progress-container">
+                <div id="uploadProgressBar" class="upload-progress-bar"></div>
+              </div>
             </div>
 
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:16px;">
@@ -288,6 +292,54 @@
     </form>
   </div>
 
+  <!-- Evidence Preview Lightbox Modal -->
+  <div id="evidenceModal" class="evidence-modal-backdrop" onclick="closeEvidenceModal(event)">
+    <div class="evidence-modal-card" onclick="event.stopPropagation()">
+      <div class="evidence-modal-header">
+        <div class="evidence-modal-title">
+          <span>📸</span> 
+          <span id="evidenceModalTitle">Incident Evidence Inspection</span>
+        </div>
+        <button class="evidence-modal-close" onclick="closeEvidenceModal()">&times;</button>
+      </div>
+      <div class="evidence-modal-body">
+        <div class="evidence-preview-box" id="evidencePreviewBox">
+          <img id="evidenceModalImg" src="" alt="Incident Evidence" class="evidence-preview-img" style="display:none;">
+          <div id="evidenceDocPreview" style="display:none; text-align:center; padding:20px;">
+            <div style="font-size:48px;" id="evidenceDocIcon">📄</div>
+            <h4 id="evidenceDocName" style="margin-top:8px; font-weight:700; color:var(--text-main);">inspection_log.pdf</h4>
+            <p style="color:var(--text-muted); font-size:11px;">Official Ground Observation Document Log</p>
+          </div>
+        </div>
+        <div class="evidence-meta-grid">
+          <div class="evidence-meta-item">
+            <strong>File Reference:</strong>
+            <span id="evidenceMetaName">—</span>
+          </div>
+          <div class="evidence-meta-item">
+            <strong>Digital Size:</strong>
+            <span id="evidenceMetaSize">—</span>
+          </div>
+          <div class="evidence-meta-item">
+            <strong>Recorded At:</strong>
+            <span id="evidenceMetaTime">—</span>
+          </div>
+          <div class="evidence-meta-item">
+            <strong>Verification Protocol:</strong>
+            <span>OISD-156 Digital Chain of Custody</span>
+          </div>
+        </div>
+        <div class="evidence-dgms-stamp">
+          <span>🛡️</span>
+          <div>
+            <strong>DGMS &amp; OISD Verified Digital Attachment</strong><br>
+            <span style="font-size:10px; opacity:0.9;">Tamper-evident timestamp logged into Oil India Safety Surveillance Network.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Government Standard Footer -->
   <footer class="gov-footer">
     <div class="footer-links">
@@ -296,6 +348,7 @@
       <a href="https://petroleum.nic.in" target="_blank" rel="noopener">Ministry of Petroleum</a>
       <a href="index.html">Portal Home</a>
       <a href="dashboard.html">Surveillance Dashboard</a>
+      <a href="admin.html" style="color:#8B5CF6; font-weight:600;">👑 Admin Console</a>
     </div>
     <div>&copy; 2026 Oil India Limited. All Rights Reserved. | SIH 2026 Problem No. 1776 | Government of India</div>
   </footer>
