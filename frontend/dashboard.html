@@ -6,7 +6,8 @@
   <title>Surveillance Dashboard — SIF Precursor Detection System | Oil India Limited</title>
   <link rel="icon" href="../assets/oil_safety_logo.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/chatbot.css">
 </head>
@@ -105,30 +106,40 @@
   <!-- Main Content: Surveillance Dashboard -->
   <main class="main-wrapper">
     <!-- Metric Overview Cards -->
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:20px;">
-      <div class="gov-card" style="padding:16px; border-left:4px solid #0284C7;">
-        <div style="font-size:11.5px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Total Hazard Reports</div>
-        <div id="statTotalReports" style="font-size:26px; font-weight:800; color:var(--text-accent); margin-top:4px;">--</div>
-        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Across all operational sectors</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:22px;">
+
+      <div class="metric-card">
+        <div class="metric-card-accent" style="background:#0284C7;"></div>
+        <div class="metric-card-icon">📋</div>
+        <div class="metric-card-value" style="color:#0284C7;" id="statTotalReports">--</div>
+        <div class="metric-card-label">Total Hazard Reports</div>
+        <div class="metric-card-sub">Across all operational sectors</div>
       </div>
 
-      <div class="gov-card" style="padding:16px; border-left:4px solid #EF4444;">
-        <div style="font-size:11.5px; color:#EF4444; font-weight:700; text-transform:uppercase;">SIF Precursors Detected</div>
-        <div id="statSifPrecursors" style="font-size:26px; font-weight:800; color:#EF4444; margin-top:4px;">--</div>
-        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Critical high-energy events</div>
+      <div class="metric-card">
+        <div class="metric-card-accent" style="background:#EF4444;"></div>
+        <div class="metric-card-icon">⚠️</div>
+        <div class="metric-card-value" style="color:#EF4444;" id="statSifPrecursors">--</div>
+        <div class="metric-card-label" style="color:#EF4444;">SIF Precursors Detected</div>
+        <div class="metric-card-sub">Critical high-energy events</div>
       </div>
 
-      <div class="gov-card" style="padding:16px; border-left:4px solid #22C55E;">
-        <div style="font-size:11.5px; color:#22C55E; font-weight:700; text-transform:uppercase;">Monitored Assets</div>
-        <div style="font-size:26px; font-weight:800; color:#22C55E; margin-top:4px;">42 Rigs / 4,200 KM</div>
-        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Active drilling &amp; pipeline sectors</div>
+      <div class="metric-card">
+        <div class="metric-card-accent" style="background:#22C55E;"></div>
+        <div class="metric-card-icon">🛢️</div>
+        <div class="metric-card-value" style="color:#22C55E; font-size:22px;">42 / 4,200 KM</div>
+        <div class="metric-card-label" style="color:#22C55E;">Monitored Assets</div>
+        <div class="metric-card-sub">Active drilling &amp; pipeline sectors</div>
       </div>
 
-      <div class="gov-card" style="padding:16px; border-left:4px solid #F59E0B;">
-        <div style="font-size:11.5px; color:#F59E0B; font-weight:700; text-transform:uppercase;">DGMS Audit Status</div>
-        <div style="font-size:22px; font-weight:800; color:#F59E0B; margin-top:4px;">OISD-156 Aligned</div>
-        <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Continuous compliance monitoring</div>
+      <div class="metric-card">
+        <div class="metric-card-accent" style="background:#F59E0B;"></div>
+        <div class="metric-card-icon">✅</div>
+        <div class="metric-card-value" style="color:#F59E0B; font-size:20px;">OISD-156 Aligned</div>
+        <div class="metric-card-label" style="color:#F59E0B;">DGMS Audit Status</div>
+        <div class="metric-card-sub">Continuous compliance monitoring</div>
       </div>
+
     </div>
 
     <!-- Reports Surveillance Table -->

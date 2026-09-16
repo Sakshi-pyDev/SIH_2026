@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIF Precursor Detection System — Oil India Limited</title>
+  <meta name="description" content="AI-powered Serious Incident Frequency (SIF) Precursor Detection System for Oil India Limited, Government of India.">
+  <link rel="icon" href="../assets/oil_safety_logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: "Inter", sans-serif; }
+
+    /* ── TRICOLOR BAR ── */
+    .tricolor {
+      position: fixed; top: 0; left: 0; right: 0; height: 5px; z-index: 999;
+      background: linear-gradient(to right,
+        #FF9933 0 33.33%, #ffffff 33.33% 66.66%, #138808 66.66% 100%);
+    }
+
+    /* ── VIDEO BACKGROUND ── */
+    .video-wrap { position: fixed; inset: 0; z-index: 0; }
+    .video-wrap video {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.38) saturate(1.1);
+    }
+    .video-wrap::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: linear-gradient(160deg, #071526 0%, #0b1e14 100%);
+    }
+
+    /* Cinematic gradient overlay */
+    .overlay {
+      position: fixed; inset: 0; z-index: 1;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,153,51,0.06) 0%, transparent 60%),
+        linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 100%);
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      position: fixed; inset: 0; z-index: 10;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding-top: 5px; /* tricolor offset */
+    }
+
+    /* ── TOP GOV BAR ── */
+    .top-bar {
+      padding: 10px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.28); backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .top-bar-left {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .top-bar-flag { font-size: 18px; }
+    .top-bar-tag {
+      font-size: 11.5px; font-weight: 500; color: rgba(255,255,255,0.7);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .top-bar-divider {
+      width: 1px; height: 14px; background: rgba(255,255,255,0.25);
+    }
+    .top-bar-right {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .top-bar-link {
+      font-size: 11px; color: rgba(255,255,255,0.5); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .top-bar-link:hover { color: rgba(255,255,255,0.85); }
+
+    /* ── MAIN HERO ── */
+    .hero {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 20px 40px 10px;
+      gap: 0;
+    }
+
+    /* Org logos */
+    .org-row {
+      display: flex; align-items: center; gap: 18px;
+      margin-bottom: 28px;
+      animation: riseIn 0.8s ease both; animation-delay: 0.1s;
+    }
+    .org-logo {
+      height: 52px; width: auto;
+      filter: drop-shadow(0 2px 10px rgba(255,153,51,0.3)) brightness(1.05);
+      object-fit: contain;
+    }
+    .org-sep {
+      width: 1px; height: 42px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.35), transparent);
+    }
+
+    /* Eyebrow */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #FF9933;
+      margin-bottom: 14px;
+      animation: riseIn 0.8s ease both; animation-delay: 0.2s;
+    }
+    .eyebrow-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: #FF9933;
+      box-shadow: 0 0 6px #FF9933;
+    }
+
+    /* Headline */
+    h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+      animation: riseIn 0.8s ease both; animation-delay: 0.35s;
+    }
+    h1 span { color: #FF9933; }
+
+    /* Hindi subtitle */
+    .hi-sub {
+      font-family: "Noto Sans Devanagari", sans-serif;
+      font-size: clamp(0.82rem, 1.4vw, 1rem);
+      color: rgba(255,153,51,0.75);
+      margin-bottom: 10px;
+      animation: riseIn 0.8s ease both; animation-delay: 0.45s;
+    }
+
+    /* Description */
+    .desc {
+      max-width: 560px;
+      font-size: clamp(0.85rem, 1.3vw, 1rem);
+      font-weight: 400;
+      color: rgba(255,255,255,0.62);
+      line-height: 1.65;
+      margin-bottom: 28px;
+      animation: riseIn 0.8s ease both; animation-delay: 0.55s;
+    }
+
+    /* Pill badges */
+    .badges {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin-bottom: 32px;
+      animation: riseIn 0.8s ease both; animation-delay: 0.65s;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 20px; padding: 5px 12px;
+      backdrop-filter: blur(6px);
+    }
+
+    /* CTA buttons */
+    .cta-row {
+      display: flex; gap: 14px; align-items: center;
+      animation: riseIn 0.8s ease both; animation-delay: 0.78s;
+    }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 36px;
+      background: linear-gradient(135deg, #FF9933, #e07520);
+      color: #fff; font-family: "Inter", sans-serif;
+      font-size: 0.93rem; font-weight: 600; letter-spacing: 0.02em;
+      border: none; border-radius: 8px; cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 22px rgba(255,153,51,0.4), 0 1px 6px rgba(0,0,0,0.35);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 0.25s ease;
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::after {
+      content: ""; position: absolute; inset: -3px; border-radius: 10px;
+      border: 2px solid rgba(255,153,51,0.4);
+      animation: pulse 2.4s ease-out infinite;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(255,153,51,0.55), 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .btn-primary .icon { font-size: 1rem; transition: transform 0.25s; }
+    .btn-primary:hover .icon { transform: translateX(3px); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.8);
+      font-family: "Inter", sans-serif;
+      font-size: 0.88rem; font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; cursor: pointer;
+      text-decoration: none; backdrop-filter: blur(8px);
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.38);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* ── FOOTER BAR ── */
+    .foot {
+      padding: 10px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.45); backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      animation: riseIn 0.8s ease both; animation-delay: 1s;
+    }
+    .foot-left {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11.5px; color: rgba(255,255,255,0.45);
+    }
+    .foot-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e; box-shadow: 0 0 7px #22c55e;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    .foot-center { font-size: 11px; color: rgba(255,255,255,0.25); }
+    .foot-right { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+    /* ── PARTICLES ── */
+    .particles { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+    .p { position: absolute; border-radius: 50%; animation: floatUp linear infinite; }
+
+    /* ── WATERMARK ── */
+    .chakra {
+      position: fixed; bottom: 48px; right: 32px; z-index: 3;
+      font-size: 120px; color: rgba(19,136,8,0.055);
+      pointer-events: none; user-select: none;
+      animation: spin 80s linear infinite;
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%   { opacity: 0.6; transform: scale(1); }
+      70%  { opacity: 0; transform: scale(1.1); }
+      100% { opacity: 0; }
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; } 50% { opacity:0.3; }
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(105vh); opacity: 0; }
+      8%   { opacity: 0.8; }
+      92%  { opacity: 0.4; }
+      100% { transform: translateY(-8vh); opacity: 0; }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .top-bar { padding: 8px 16px; }
+      .hero { padding: 10px 16px; }
+      .cta-row { flex-direction: column; width: 100%; }
+      .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+      .org-logo { height: 40px; }
+      .foot { padding: 8px 16px; }
+      .foot-center { display: none; }
+      .chakra { display: none; }
+      .top-bar-right { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="tricolor"></div>
+
+<div class="video-wrap">
+  <video id="vid" autoplay muted loop playsinline poster="../assets/offshore_oil_rig.jpg">
+    <source src="https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_25fps.mp4" type="video/mp4">
+    <source src="https://videos.pexels.com/video-files/2278095/2278095-uhd_2560_1440_30fps.mp4" type="video/mp4">
+  </video>
+</div>
+
+<div class="overlay"></div>
+<div class="particles" id="pts"></div>
+<div class="chakra">☸</div>
+
+<div class="page">
+
+  <!-- Top Gov Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="top-bar-flag">🇮🇳</span>
+      <span class="top-bar-tag">Government of India</span>
+      <div class="top-bar-divider"></div>
+      <span class="top-bar-tag" style="font-family:'Noto Sans Devanagari',sans-serif; letter-spacing:0;">भारत सरकार</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="https://www.oilindia.in" target="_blank" rel="noopener" class="top-bar-link">Oil India Limited</a>
+      <a href="https://dgms.gov.in" target="_blank" rel="noopener" class="top-bar-link">DGMS</a>
+      <a href="https://petroleum.nic.in" target="_blank" rel="noopener" class="top-bar-link">MoPNG</a>
+      <a href="https://sih.gov.in" target="_blank" rel="noopener" class="top-bar-link">SIH 2026</a>
+    </div>
+  </div>
+
+  <!-- Hero Center -->
+  <main class="hero">
+
+    <!-- Organization Logos -->
+    <div class="org-row">
+      <img class="org-logo" src="../assets/oil_safety_logo.png" alt="Oil India Limited" onerror="this.style.display='none'">
+      <div class="org-sep"></div>
+      <img class="org-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/200px-Emblem_of_India.svg.png" alt="Emblem of India" crossorigin="anonymous" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Eyebrow label -->
+    <div class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      Ministry of Petroleum &amp; Natural Gas &nbsp;·&nbsp; SIH 2026 · Problem #1776
+    </div>
+
+    <!-- Main headline -->
+    <h1>
+      Keeping our workers safe —<br>
+      <span>before</span> incidents happen.
+    </h1>
+
+    <!-- Hindi -->
+    <p class="hi-sub">गंभीर घटना आवृत्ति पूर्ववर्ती पहचान प्रणाली · ऑयल इंडिया लिमिटेड</p>
+
+    <!-- Description -->
+    <p class="desc">
+      An AI-powered safety intelligence platform for Oil India Limited field operations.
+      We analyze hazard reports, near-miss events, and sensor data to detect
+      SIF precursors — stopping serious injuries before they escalate.
+    </p>
+
+    <!-- Feature badges -->
+    <div class="badges">
+      <span class="badge">🤖 ML-Powered Prediction</span>
+      <span class="badge">📊 SHAP Explainability</span>
+      <span class="badge">🛡️ DGMS &amp; OISD-156 Compliant</span>
+      <span class="badge">🛢️ 4,200+ KM Pipeline</span>
+      <span class="badge">⚡ Real-time Analysis</span>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="cta-row">
+      <a href="index.html" class="btn-primary" id="btn-enter">
+        Enter the Portal <span class="icon">→</span>
+      </a>
+      <a href="login.html" class="btn-ghost" id="btn-login">
+        🔐 Sign In
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="foot">
+    <div class="foot-left">
+      <div class="foot-dot"></div>
+      System Online &nbsp;·&nbsp; SIH 2026
+    </div>
+    <div class="foot-center">
+      Secured by Government of India &nbsp;·&nbsp; Digital India Initiative
+    </div>
+    <div class="foot-right">
+      © 2026 Oil India Limited. All rights reserved.
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Floating particles
+  const c = document.getElementById("pts");
+  for (let i = 0; i < 16; i++) {
+    const el = document.createElement("div");
+    el.className = "p";
+    const s = Math.random() * 5 + 2;
+    const colors = ["rgba(255,153,51,0.25)", "rgba(19,136,8,0.22)", "rgba(255,255,255,0.1)"];
+    el.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;` +
+      `animation-duration:${Math.random()*14+10}s;animation-delay:${Math.random()*12}s;` +
+      `background:${colors[Math.floor(Math.random()*colors.length)]};`;
+    c.appendChild(el);
+  }
+
+  // Video fallback
+  const vid = document.getElementById("vid");
+  vid.addEventListener("error", () => {
+    document.querySelector(".video-wrap").style.background =
+      "url('../assets/offshore_oil_rig.jpg') center/cover no-repeat";
+  }, true);
+
+  // Enter key → portal
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && document.activeElement.tagName !== "INPUT")
+      window.location.href = "index.html";
+  });
+</script>
+
+</body>
+</html>
