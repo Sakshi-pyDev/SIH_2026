@@ -101,7 +101,10 @@
     <label>Department</label>
     <input id="repDept" placeholder="e.g. Drilling, Production, HSE">
     <label>Report Description</label>
-    <textarea id="repText" placeholder="Describe the unsafe act / condition / near-miss in detail..."></textarea>
+    <div style="position:relative;">
+      <textarea id="repText" placeholder="Describe the unsafe act / condition / near-miss in detail..." oninput="onReportTextInput()" onblur="setTimeout(hideSuggestions,150)"></textarea>
+      <div id="suggestBox" class="hidden" style="position:absolute; top:100%; left:0; right:0; background:#0f172a; border:1px solid var(--border); border-radius:6px; margin-top:-10px; max-height:200px; overflow-y:auto; z-index:10;"></div>
+    </div>
     <button onclick="submitReport()">Analyze & Submit</button>
     <div id="predictResult" class="hidden"></div>
   </div>
@@ -228,6 +231,54 @@ async function submitReport() {
 
   document.getElementById('repText').value = "";
   loadReports();
+}
+
+let suggestDebounce = null;
+
+function onReportTextInput() {
+  clearTimeout(suggestDebounce);
+  suggestDebounce = setTimeout(fetchSuggestions, 250);
+}
+
+async function fetchSuggestions() {
+  const textarea = document.getElementById('repText');
+  const fullText = textarea.value;
+  // use the last few words being typed as the query, like a search bar
+  const lastWords = fullText.trim().split(/\s+/).slice(-4).join(' ');
+  if (lastWords.length < 2) { hideSuggestions(); return; }
+
+  try {
+    const res = await fetch(`${API_BASE}/suggest?q=${encodeURIComponent(lastWords)}`);
+    const data = await res.json();
+    renderSuggestions(data.suggestions || [], fullText);
+  } catch (e) { hideSuggestions(); }
+}
+
+function renderSuggestions(suggestions, currentText) {
+  const box = document.getElementById('suggestBox');
+  if (!suggestions.length) { hideSuggestions(); return; }
+  box.innerHTML = suggestions.map(s =>
+    `<div style="padding:8px 12px; cursor:pointer; border-bottom:1px solid var(--border); font-size:13px;"
+          onmousedown="applySuggestion('${s.replace(/'/g, "\\'")}')">
+       🔍 ${s}
+     </div>`
+  ).join('');
+  box.classList.remove('hidden');
+}
+
+function applySuggestion(suggestion) {
+  const textarea = document.getElementById('repText');
+  let text = textarea.value.trim();
+  // replace the last few typed words with the full suggestion phrase
+  const words = text.split(/\s+/);
+  const kept = words.slice(0, Math.max(0, words.length - 4)).join(' ');
+  textarea.value = (kept ? kept + ' ' : '') + suggestion + ' ';
+  textarea.focus();
+  hideSuggestions();
+}
+
+function hideSuggestions() {
+  document.getElementById('suggestBox').classList.add('hidden');
 }
 
 async function loadReports() {
