@@ -558,6 +558,7 @@ async function submitReportFromPortal() {
     if (resultEl) {
       resultEl.style.display = 'block';
 
+      const isPrecautionAct = data.predicted_label === null || data.predicted_label === undefined;
       const isHigh = data.predicted_label === 1;
       let factors = [];
       try {
@@ -571,7 +572,15 @@ async function submitReportFromPortal() {
         ? `<div style="margin-top:6px; font-size:11.5px; color:var(--text-secondary);">📎 <strong>Verified Digital Evidence Attached (${fileCount}):</strong> ${attachedFiles.map(f => f.name).join(', ')} <span style="color:#10B981; font-weight:700;">✓ Encrypted &amp; Logged</span></div>`
         : '';
 
-      resultEl.innerHTML = `
+      resultEl.innerHTML = isPrecautionAct ? `
+        <div class="result-box low-risk">
+          <div class="result-status-title">✅ Precaution Act Logged — Thank You!</div>
+          <div style="font-size:12.5px; margin-top:6px; color:var(--text-main);">
+            This good safety practice has been recorded. It does not go through SIF risk scoring since it isn't a hazard observation.
+          </div>
+          ${fileBadge}
+        </div>
+      ` : `
         <div class="result-box ${isHigh ? 'high-risk' : 'low-risk'}">
           <div class="result-status-title">
             ${isHigh ? '⚠️ SIF PRECURSOR DETECTED' : '✅ Low Risk Observation'}
@@ -625,7 +634,7 @@ async function loadReports() {
 
   const token = AuthState.getToken();
   if (!token) {
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Please <a href="login.html" style="color:var(--gov-orange); font-weight:700;">Sign in</a> or click <button class="btn" style="background:#0284C7; color:#fff; padding:2px 8px; font-size:11px; margin-left:4px; border-radius:3px;" onclick="quickDemoLogin()">⚡ Quick Demo Login</button> to view live incident surveillance feed.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Please <a href="login.html" style="color:var(--gov-orange); font-weight:700;">Sign in</a> or click <button class="btn" style="background:#0284C7; color:#fff; padding:2px 8px; font-size:11px; margin-left:4px; border-radius:3px;" onclick="quickDemoLogin()">⚡ Quick Demo Login</button> to view live incident surveillance feed.</td></tr>`;
     return;
   }
 
@@ -635,11 +644,20 @@ async function loadReports() {
     const res = await fetch(`${API_BASE}/reports`, { headers });
     const data = await res.json();
     if (!res.ok) {
-      tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Sign in to view live incident surveillance feed.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Sign in to view live incident surveillance feed.</td></tr>`;
       return;
     }
 
     allLoadedReports = Array.isArray(data) ? data : [];
+
+    // Active queue: High → Medium → Low → Precaution Act.
+    // Resolved reports move into a separate section with the same ordering.
+    const activeReports = allLoadedReports
+      .filter(r => (r.status || 'Open') !== 'Resolved')
+      .sort(compareReportsByRisk);
+    const resolvedReports = allLoadedReports
+      .filter(r => (r.status || 'Open') === 'Resolved')
+      .sort(compareReportsByRisk);
 
     // Update KPI counters if present
     const statTotal = document.getElementById('statTotalReports');
@@ -650,10 +668,39 @@ async function loadReports() {
       statSif.textContent = sifCount;
     }
 
-    renderReportsTable(allLoadedReports);
+    renderReportsTable(activeReports);
+    renderResolvedReportsTable(resolvedReports);
   } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Live feed waiting for API connection (${e.message}).</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Live feed waiting for API connection (${e.message}).</td></tr>`;
   }
+}
+
+// ========== SAFETY-PRIORITY REPORT ORDERING ==========
+function getReportRiskPriority(report) {
+  if (!report || report.report_type === 'Precaution Act') return 0;
+
+  // Once an officer has supplied a final risk, that human decision is the
+  // operational risk used for ordering. Otherwise use the AI recommendation.
+  const risk = report.officer_final_risk ||
+    (report.predicted_probability != null
+      ? (report.predicted_probability >= 0.7 ? 'High' : report.predicted_probability >= 0.4 ? 'Medium' : 'Low')
+      : 'Low');
+
+  const normalized = String(risk).toLowerCase();
+  if (normalized === 'high') return 3;
+  if (normalized === 'medium') return 2;
+  if (normalized === 'low') return 1;
+  return 0;
+}
+
+function compareReportsByRisk(a, b) {
+  const riskDifference = getReportRiskPriority(b) - getReportRiskPriority(a);
+  if (riskDifference !== 0) return riskDifference;
+
+  // Within the same risk tier, show newest reports first.
+  const dateA = a && a.created_at ? new Date(a.created_at).getTime() : 0;
+  const dateB = b && b.created_at ? new Date(b.created_at).getTime() : 0;
+  return dateB - dateA;
 }
 
 function renderReportsTable(reportsList) {
@@ -661,11 +708,12 @@ function renderReportsTable(reportsList) {
   if (!tbody) return;
 
   if (!reportsList || reportsList.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No hazard reports found. Submit your first observation above!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No hazard reports found. Submit your first observation above!</td></tr>`;
     return;
   }
 
   tbody.innerHTML = reportsList.map(r => {
+    const isPrecautionAct = r.report_type === 'Precaution Act';
     const isHigh = r.predicted_label === 1;
     let factors = [];
     try {
@@ -720,46 +768,309 @@ function renderReportsTable(reportsList) {
           <span style="color:var(--text-muted); font-size:11px;">${r.department || '—'}</span>
         </td>
         <td style="max-width:320px; line-height:1.45;">
-          <div>${cleanNarrative}</div>
+          <div>${escapeHtml(cleanNarrative)}</div>
           ${evidenceBadge}
         </td>
         <td>
-          <span class="badge-risk ${isHigh ? 'high' : 'low'}">
-            ${isHigh ? '⚠️ SIF RISK' : '✅ LOW RISK'}
-          </span>
-          <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">
-            ${prob} &bull;
-            ${factors.map(f => `<span class="factor-chip">${f.feature.replace('flag_', '').replace('count_', '').replace('tfidf_', '')}</span>`).join('')}
-          </div>
+          ${isPrecautionAct ? `
+            <span class="badge-risk low">✅ PRECAUTION ACT</span>
+            <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">Good safety practice &bull; not risk-scored</div>
+          ` : `
+            <span class="badge-risk ${isHigh ? 'high' : 'low'}">
+              ${isHigh ? '⚠️ SIF RISK' : '✅ LOW RISK'}
+            </span>
+            ${r.rule_escalated ? `
+              <div style="margin-top:4px;">
+                <span class="factor-chip" style="background:#f59e0b; color:#000; font-weight:700;">
+                  🛡️ Rule-Escalated &bull; Raw ML: ${r.ml_probability_raw !== null && r.ml_probability_raw !== undefined ? (r.ml_probability_raw * 100).toFixed(1) + '%' : '—'}
+                </span>
+              </div>
+            ` : ''}
+            <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">
+              ${prob} &bull;
+              ${factors.map(f => `<span class="factor-chip">${f.feature.replace('flag_', '').replace('count_', '').replace('tfidf_', '')}</span>`).join('')}
+            </div>
+          `}
         </td>
         <td><strong>${r.submitted_by_username || 'field_worker'}</strong></td>
+        <td>${renderStatusCell(r)}</td>
       </tr>
     `;
   }).join('');
 }
 
-function filterReportsTable() {
-  const query = (document.getElementById('reportFilterInput')?.value || '').trim().toLowerCase();
-  if (!query) {
-    renderReportsTable(allLoadedReports);
+// Render resolved reports below the active queue.
+// Ordering: High → Medium → Low → Precaution Act.
+function renderResolvedReportsTable(reportsList) {
+  const tbody = document.getElementById('resolvedReportsTableBody');
+  if (!tbody) return;
+
+  if (!reportsList || reportsList.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No resolved reports yet.</td></tr>`;
     return;
   }
 
-  const filtered = allLoadedReports.filter(r => {
+  tbody.innerHTML = reportsList.map(r => {
+    const isPrecautionAct = r.report_type === 'Precaution Act';
+    const isHigh = r.officer_final_risk
+      ? String(r.officer_final_risk).toLowerCase() === 'high'
+      : r.predicted_label === 1;
+    let factors = [];
+    try {
+      factors = (typeof r.top_factors === 'string' ? JSON.parse(r.top_factors || "[]") : (r.top_factors || [])).slice(0, 3);
+    } catch (e) { factors = []; }
+
+    const prob = r.predicted_probability !== null && r.predicted_probability !== undefined
+      ? (r.predicted_probability * 100).toFixed(1) + '%'
+      : '—';
+    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Today';
+    const rawText = r.report_text || '—';
+    const cleanNarrative = rawText.replace(/\[📎 Verified Evidence:[^\]]+\]/g, '').trim();
+    const finalRisk = r.officer_final_risk ? String(r.officer_final_risk).toLowerCase() : '';
+    const riskLabel = finalRisk ? finalRisk.charAt(0).toUpperCase() + finalRisk.slice(1) : (isHigh ? 'High' : (r.predicted_probability >= 0.4 ? 'Medium' : 'Low'));
+    const riskClass = riskLabel.toLowerCase() === 'high' ? 'high' : 'low';
+
+    return `
+      <tr>
+        <td><strong>${escapeHtml(r.report_type || 'Near Miss')}</strong><div style="font-size:10.5px; color:var(--text-muted);">${dateStr}</div></td>
+        <td><strong>${escapeHtml(r.location || '—')}</strong><br><span style="color:var(--text-muted); font-size:11px;">${escapeHtml(r.department || '—')}</span></td>
+        <td style="max-width:320px; line-height:1.45;"><div>${escapeHtml(cleanNarrative)}</div></td>
+        <td>
+          ${isPrecautionAct ? `
+            <span class="badge-risk low">✅ PRECAUTION ACT</span>
+            <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">Good safety practice &bull; not risk-scored</div>
+          ` : `
+            <span class="badge-risk ${riskClass}">${riskLabel === 'High' ? '⚠️ SIF RISK' : riskLabel === 'Medium' ? '🟠 MEDIUM RISK' : '✅ LOW RISK'}</span>
+            ${finalRisk ? `<div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">Officer final risk: <strong>${escapeHtml(riskLabel)}</strong></div>` : ''}
+            <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">${prob} &bull; ${factors.map(f => `<span class="factor-chip">${escapeHtml(String(f.feature || '').replace('flag_', '').replace('count_', '').replace('tfidf_', ''))}</span>`).join('')}</div>
+          `}
+        </td>
+        <td><strong>${escapeHtml(r.submitted_by_username || 'field_worker')}</strong></td>
+        <td><span class="badge-risk low">✅ Resolved</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// Status + Human-in-the-loop validation controls.
+function renderStatusCell(r) {
+  const status = r.status || 'Open';
+  const role = AuthState.getRole();
+  const canReview = role === 'safety_officer' || role === 'admin';
+  const reviewStatus = r.review_status || 'Pending';
+  let reviewBadge = reviewStatus === 'Confirmed'
+    ? '<span class="hitl-status-badge confirmed">✅ AI Confirmed</span>'
+    : reviewStatus === 'Overridden'
+      ? '<span class="hitl-status-badge overridden">✏️ AI Overridden</span>'
+      : reviewStatus === 'Needs Evidence'
+        ? '<span class="hitl-status-badge evidence">📎 Needs Evidence</span>'
+        : '<span class="hitl-status-badge pending">⏳ Pending Officer Review</span>';
+  const finalRisk = r.officer_final_risk ? `<span class="hitl-final-risk">Final: <strong>${escapeHtml(r.officer_final_risk)}</strong></span>` : '';
+  const reviewButton = canReview && r.report_type !== 'Precaution Act'
+    ? `<button class="btn hitl-review-btn" onclick="openHITLReview(${r.id})">👨‍💼 ${reviewStatus === 'Pending' ? 'Validate AI' : 'Review Again'}</button>` : '';
+  const resolveButton = canReview && status !== 'Resolved'
+    ? `<button class="btn btn-ghost" style="padding:2px 8px; font-size:10.5px;" onclick="resolveReport(${r.id})">Mark Resolved</button>` : '';
+  return `<div class="hitl-status-wrap">${reviewBadge}${finalRisk}${status === 'Resolved' ? '<span class="badge-risk low">✅ Resolved</span>' : '<span class="badge-risk high">Open</span>'}<div class="hitl-status-actions">${reviewButton}${resolveButton}</div>${r.reviewed_by_username ? `<div class="hitl-review-meta">Reviewed by ${escapeHtml(r.reviewed_by_username)}${r.reviewed_at ? ' • ' + new Date(r.reviewed_at).toLocaleString() : ''}</div>` : ''}</div>`;
+}
+
+let activeHITLReportId = null;
+function getReportById(reportId) { return allLoadedReports.find(r => Number(r.id) === Number(reportId)) || null; }
+
+function openHITLReview(reportId) {
+  const report = getReportById(reportId);
+  const modal = document.getElementById('hitlReviewModal');
+  if (!report || !modal) return;
+  activeHITLReportId = report.id;
+  const alertEl = document.getElementById('hitlReviewAlert');
+  if (alertEl) { alertEl.textContent = ''; alertEl.className = 'alert'; }
+  const fields = document.getElementById('hitlOverrideFields');
+  if (fields) fields.style.display = 'none';
+  const feedback = document.getElementById('hitlFeedback');
+  if (feedback) feedback.value = '';
+  const isPrecaution = report.report_type === 'Precaution Act';
+  const prob = report.predicted_probability != null ? (report.predicted_probability * 100).toFixed(1) + '%' : '—';
+  const aiRisk = isPrecaution ? 'Precaution Act' : (report.predicted_probability >= 0.7 ? 'High' : report.predicted_probability >= 0.4 ? 'Medium' : 'Low');
+  const summary = document.getElementById('hitlReportSummary');
+  if (summary) summary.innerHTML = `<div><span>ID</span><strong>#${report.id}</strong></div><div><span>Type</span><strong>${escapeHtml(report.report_type || '—')}</strong></div><div><span>Location</span><strong>${escapeHtml(report.location || '—')}</strong></div><div class="hitl-summary-wide"><span>Observation</span><strong>${escapeHtml(report.report_text || '—')}</strong></div>`;
+  const ai = document.getElementById('hitlAIRecommendation');
+  if (ai) {
+    const raw = report.ml_probability_raw != null ? (report.ml_probability_raw * 100).toFixed(1) + '%' : prob;
+    ai.innerHTML = `<div class="hitl-ai-grid"><div><span>AI Recommendation</span><strong class="hitl-risk-${aiRisk.toLowerCase().replace(' ', '-')}">${escapeHtml(aiRisk)}</strong></div><div><span>Final AI Probability</span><strong>${prob}</strong></div><div><span>Raw ML Probability</span><strong>${raw}</strong></div><div><span>Safety Rule</span><strong>${report.rule_escalated ? '🛡️ Critical precursor detected' : 'Standard ML assessment'}</strong></div></div><div class="hitl-ai-explain">The AI recommendation is advisory. The safety officer records the human operational decision below.</div>`;
+  }
+  modal.classList.add('open');
+}
+
+function closeHITLReview(e) {
+  if (e && e.target && e.target.id !== 'hitlReviewModal' && !e.target.classList.contains('evidence-modal-close')) return;
+  const modal = document.getElementById('hitlReviewModal');
+  if (modal) modal.classList.remove('open');
+  activeHITLReportId = null;
+}
+function selectHITLOverride() { const fields = document.getElementById('hitlOverrideFields'); if (fields) fields.style.display = 'block'; }
+
+async function submitHITLReview(decision) {
+  const token = AuthState.getToken();
+  if (!token || !activeHITLReportId) return;
+  const feedback = document.getElementById('hitlFeedback')?.value.trim() || '';
+  const finalRisk = document.getElementById('hitlFinalRisk')?.value || null;
+  try {
+    const res = await fetch(`${API_BASE}/reports/${activeHITLReportId}/review`, { method:'PATCH', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({decision, final_risk: decision === 'override' ? finalRisk : null, feedback}) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { const a=document.getElementById('hitlReviewAlert'); if(a){a.textContent=data.detail||'Could not save officer review.';a.className='alert alert-error show';} return; }
+    const idx=allLoadedReports.findIndex(r=>Number(r.id)===Number(activeHITLReportId));
+    if(idx>=0) allLoadedReports[idx]=data;
+    renderReportsTable(allLoadedReports);
+    if(document.getElementById('reportsHigh')) await loadAnalyticsSummary();
+    closeHITLReview();
+  } catch(e) { const a=document.getElementById('hitlReviewAlert'); if(a){a.textContent='Network error while saving review: '+e.message;a.className='alert alert-error show';} }
+}
+
+async function resolveReport(reportId) {
+  const token = AuthState.getToken();
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/reports/${reportId}/resolve`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      alert(data.detail || 'Could not mark report as resolved.');
+      return;
+    }
+    // Refresh table + summary cards + chart so everything stays in sync
+    await loadReports();
+    if (document.getElementById('reportsHigh')) await loadAnalyticsSummary();
+    if (document.getElementById('monthlyTrendChart')) await loadMonthlyChart();
+  } catch (e) {
+    alert('Network error while resolving report: ' + e.message);
+  }
+}
+
+// ========== OFFICER DASHBOARD: STATION FILTER + SUMMARY CARDS + CHART ==========
+let monthlyChartInstance = null;
+
+async function loadStationFilter() {
+  const select = document.getElementById('stationFilter');
+  if (!select) return;
+  const token = AuthState.getToken();
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/reports/analytics/locations`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    (data.locations || []).forEach(loc => {
+      const opt = document.createElement('option');
+      opt.value = loc;
+      opt.textContent = loc;
+      select.appendChild(opt);
+    });
+  } catch (e) {
+    console.error('Failed to load stations', e);
+  }
+}
+
+function onStationFilterChange() {
+  loadAnalyticsSummary();
+  loadMonthlyChart();
+}
+
+async function loadAnalyticsSummary() {
+  const select = document.getElementById('stationFilter');
+  const location = select ? select.value : '';
+  const token = AuthState.getToken();
+  if (!token) return;
+
+  try {
+    const url = `${API_BASE}/reports/analytics/summary` + (location ? `?location=${encodeURIComponent(location)}` : '');
+    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setText('reportsHigh', data.reports.high);
+    setText('reportsMedium', data.reports.medium);
+    setText('reportsLow', data.reports.low);
+    setText('reportsPrecaution', data.reports.precaution_act);
+    setText('resolvedHigh', data.resolved.high);
+    setText('resolvedMedium', data.resolved.medium);
+    setText('resolvedLow', data.resolved.low);
+    setText('resolvedPrecaution', data.resolved.precaution_act);
+  } catch (e) {
+    console.error('Failed to load analytics summary', e);
+  }
+}
+
+async function loadMonthlyChart() {
+  const canvas = document.getElementById('monthlyTrendChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const select = document.getElementById('stationFilter');
+  const location = select ? select.value : '';
+  const token = AuthState.getToken();
+  if (!token) return;
+
+  try {
+    const url = `${API_BASE}/reports/analytics/monthly` + (location ? `?location=${encodeURIComponent(location)}` : '');
+    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (monthlyChartInstance) {
+      monthlyChartInstance.destroy();
+    }
+    monthlyChartInstance = new Chart(canvas.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          { label: 'High Risk', data: data.high, borderColor: '#EF4444', backgroundColor: '#EF4444', tension: 0.3 },
+          { label: 'Medium', data: data.medium, borderColor: '#F59E0B', backgroundColor: '#F59E0B', tension: 0.3 },
+          { label: 'Low', data: data.low, borderColor: '#0284C7', backgroundColor: '#0284C7', tension: 0.3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+      }
+    });
+  } catch (e) {
+    console.error('Failed to load monthly chart', e);
+  }
+}
+
+function filterReportsTable() {
+  const query = (document.getElementById('reportFilterInput')?.value || '').trim().toLowerCase();
+  const matchesQuery = r => {
+    if (!query) return true;
     return (r.location && r.location.toLowerCase().includes(query)) ||
            (r.department && r.department.toLowerCase().includes(query)) ||
            (r.report_type && r.report_type.toLowerCase().includes(query)) ||
            (r.report_text && r.report_text.toLowerCase().includes(query)) ||
            (r.submitted_by_username && r.submitted_by_username.toLowerCase().includes(query));
-  });
+  };
 
-  renderReportsTable(filtered);
+  const active = allLoadedReports.filter(r => (r.status || 'Open') !== 'Resolved' && matchesQuery(r)).sort(compareReportsByRisk);
+  const resolved = allLoadedReports.filter(r => (r.status || 'Open') === 'Resolved' && matchesQuery(r)).sort(compareReportsByRisk);
+
+  renderReportsTable(active);
+  renderResolvedReportsTable(resolved);
 }
 
-// ========== INITIALIZATION ==========
+// ========== INITIALIZATION ============
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initFileDropzone();
   updateUserLabel();
   loadReports();
+
+  // These only run on dashboard.html - each checks its own element exists first
+  loadStationFilter();
+  loadAnalyticsSummary();
+  loadMonthlyChart();
 });

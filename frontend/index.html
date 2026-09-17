@@ -90,20 +90,15 @@
        ====================================================================== -->
   <nav class="gov-nav" aria-label="Main Navigation">
     <div class="gov-nav-links">
-      <a href="index.html" class="active">🏠 Portal Home</a>
-      <a href="report.html" id="navLinkReport">📝 Submit Safety Report</a>
-      <a href="dashboard.html" id="navLinkDashboard">📊 Surveillance Dashboard</a>
+    <a href="index.html" class="active">🏠 Portal Home</a>
     </div>
 
     <div class="gov-nav-right">
       <!-- Unauthenticated State: Login & Register Buttons -->
       <div class="nav-auth-buttons">
-        <button class="btn" style="background:#0284C7; color:#fff; padding:4px 12px; font-size:11.5px; border-radius:3px;" onclick="quickDemoLogin()" title="Click to auto-authenticate as Field Worker">
-          ⚡ Quick Demo Login
-        </button>
-        <a href="login.html" class="btn-nav-login">🔐 Login</a>
-        <a href="register.html" class="btn-nav-register">Register</a>
-      </div>
+  <a href="login.html" class="btn-nav-login">🔐 Login</a>
+  <a href="register.html" class="btn-nav-register">Register</a>
+</div>
 
       <!-- Authenticated State: User Session Badge & Logout -->
       <div class="nav-user-session">
@@ -148,15 +143,21 @@
       </div>
 
       <div class="hero-actions">
-        <a href="report.html" class="btn btn-primary" style="font-size:13px; padding:9px 24px; border-radius:6px; font-weight:700;">
-          📝 Submit Safety Report &rarr;
-        </a>
-        <a href="dashboard.html" class="btn btn-ghost" style="font-size:13px; padding:8.5px 20px; border-radius:6px;">
-          📊 Open Dashboard &rarr;
-        </a>
-        <button class="btn" style="background:rgba(2,132,199,0.88); color:#fff; border:1px solid #38BDF8; font-size:12px; padding:8.5px 16px; border-radius:6px;" onclick="quickDemoLogin()">
-          ⚡ Quick Demo Login
-        </button>
+        <!-- Shown when NOT logged in -->
+        <div class="hero-actions-guest">
+          <a href="register.html" class="btn btn-primary btn-hero">Get Started — Register →</a>
+          <a href="login.html" class="btn btn-outline btn-hero">🔐 Login</a>
+        </div>
+
+        <!-- Shown only AFTER login, for field_worker (and admin) -->
+        <div class="hero-actions-report" style="display:none;">
+          <a href="report.html" class="btn btn-primary btn-hero">⚡ File Safety Report</a>
+        </div>
+
+        <!-- Shown only AFTER login, for safety_officer (and admin) -->
+        <div class="hero-actions-dashboard" style="display:none;">
+          <a href="dashboard.html" class="btn btn-outline btn-hero">📊 View Dashboard</a>
+        </div>
       </div>
     </div>
   </main>

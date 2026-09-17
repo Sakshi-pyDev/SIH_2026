@@ -36,20 +36,45 @@ const AuthState = {
     const usernameDisplays = document.querySelectorAll('.user-name-display');
     const roleDisplays = document.querySelectorAll('.user-role-display');
 
+    // Hero section buttons on the landing page (index.html) - role-based
+    const heroGuest = document.querySelectorAll('.hero-actions-guest');
+    const heroReport = document.querySelectorAll('.hero-actions-report');   // field_worker + admin
+    const heroDashboard = document.querySelectorAll('.hero-actions-dashboard'); // safety_officer + admin
+
     if (isLoggedIn) {
       authBtns.forEach(el => el.style.display = 'none');
       userSession.forEach(el => el.style.display = 'flex');
       usernameDisplays.forEach(el => el.textContent = username);
       roleDisplays.forEach(el => el.textContent = (role || '').replace('_', ' ').toUpperCase());
+
+      heroGuest.forEach(el => el.style.display = 'none');
+
+      const canReport = (role === 'field_worker' || role === 'admin');
+      const canViewDashboard = (role === 'safety_officer' || role === 'admin');
+
+      heroReport.forEach(el => el.style.display = canReport ? 'flex' : 'none');
+      heroDashboard.forEach(el => el.style.display = canViewDashboard ? 'flex' : 'none');
     } else {
       authBtns.forEach(el => el.style.display = 'flex');
       userSession.forEach(el => el.style.display = 'none');
+
+      heroGuest.forEach(el => el.style.display = 'flex');
+      heroReport.forEach(el => el.style.display = 'none');
+      heroDashboard.forEach(el => el.style.display = 'none');
     }
 
     const activeUser = document.getElementById('activeUserLabel');
     if (activeUser) {
       activeUser.textContent = username ? `${username} (${(role || 'worker').replace('_', ' ')})` : 'worker1 (Field Worker)';
     }
+
+    // Nav bar "Submit Safety Report" / "Surveillance Dashboard" links - role based
+    const navReport = document.getElementById('navLinkReport');
+    const navDashboard = document.getElementById('navLinkDashboard');
+    const canReportNav = isLoggedIn && (role === 'field_worker' || role === 'admin');
+    const canDashboardNav = isLoggedIn && (role === 'safety_officer' || role === 'admin');
+    if (navReport) navReport.style.display = canReportNav ? '' : 'none';
+    if (navDashboard) navDashboard.style.display = canDashboardNav ? '' : 'none';
 
     // Dynamic Admin Console link injection for admin users
     const navLinks = document.querySelector('.gov-nav-links');

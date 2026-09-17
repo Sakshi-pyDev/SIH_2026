@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/chatbot.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -105,47 +106,68 @@
 
   <!-- Main Content: Surveillance Dashboard -->
   <main class="main-wrapper">
-    <!-- Metric Overview Cards -->
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:22px;">
 
-      <div class="metric-card">
-        <div class="metric-card-accent" style="background:#0284C7;"></div>
-        <div class="metric-card-icon">📋</div>
-        <div class="metric-card-value" style="color:#0284C7;" id="statTotalReports">--</div>
-        <div class="metric-card-label">Total Hazard Reports</div>
-        <div class="metric-card-sub">Across all operational sectors</div>
+    <!-- Station Filter (drives the cards below + the monthly trend chart) -->
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+      <label class="form-label" for="stationFilter" style="margin:0;">🏭 Station / Location:</label>
+      <select id="stationFilter" class="form-control" style="width:280px;" onchange="onStationFilterChange()">
+        <option value="">All Stations</option>
+      </select>
+    </div>
+
+    <!-- Reports vs Resolved: High Risk / Medium / Low / Precaution Act -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:22px;">
+
+      <div class="gov-card">
+        <div class="gov-card-header">📋 Reports</div>
+        <div class="gov-card-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+          <div class="metric-card"><div class="metric-card-accent" style="background:#EF4444;"></div>
+            <div class="metric-card-value" style="color:#EF4444;" id="reportsHigh">--</div>
+            <div class="metric-card-label">High Risk</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#F59E0B;"></div>
+            <div class="metric-card-value" style="color:#F59E0B;" id="reportsMedium">--</div>
+            <div class="metric-card-label">Medium</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#0284C7;"></div>
+            <div class="metric-card-value" style="color:#0284C7;" id="reportsLow">--</div>
+            <div class="metric-card-label">Low</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#22C55E;"></div>
+            <div class="metric-card-value" style="color:#22C55E;" id="reportsPrecaution">--</div>
+            <div class="metric-card-label">✅ Precaution Act</div></div>
+        </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-accent" style="background:#EF4444;"></div>
-        <div class="metric-card-icon">⚠️</div>
-        <div class="metric-card-value" style="color:#EF4444;" id="statSifPrecursors">--</div>
-        <div class="metric-card-label" style="color:#EF4444;">SIF Precursors Detected</div>
-        <div class="metric-card-sub">Critical high-energy events</div>
+      <div class="gov-card">
+        <div class="gov-card-header">✅ Resolved</div>
+        <div class="gov-card-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+          <div class="metric-card"><div class="metric-card-accent" style="background:#EF4444;"></div>
+            <div class="metric-card-value" style="color:#EF4444;" id="resolvedHigh">--</div>
+            <div class="metric-card-label">High</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#F59E0B;"></div>
+            <div class="metric-card-value" style="color:#F59E0B;" id="resolvedMedium">--</div>
+            <div class="metric-card-label">Medium</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#0284C7;"></div>
+            <div class="metric-card-value" style="color:#0284C7;" id="resolvedLow">--</div>
+            <div class="metric-card-label">Low</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#22C55E;"></div>
+            <div class="metric-card-value" style="color:#22C55E;" id="resolvedPrecaution">--</div>
+            <div class="metric-card-label">✅ Precaution Act</div></div>
+        </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-accent" style="background:#22C55E;"></div>
-        <div class="metric-card-icon">🛢️</div>
-        <div class="metric-card-value" style="color:#22C55E; font-size:22px;">42 / 4,200 KM</div>
-        <div class="metric-card-label" style="color:#22C55E;">Monitored Assets</div>
-        <div class="metric-card-sub">Active drilling &amp; pipeline sectors</div>
-      </div>
+    </div>
 
-      <div class="metric-card">
-        <div class="metric-card-accent" style="background:#F59E0B;"></div>
-        <div class="metric-card-icon">✅</div>
-        <div class="metric-card-value" style="color:#F59E0B; font-size:20px;">OISD-156 Aligned</div>
-        <div class="metric-card-label" style="color:#F59E0B;">DGMS Audit Status</div>
-        <div class="metric-card-sub">Continuous compliance monitoring</div>
+    <!-- Improvement in Station: monthly High/Medium/Low trend -->
+    <div class="gov-card" style="margin-bottom:22px;">
+      <div class="gov-card-header">📈 Improvement in Station — Monthly Risk Trend</div>
+      <div class="gov-card-body">
+        <canvas id="monthlyTrendChart" height="90"></canvas>
       </div>
-
     </div>
 
     <!-- Reports Surveillance Table -->
     <div class="gov-card">
       <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-        <h3 id="dashboardTitle" style="font-size:14px; font-weight:700; margin:0;">📊 Real-time Reports Surveillance Table</h3>
+        <h3 id="dashboardTitle" style="font-size:14px; font-weight:700; margin:0;">📊 Active Reports Surveillance Table</h3>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="text" id="reportFilterInput" class="form-control" placeholder="Search by location / text..." style="font-size:11.5px; padding:4px 10px; width:200px;" oninput="filterReportsTable()">
           <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px;" onclick="loadReports()">↻ Refresh Live Table</button>
@@ -160,15 +182,79 @@
               <th>Observation Narrative</th>
               <th style="width:260px;">AI Risk Triage &amp; SHAP Drivers</th>
               <th style="width:110px;">Reported By</th>
+              <th style="width:120px;">Status</th>
             </tr>
           </thead>
           <tbody id="reportsTableBody">
-            <tr><td colspan="5" class="empty-state">Loading reports from secure database...</td></tr>
+            <tr><td colspan="6" class="empty-state">Loading reports from secure database...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Resolved Reports Section -->
+    <div class="gov-card" id="resolvedReportsSection" style="margin-top:22px;">
+      <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <h3 style="font-size:14px; font-weight:700; margin:0;">✅ Resolved Reports</h3>
+        <span style="font-size:11px; color:var(--text-muted);">Closed reports • High → Medium → Low → Precaution Act</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:140px;">Type</th>
+              <th style="width:180px;">Location / Dept</th>
+              <th>Observation Narrative</th>
+              <th style="width:260px;">AI Risk Triage &amp; SHAP Drivers</th>
+              <th style="width:110px;">Reported By</th>
+              <th style="width:120px;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="resolvedReportsTableBody">
+            <tr><td colspan="6" class="empty-state">Loading resolved reports...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </main>
+
+  <!-- Human-in-the-loop Safety Officer Review Modal -->
+  <div id="hitlReviewModal" class="hitl-modal-backdrop" onclick="closeHITLReview(event)">
+    <div class="hitl-modal-card" onclick="event.stopPropagation()">
+      <div class="hitl-modal-header">
+        <div>
+          <div class="hitl-modal-title">👨‍💼 Human-in-the-Loop Safety Review</div>
+          <div class="hitl-modal-subtitle">AI recommends. Safety Officer validates the operational decision.</div>
+        </div>
+        <button class="evidence-modal-close" type="button" onclick="closeHITLReview()">&times;</button>
+      </div>
+      <div class="hitl-modal-body">
+        <div id="hitlReviewAlert" class="alert"></div>
+        <div id="hitlReportSummary" class="hitl-report-summary"></div>
+        <div class="hitl-ai-panel">
+          <div class="hitl-section-label">🤖 AI RECOMMENDATION</div>
+          <div id="hitlAIRecommendation"></div>
+        </div>
+        <div class="hitl-section-label" style="margin-top:16px;">👨‍💼 OFFICER VALIDATION</div>
+        <div class="hitl-action-grid">
+          <button type="button" class="hitl-action-btn confirm" onclick="submitHITLReview('confirm')"><span>✅</span><strong>Confirm AI Prediction</strong><small>AI assessment is correct</small></button>
+          <button type="button" class="hitl-action-btn override" onclick="selectHITLOverride()"><span>✏️</span><strong>Override Prediction</strong><small>Officer selects final risk</small></button>
+          <button type="button" class="hitl-action-btn evidence" onclick="submitHITLReview('needs_evidence')"><span>📎</span><strong>Needs More Evidence</strong><small>Do not finalize risk yet</small></button>
+        </div>
+        <div id="hitlOverrideFields" class="hitl-override-fields" style="display:none;">
+          <label class="form-label">Officer's Final Risk <span class="required">*</span></label>
+          <select id="hitlFinalRisk" class="form-control"><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
+          <button type="button" class="btn hitl-save-override" onclick="submitHITLReview('override')">Save Override</button>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label class="form-label" for="hitlFeedback">Officer Feedback / Reason</label>
+          <textarea id="hitlFeedback" class="form-control" rows="3" placeholder="Explain why the AI was confirmed, overridden, or why more evidence is required..."></textarea>
+        </div>
+        <div class="hitl-audit-note">🔐 <strong>Audit-safe:</strong> the original AI prediction remains unchanged. Human validation is stored separately as labelled feedback for controlled model evaluation and retraining.</div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Floating Chatbot Widget ("OIL Suraksha Sahayak") -->
   <button id="oilChatbotToggle" class="oil-chatbot-toggle" onclick="toggleChatbot()" aria-label="Open Safety AI Assistant">
