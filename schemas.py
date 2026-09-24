@@ -52,3 +52,28 @@ class ReportOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# --- Admin-only account creation (replaces self-service /auth/register for
+# field_worker / safety_officer accounts) -----------------------------------
+class AdminCreateUser(BaseModel):
+    """Admin fills this in to onboard a worker/officer. The system generates
+    a unique employee code (e.g. FW260007) as the username - the admin only
+    supplies the person's real name, role, phone, and an initial password."""
+    full_name: str
+    phone_number: Optional[str] = None
+    role: str  # field_worker | safety_officer | admin
+    password: str
+
+
+class AdminCreateUserOut(BaseModel):
+    """Returned right after creation so the admin can note down / hand over
+    the generated employee code to the worker or officer."""
+    id: int
+    username: str  # the generated employee code - THIS is what they log in with
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    role: str
+
+    class Config:
+        from_attributes = True

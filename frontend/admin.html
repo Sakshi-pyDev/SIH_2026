@@ -153,7 +153,6 @@
           ⚡ Demo Admin Login
         </button>
         <a href="login.html" class="btn-nav-login">🔐 Login</a>
-        <a href="register.html" class="btn-nav-register">Register</a>
       </div>
 
       <div class="nav-user-session">
@@ -287,13 +286,18 @@
         
         <form id="addUserForm" onsubmit="submitNewUser(event)">
           <div class="form-group">
-            <label class="form-label" for="newUsername">Official Username / Email <span class="required">*</span></label>
-            <input type="text" id="newUsername" class="form-control" placeholder="e.g. hse_officer_guwahati" required>
+            <label class="form-label" for="newFullName">Official's Full Name <span class="required">*</span></label>
+            <input type="text" id="newFullName" class="form-control" placeholder="e.g. Ramesh Kumar" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newPhoneNumber">Phone Number <span style="font-weight:400; color:var(--text-muted); font-size:10.5px;">(for future automation - SMS alerts etc.)</span></label>
+            <input type="tel" id="newPhoneNumber" class="form-control" placeholder="e.g. 98765 43210">
           </div>
 
           <div class="form-group">
             <label class="form-label" for="newPassword">Temporary Access Password <span class="required">*</span></label>
-            <input type="password" id="newPassword" class="form-control" placeholder="Minimum 6 characters" required>
+            <input type="password" id="newPassword" class="form-control" placeholder="Minimum 4 characters" required>
           </div>
 
           <div class="form-group">
@@ -407,8 +411,8 @@
         <tr>
           <td><strong>#${u.id}</strong></td>
           <td>
-            <div style="font-weight:700; color:var(--text-main);">${escapeHtml(u.username)}</div>
-            <div style="font-size:10.5px; color:var(--text-muted);">Assigned ID: OIL-UID-${1000 + u.id}</div>
+            <div style="font-weight:700; color:var(--text-main);">${escapeHtml(u.full_name || '(no name on file)')}</div>
+            <div style="font-size:10.5px; color:var(--text-muted);">Employee Code: <strong>${escapeHtml(u.username)}</strong>${u.phone_number ? ` &bull; 📱 ${escapeHtml(u.phone_number)}` : ''}</div>
           </td>
           <td>${roleBadges[u.role] || u.role}</td>
           <td style="font-size:11.5px; color:var(--text-secondary);">${clearanceLabels[u.role] || 'Standard Access'}</td>
@@ -427,7 +431,7 @@
       const roleFilter = document.getElementById('adminRoleFilter')?.value || '';
 
       const filtered = allAdminUsers.filter(u => {
-        const matchesQuery = !q || (u.username && u.username.toLowerCase().includes(q));
+        const matchesQuery = !q || (u.username && u.username.toLowerCase().includes(q)) || (u.full_name && u.full_name.toLowerCase().includes(q));
         const matchesRole = !roleFilter || (u.role === roleFilter);
         return matchesQuery && matchesRole;
       });
@@ -439,7 +443,7 @@
       document.getElementById('addUserModal')?.classList.add('open');
       const alertEl = document.getElementById('addUserAlert');
       if (alertEl) alertEl.style.display = 'none';
-      document.getElementById('newUsername')?.focus();
+      document.getElementById('newFullName')?.focus();
     }
 
     function closeAddUserModal(e) {
@@ -451,12 +455,14 @@
       e.preventDefault();
       const alertEl = document.getElementById('addUserAlert');
       const saveBtn = document.getElementById('saveUserBtn');
+      const token = AuthState.getToken();
 
-      const username = document.getElementById('newUsername').value.trim();
+      const full_name = document.getElementById('newFullName').value.trim();
+      const phone_number = document.getElementById('newPhoneNumber').value.trim();
       const password = document.getElementById('newPassword').value;
       const role = document.getElementById('newRole').value;
 
-      if (!username || !password) return;
+      if (!full_name || !password || !token) return;
 
       if (saveBtn) {
         saveBtn.disabled = true;
@@ -464,10 +470,13 @@
       }
 
       try {
-        const res = await fetch(`${window.API_BASE}/auth/register`, {
+        const res = await fetch(`${window.API_BASE}/admin/users`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password, role })
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ full_name, phone_number, password, role })
         });
 
         const data = await res.json();
@@ -475,15 +484,24 @@
           throw new Error(data.detail || 'Registration failed');
         }
 
-        alertEl.textContent = `Official ${username} registered successfully as ${role.replace('_', ' ')}!`;
+        alertEl.innerHTML = `
+          ✅ <strong>${escapeHtml(full_name)}</strong> registered as ${role.replace('_', ' ')}.
+          <div style="margin-top:8px; padding:10px; background:rgba(139,92,246,0.1); border:1px dashed #8B5CF6; border-radius:6px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+            <div>
+              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Employee Login Code</div>
+              <div style="font-size:16px; font-weight:800; letter-spacing:0.03em;">${escapeHtml(data.username)}</div>
+            </div>
+            <button type="button" class="btn btn-ghost" style="padding:4px 10px; font-size:11px;" onclick="navigator.clipboard.writeText('${data.username}')">📋 Copy</button>
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Share this code with them - it's their login username. This is also always visible later in the Personnel Directory table.</div>
+        `;
         alertEl.className = 'alert alert-success show';
         alertEl.style.display = 'block';
 
         document.getElementById('addUserForm').reset();
-        setTimeout(() => {
-          closeAddUserModal();
-          loadAdminUsers();
-        }, 800);
+        loadAdminUsers();
+        // Note: modal stays open (no auto-close) so the admin has time to
+        // copy/note the code down before dismissing it manually.
       } catch(err) {
         alertEl.textContent = err.message;
         alertEl.className = 'alert alert-error show';

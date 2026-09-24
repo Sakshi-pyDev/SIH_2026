@@ -609,8 +609,7 @@ async function submitReportFromPortal() {
     attachedFiles = [];
     renderFilePreviews();
     hideSuggestions();
-    loadReports();
-
+  
   } catch (err) {
     if (progressContainer) progressContainer.style.display = 'none';
     if (alertEl) {
@@ -650,15 +649,6 @@ async function loadReports() {
 
     allLoadedReports = Array.isArray(data) ? data : [];
 
-    // Active queue: High → Medium → Low → Precaution Act.
-    // Resolved reports move into a separate section with the same ordering.
-    const activeReports = allLoadedReports
-      .filter(r => (r.status || 'Open') !== 'Resolved')
-      .sort(compareReportsByRisk);
-    const resolvedReports = allLoadedReports
-      .filter(r => (r.status || 'Open') === 'Resolved')
-      .sort(compareReportsByRisk);
-
     // Update KPI counters if present
     const statTotal = document.getElementById('statTotalReports');
     const statSif = document.getElementById('statSifPrecursors');
@@ -668,39 +658,10 @@ async function loadReports() {
       statSif.textContent = sifCount;
     }
 
-    renderReportsTable(activeReports);
-    renderResolvedReportsTable(resolvedReports);
+    renderReportsTable(allLoadedReports);
   } catch (e) {
     tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Live feed waiting for API connection (${e.message}).</td></tr>`;
   }
-}
-
-// ========== SAFETY-PRIORITY REPORT ORDERING ==========
-function getReportRiskPriority(report) {
-  if (!report || report.report_type === 'Precaution Act') return 0;
-
-  // Once an officer has supplied a final risk, that human decision is the
-  // operational risk used for ordering. Otherwise use the AI recommendation.
-  const risk = report.officer_final_risk ||
-    (report.predicted_probability != null
-      ? (report.predicted_probability >= 0.7 ? 'High' : report.predicted_probability >= 0.4 ? 'Medium' : 'Low')
-      : 'Low');
-
-  const normalized = String(risk).toLowerCase();
-  if (normalized === 'high') return 3;
-  if (normalized === 'medium') return 2;
-  if (normalized === 'low') return 1;
-  return 0;
-}
-
-function compareReportsByRisk(a, b) {
-  const riskDifference = getReportRiskPriority(b) - getReportRiskPriority(a);
-  if (riskDifference !== 0) return riskDifference;
-
-  // Within the same risk tier, show newest reports first.
-  const dateA = a && a.created_at ? new Date(a.created_at).getTime() : 0;
-  const dateB = b && b.created_at ? new Date(b.created_at).getTime() : 0;
-  return dateB - dateA;
 }
 
 function renderReportsTable(reportsList) {
@@ -768,7 +729,7 @@ function renderReportsTable(reportsList) {
           <span style="color:var(--text-muted); font-size:11px;">${r.department || '—'}</span>
         </td>
         <td style="max-width:320px; line-height:1.45;">
-          <div>${escapeHtml(cleanNarrative)}</div>
+          <div>${cleanNarrative}</div>
           ${evidenceBadge}
         </td>
         <td>
@@ -799,59 +760,6 @@ function renderReportsTable(reportsList) {
   }).join('');
 }
 
-// Render resolved reports below the active queue.
-// Ordering: High → Medium → Low → Precaution Act.
-function renderResolvedReportsTable(reportsList) {
-  const tbody = document.getElementById('resolvedReportsTableBody');
-  if (!tbody) return;
-
-  if (!reportsList || reportsList.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No resolved reports yet.</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = reportsList.map(r => {
-    const isPrecautionAct = r.report_type === 'Precaution Act';
-    const isHigh = r.officer_final_risk
-      ? String(r.officer_final_risk).toLowerCase() === 'high'
-      : r.predicted_label === 1;
-    let factors = [];
-    try {
-      factors = (typeof r.top_factors === 'string' ? JSON.parse(r.top_factors || "[]") : (r.top_factors || [])).slice(0, 3);
-    } catch (e) { factors = []; }
-
-    const prob = r.predicted_probability !== null && r.predicted_probability !== undefined
-      ? (r.predicted_probability * 100).toFixed(1) + '%'
-      : '—';
-    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Today';
-    const rawText = r.report_text || '—';
-    const cleanNarrative = rawText.replace(/\[📎 Verified Evidence:[^\]]+\]/g, '').trim();
-    const finalRisk = r.officer_final_risk ? String(r.officer_final_risk).toLowerCase() : '';
-    const riskLabel = finalRisk ? finalRisk.charAt(0).toUpperCase() + finalRisk.slice(1) : (isHigh ? 'High' : (r.predicted_probability >= 0.4 ? 'Medium' : 'Low'));
-    const riskClass = riskLabel.toLowerCase() === 'high' ? 'high' : 'low';
-
-    return `
-      <tr>
-        <td><strong>${escapeHtml(r.report_type || 'Near Miss')}</strong><div style="font-size:10.5px; color:var(--text-muted);">${dateStr}</div></td>
-        <td><strong>${escapeHtml(r.location || '—')}</strong><br><span style="color:var(--text-muted); font-size:11px;">${escapeHtml(r.department || '—')}</span></td>
-        <td style="max-width:320px; line-height:1.45;"><div>${escapeHtml(cleanNarrative)}</div></td>
-        <td>
-          ${isPrecautionAct ? `
-            <span class="badge-risk low">✅ PRECAUTION ACT</span>
-            <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">Good safety practice &bull; not risk-scored</div>
-          ` : `
-            <span class="badge-risk ${riskClass}">${riskLabel === 'High' ? '⚠️ SIF RISK' : riskLabel === 'Medium' ? '🟠 MEDIUM RISK' : '✅ LOW RISK'}</span>
-            ${finalRisk ? `<div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">Officer final risk: <strong>${escapeHtml(riskLabel)}</strong></div>` : ''}
-            <div style="margin-top:4px; font-size:11px; color:var(--text-secondary);">${prob} &bull; ${factors.map(f => `<span class="factor-chip">${escapeHtml(String(f.feature || '').replace('flag_', '').replace('count_', '').replace('tfidf_', ''))}</span>`).join('')}</div>
-          `}
-        </td>
-        <td><strong>${escapeHtml(r.submitted_by_username || 'field_worker')}</strong></td>
-        <td><span class="badge-risk low">✅ Resolved</span></td>
-      </tr>
-    `;
-  }).join('');
-}
-
 // Status + Human-in-the-loop validation controls.
 function renderStatusCell(r) {
   const status = r.status || 'Open';
@@ -869,7 +777,7 @@ function renderStatusCell(r) {
   const reviewButton = canReview && r.report_type !== 'Precaution Act'
     ? `<button class="btn hitl-review-btn" onclick="openHITLReview(${r.id})">👨‍💼 ${reviewStatus === 'Pending' ? 'Validate AI' : 'Review Again'}</button>` : '';
   const resolveButton = canReview && status !== 'Resolved'
-    ? `<button class="btn btn-ghost" style="padding:2px 8px; font-size:10.5px;" onclick="resolveReport(${r.id})">Mark Resolved</button>` : '';
+    ? `<button class="btn" style="padding:5px 10px; font-size:10.5px; background:#10B981; color:#fff; border:1px solid #10B981; border-radius:5px; font-weight:700; cursor:pointer;" onclick="resolveReport(${r.id})">✓ Mark Resolved</button>` : '';
   return `<div class="hitl-status-wrap">${reviewBadge}${finalRisk}${status === 'Resolved' ? '<span class="badge-risk low">✅ Resolved</span>' : '<span class="badge-risk high">Open</span>'}<div class="hitl-status-actions">${reviewButton}${resolveButton}</div>${r.reviewed_by_username ? `<div class="hitl-review-meta">Reviewed by ${escapeHtml(r.reviewed_by_username)}${r.reviewed_at ? ' • ' + new Date(r.reviewed_at).toLocaleString() : ''}</div>` : ''}</div>`;
 }
 
@@ -919,8 +827,9 @@ async function submitHITLReview(decision) {
     if (!res.ok) { const a=document.getElementById('hitlReviewAlert'); if(a){a.textContent=data.detail||'Could not save officer review.';a.className='alert alert-error show';} return; }
     const idx=allLoadedReports.findIndex(r=>Number(r.id)===Number(activeHITLReportId));
     if(idx>=0) allLoadedReports[idx]=data;
-    renderReportsTable(allLoadedReports);
-    if(document.getElementById('reportsHigh')) await loadAnalyticsSummary();
+    await loadPendingReportsTable();
+    await loadResolvedReportsTable();
+    await loadAnalyticsSummary();
     closeHITLReview();
   } catch(e) { const a=document.getElementById('hitlReviewAlert'); if(a){a.textContent='Network error while saving review: '+e.message;a.className='alert alert-error show';} }
 }
@@ -939,10 +848,12 @@ async function resolveReport(reportId) {
       alert(data.detail || 'Could not mark report as resolved.');
       return;
     }
-    // Refresh table + summary cards + chart so everything stays in sync
-    await loadReports();
-    if (document.getElementById('reportsHigh')) await loadAnalyticsSummary();
-    if (document.getElementById('monthlyTrendChart')) await loadMonthlyChart();
+    // Refresh only the existing dashboard sections. Do not restore a mixed report table.
+    await loadPendingReportsTable();
+    await loadResolvedReportsTable();
+    await loadAnalyticsSummary();
+    await loadMonthlyChart();
+    await refreshRetrainButton();
   } catch (e) {
     alert('Network error while resolving report: ' + e.message);
   }
@@ -976,7 +887,124 @@ async function loadStationFilter() {
 
 function onStationFilterChange() {
   loadAnalyticsSummary();
+  loadPendingReportsTable();
+  loadResolvedReportsTable();
   loadMonthlyChart();
+}
+
+
+// Dashboard-specific report tables: keep Pending and Resolved completely separate.
+function dashboardRiskRank(r) {
+  if (r.report_type === 'Precaution Act') return 3;
+  const p = Number(r.predicted_probability);
+  if (!Number.isFinite(p)) return 2;
+  if (p >= 0.7) return 0;
+  if (p >= 0.4) return 1;
+  return 2;
+}
+
+function sortDashboardReports(list) {
+  return [...list].sort((a, b) => {
+    const riskDiff = dashboardRiskRank(a) - dashboardRiskRank(b);
+    if (riskDiff !== 0) return riskDiff;
+    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+  });
+}
+
+function renderDashboardReportRows(list) {
+  // Reuse the existing renderer in an isolated temporary tbody.
+  // dashboard.html intentionally has no mixed reportsTableBody.
+  const temp = document.createElement('tbody');
+  temp.id = 'reportsTableBody';
+  temp.style.display = 'none';
+  document.body.appendChild(temp);
+
+  try {
+    renderReportsTable(sortDashboardReports(list));
+    return temp.innerHTML;
+  } finally {
+    temp.remove();
+  }
+}
+
+async function fetchDashboardReports() {
+  const token = AuthState.getToken();
+  if (!token) return [];
+
+  const res = await fetch(`${API_BASE}/reports`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (!res.ok) {
+    throw new Error(`Reports API returned HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  const reports = Array.isArray(data) ? data : [];
+
+  // dashboard.html has no #reportsTableBody, so loadReports() (which
+  // normally fills this) exits early here and never runs. Fill it here
+  // instead so openHITLReview()/getReportById() can find reports by id
+  // when "Validate AI" is clicked on the dashboard.
+  allLoadedReports = reports;
+
+  return reports;
+}
+
+async function loadPendingReportsTable() {
+  const tbody = document.getElementById('pendingReportsTableBody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Loading pending reports...</td></tr>';
+
+  try {
+    const reports = await fetchDashboardReports();
+    const pending = reports.filter(r => (r.status || 'Open') !== 'Resolved');
+    tbody.innerHTML = pending.length
+      ? renderDashboardReportRows(pending)
+      : '<tr><td colspan="6" class="empty-state">No pending reports.</td></tr>';
+    filterPendingReportsTable();
+  } catch (e) {
+    console.error('Pending reports load failed:', e);
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Unable to load pending reports: ${escapeHtml(e.message)}</td></tr>`;
+  }
+}
+
+async function loadResolvedReportsTable() {
+  const tbody = document.getElementById('resolvedReportsTableBody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Loading resolved reports...</td></tr>';
+
+  try {
+    const reports = await fetchDashboardReports();
+    const resolved = reports.filter(r => r.status === 'Resolved');
+    tbody.innerHTML = resolved.length
+      ? renderDashboardReportRows(resolved)
+      : '<tr><td colspan="6" class="empty-state">No resolved reports.</td></tr>';
+    filterResolvedReportsTable();
+  } catch (e) {
+    console.error('Resolved reports load failed:', e);
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Unable to load resolved reports: ${escapeHtml(e.message)}</td></tr>`;
+  }
+}
+
+function filterDashboardTable(inputId, bodyId) {
+  const q = (document.getElementById(inputId)?.value || '').trim().toLowerCase();
+  const tbody = document.getElementById(bodyId);
+  if (!tbody) return;
+
+  tbody.querySelectorAll('tr').forEach(row => {
+    row.style.display = !q || row.innerText.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function filterPendingReportsTable() {
+  filterDashboardTable('pendingReportFilterInput', 'pendingReportsTableBody');
+}
+
+function filterResolvedReportsTable() {
+  filterDashboardTable('resolvedReportFilterInput', 'resolvedReportsTableBody');
 }
 
 async function loadAnalyticsSummary() {
@@ -991,15 +1019,29 @@ async function loadAnalyticsSummary() {
     if (!res.ok) return;
     const data = await res.json();
 
-    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    setText('reportsHigh', data.reports.high);
-    setText('reportsMedium', data.reports.medium);
-    setText('reportsLow', data.reports.low);
-    setText('reportsPrecaution', data.reports.precaution_act);
-    setText('resolvedHigh', data.resolved.high);
-    setText('resolvedMedium', data.resolved.medium);
-    setText('resolvedLow', data.resolved.low);
-    setText('resolvedPrecaution', data.resolved.precaution_act);
+    const setText = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val ?? 0;
+    };
+
+    const total = data.total || data.reports || {};
+    const pending = data.pending || {};
+    const resolved = data.resolved || {};
+
+    setText('totalHigh', total.high);
+    setText('totalMedium', total.medium);
+    setText('totalLow', total.low);
+    setText('totalPrecaution', total.precaution_act);
+
+    setText('pendingHigh', pending.high);
+    setText('pendingMedium', pending.medium);
+    setText('pendingLow', pending.low);
+    setText('pendingPrecaution', pending.precaution_act);
+
+    setText('resolvedHigh', resolved.high);
+    setText('resolvedMedium', resolved.medium);
+    setText('resolvedLow', resolved.low);
+    setText('resolvedPrecaution', resolved.precaution_act);
   } catch (e) {
     console.error('Failed to load analytics summary', e);
   }
@@ -1044,25 +1086,92 @@ async function loadMonthlyChart() {
   }
 }
 
+// ========== CONTROLLED RETRAINING (HITL feedback -> candidate model) ==========
+async function refreshRetrainButton() {
+  const btn = document.getElementById("retrainBtn");
+  if (!btn) return; // only exists on dashboard.html
+  const token = AuthState.getToken();
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/reports/retrain-status`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+    const status = await res.json();
+
+    if (status.can_retrain) {
+      btn.disabled = false;
+      btn.textContent = `🔄 Retrain Model (${status.new_eligible_reports} new reports ready)`;
+    } else {
+      btn.disabled = true;
+      btn.textContent = `Retrain Model (${status.new_eligible_reports}/${status.threshold} reports)`;
+    }
+  } catch (e) {
+    console.error('retrain-status check failed', e);
+  }
+}
+
+async function triggerRetrain() {
+  const btn = document.getElementById("retrainBtn");
+  const resultBox = document.getElementById("retrainResult");
+  const token = AuthState.getToken();
+  if (!token || !btn) return;
+
+  btn.disabled = true;
+  btn.textContent = "Retraining... this may take a moment";
+
+  try {
+    const res = await fetch(`${API_BASE}/reports/retrain`, {
+      method: "POST",
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+    if (resultBox) {
+      if (!res.ok) {
+        resultBox.textContent = `Retrain failed: ${data.detail}`;
+        resultBox.className = "retrain-result error";
+      } else if (data.promoted) {
+        resultBox.textContent =
+          `✅ New model promoted (${data.model_version}). ` +
+          `High-risk recall: ${data.old_metrics.recall_high.toFixed(3)} → ${data.new_metrics.recall_high.toFixed(3)}, ` +
+          `Accuracy: ${data.old_metrics.accuracy.toFixed(3)} → ${data.new_metrics.accuracy.toFixed(3)}.`;
+        resultBox.className = "retrain-result success";
+      } else {
+        resultBox.textContent =
+          `Retrained, but kept the previous model — candidate didn't clear the threshold ` +
+          `(recall ${data.new_metrics.recall_high.toFixed(3)} vs current ${data.old_metrics.recall_high.toFixed(3)}).`;
+        resultBox.className = "retrain-result neutral";
+      }
+    }
+  } catch (e) {
+    if (resultBox) resultBox.textContent = "Retrain request failed — check console.";
+    console.error(e);
+  } finally {
+    await refreshRetrainButton();
+  }
+}
+
 function filterReportsTable() {
   const query = (document.getElementById('reportFilterInput')?.value || '').trim().toLowerCase();
-  const matchesQuery = r => {
-    if (!query) return true;
+  if (!query) {
+    renderReportsTable(allLoadedReports);
+    return;
+  }
+
+  const filtered = allLoadedReports.filter(r => {
     return (r.location && r.location.toLowerCase().includes(query)) ||
            (r.department && r.department.toLowerCase().includes(query)) ||
            (r.report_type && r.report_type.toLowerCase().includes(query)) ||
            (r.report_text && r.report_text.toLowerCase().includes(query)) ||
            (r.submitted_by_username && r.submitted_by_username.toLowerCase().includes(query));
-  };
+  });
 
-  const active = allLoadedReports.filter(r => (r.status || 'Open') !== 'Resolved' && matchesQuery(r)).sort(compareReportsByRisk);
-  const resolved = allLoadedReports.filter(r => (r.status || 'Open') === 'Resolved' && matchesQuery(r)).sort(compareReportsByRisk);
-
-  renderReportsTable(active);
-  renderResolvedReportsTable(resolved);
+  renderReportsTable(filtered);
 }
 
-// ========== INITIALIZATION ============
+// ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initFileDropzone();
@@ -1072,5 +1181,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // These only run on dashboard.html - each checks its own element exists first
   loadStationFilter();
   loadAnalyticsSummary();
+  loadPendingReportsTable();
+  loadResolvedReportsTable();
   loadMonthlyChart();
+  refreshRetrainButton();
+  document.getElementById("retrainBtn")?.addEventListener("click", triggerRetrain);
 });

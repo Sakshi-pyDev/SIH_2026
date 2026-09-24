@@ -11,6 +11,12 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/chatbot.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+/* HUMAN-IN-THE-LOOP SAFETY OFFICER REVIEW */
+.hitl-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px);z-index:100000;align-items:center;justify-content:center;padding:18px}.hitl-modal-backdrop.open{display:flex}.hitl-modal-card{width:min(760px,100%);max-height:92vh;overflow-y:auto;background:var(--bg-card);border:1px solid var(--border-card);border-radius:10px;box-shadow:var(--shadow-lg);animation:modalFadeIn .2s ease-out}.hitl-modal-header{padding:15px 18px;background:var(--gov-navy);color:#fff;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:3px solid var(--gov-orange)}.hitl-modal-title{font-size:15px;font-weight:800}.hitl-modal-subtitle{font-size:10.5px;opacity:.82;margin-top:2px}.hitl-modal-body{padding:17px}.hitl-report-summary{display:grid;grid-template-columns:90px 130px 1fr;gap:8px;padding:11px;background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:7px;margin-bottom:12px}.hitl-report-summary>div{min-width:0}.hitl-report-summary span,.hitl-ai-grid span{display:block;color:var(--text-muted);font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}.hitl-report-summary strong{font-size:11.5px;overflow-wrap:anywhere}.hitl-summary-wide{grid-column:1/-1}.hitl-ai-panel{border:1px solid var(--border-card);border-left:4px solid var(--gov-orange);border-radius:7px;padding:12px;background:var(--bg-subtle)}.hitl-section-label{font-size:10px;font-weight:800;color:var(--text-secondary);letter-spacing:.06em}.hitl-ai-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:8px}.hitl-ai-grid>div{min-width:0}.hitl-ai-grid strong{font-size:12px}.hitl-ai-explain{margin-top:9px;font-size:10.5px;color:var(--text-secondary)}.hitl-risk-high{color:#DC2626!important}.hitl-risk-medium{color:#D97706!important}.hitl-risk-low{color:#0284C7!important}.hitl-risk-precaution-act{color:#16A34A!important}.hitl-action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:8px}.hitl-action-btn{border:1px solid var(--border-card);background:var(--bg-card);color:var(--text-main);border-radius:7px;padding:10px 8px;cursor:pointer;font-family:inherit;text-align:left;transition:transform .15s ease,box-shadow .15s ease}.hitl-action-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}.hitl-action-btn span{font-size:18px;display:block;margin-bottom:4px}.hitl-action-btn strong{display:block;font-size:11.5px}.hitl-action-btn small{display:block;color:var(--text-muted);font-size:9.5px;margin-top:2px}.hitl-action-btn.confirm{border-left:3px solid #16A34A}.hitl-action-btn.override{border-left:3px solid var(--gov-orange)}.hitl-action-btn.evidence{border-left:3px solid #0284C7}.hitl-override-fields{margin-top:11px;padding:10px;border:1px dashed var(--gov-orange);border-radius:6px;background:rgba(255,102,0,.05)}.hitl-save-override{margin-top:8px;padding:5px 11px;font-size:10.5px;background:var(--gov-orange);color:#fff;border:0;border-radius:4px;cursor:pointer}.hitl-audit-note{margin-top:10px;padding:9px 11px;border-radius:6px;background:rgba(2,132,199,.08);border:1px solid rgba(2,132,199,.25);color:var(--text-secondary);font-size:10.5px}.hitl-status-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:3px}.hitl-status-badge{display:inline-block;padding:3px 7px;border-radius:10px;font-size:9.5px;font-weight:800;border:1px solid transparent}.hitl-status-badge.pending{background:#FEF3C7;color:#92400E;border-color:#FCD34D}.hitl-status-badge.confirmed{background:#DCFCE7;color:#166534;border-color:#86EFAC}.hitl-status-badge.overridden{background:#FFEDD5;color:#9A3412;border-color:#FDBA74}.hitl-status-badge.evidence{background:#E0F2FE;color:#075985;border-color:#7DD3FC}.hitl-final-risk{font-size:10px;color:var(--text-secondary)}.hitl-status-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}.hitl-review-btn{padding:3px 8px;font-size:10px;background:var(--gov-navy);color:#fff;border:1px solid var(--gov-navy);border-radius:4px;cursor:pointer}.hitl-review-btn:hover{background:var(--gov-orange);border-color:var(--gov-orange)}.hitl-review-meta{font-size:9px;color:var(--text-muted)}@media(max-width:760px){.hitl-ai-grid{grid-template-columns:repeat(2,1fr)}.hitl-action-grid{grid-template-columns:1fr}.hitl-report-summary{grid-template-columns:1fr 1fr}.hitl-summary-wide{grid-column:1/-1}}
+/* CONTROLLED MODEL RETRAINING */
+.retrain-result{min-height:14px}.retrain-result.success{color:#16A34A;font-weight:600}.retrain-result.error{color:#DC2626;font-weight:600}.retrain-result.neutral{color:#D97706;font-weight:600}#retrainBtn{align-self:flex-start;padding:8px 16px;font-size:12px;font-weight:700;background:var(--gov-navy);color:#fff;border:1px solid var(--gov-navy);border-radius:6px;cursor:pointer}#retrainBtn:disabled{opacity:.55;cursor:not-allowed}
+</style>
 </head>
 <body>
 
@@ -115,33 +121,51 @@
       </select>
     </div>
 
-    <!-- Reports vs Resolved: High Risk / Medium / Low / Precaution Act -->
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:22px;">
+    <!-- Total / Pending / Resolved summary -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:22px;">
 
       <div class="gov-card">
-        <div class="gov-card-header">📋 Reports</div>
-        <div class="gov-card-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+        <div class="gov-card-header">📋 Total Reports</div>
+        <div class="gov-card-body" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
           <div class="metric-card"><div class="metric-card-accent" style="background:#EF4444;"></div>
-            <div class="metric-card-value" style="color:#EF4444;" id="reportsHigh">--</div>
+            <div class="metric-card-value" style="color:#EF4444;" id="totalHigh">--</div>
             <div class="metric-card-label">High Risk</div></div>
           <div class="metric-card"><div class="metric-card-accent" style="background:#F59E0B;"></div>
-            <div class="metric-card-value" style="color:#F59E0B;" id="reportsMedium">--</div>
+            <div class="metric-card-value" style="color:#F59E0B;" id="totalMedium">--</div>
             <div class="metric-card-label">Medium</div></div>
           <div class="metric-card"><div class="metric-card-accent" style="background:#0284C7;"></div>
-            <div class="metric-card-value" style="color:#0284C7;" id="reportsLow">--</div>
+            <div class="metric-card-value" style="color:#0284C7;" id="totalLow">--</div>
             <div class="metric-card-label">Low</div></div>
           <div class="metric-card"><div class="metric-card-accent" style="background:#22C55E;"></div>
-            <div class="metric-card-value" style="color:#22C55E;" id="reportsPrecaution">--</div>
+            <div class="metric-card-value" style="color:#22C55E;" id="totalPrecaution">--</div>
             <div class="metric-card-label">✅ Precaution Act</div></div>
         </div>
       </div>
 
       <div class="gov-card">
-        <div class="gov-card-header">✅ Resolved</div>
-        <div class="gov-card-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+        <div class="gov-card-header">⏳ Pending Reports</div>
+        <div class="gov-card-body" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
+          <div class="metric-card"><div class="metric-card-accent" style="background:#EF4444;"></div>
+            <div class="metric-card-value" style="color:#EF4444;" id="pendingHigh">--</div>
+            <div class="metric-card-label">High Risk</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#F59E0B;"></div>
+            <div class="metric-card-value" style="color:#F59E0B;" id="pendingMedium">--</div>
+            <div class="metric-card-label">Medium</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#0284C7;"></div>
+            <div class="metric-card-value" style="color:#0284C7;" id="pendingLow">--</div>
+            <div class="metric-card-label">Low</div></div>
+          <div class="metric-card"><div class="metric-card-accent" style="background:#22C55E;"></div>
+            <div class="metric-card-value" style="color:#22C55E;" id="pendingPrecaution">--</div>
+            <div class="metric-card-label">✅ Precaution Act</div></div>
+        </div>
+      </div>
+
+      <div class="gov-card">
+        <div class="gov-card-header">✅ Resolved Reports</div>
+        <div class="gov-card-body" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
           <div class="metric-card"><div class="metric-card-accent" style="background:#EF4444;"></div>
             <div class="metric-card-value" style="color:#EF4444;" id="resolvedHigh">--</div>
-            <div class="metric-card-label">High</div></div>
+            <div class="metric-card-label">High Risk</div></div>
           <div class="metric-card"><div class="metric-card-accent" style="background:#F59E0B;"></div>
             <div class="metric-card-value" style="color:#F59E0B;" id="resolvedMedium">--</div>
             <div class="metric-card-label">Medium</div></div>
@@ -156,21 +180,22 @@
 
     </div>
 
-    <!-- Improvement in Station: monthly High/Medium/Low trend -->
+    <!-- Controlled Model Retraining (HITL feedback -> candidate model) -->
     <div class="gov-card" style="margin-bottom:22px;">
-      <div class="gov-card-header">📈 Improvement in Station — Monthly Risk Trend</div>
-      <div class="gov-card-body">
-        <canvas id="monthlyTrendChart" height="90"></canvas>
+      <div class="gov-card-header">🔄 Controlled Model Retraining</div>
+      <div class="gov-card-body" style="display:flex; flex-direction:column; gap:8px;">
+        <button id="retrainBtn" disabled>Retrain Model (0/3 reports)</button>
+        <div id="retrainResult" class="retrain-result"></div>
       </div>
     </div>
 
-    <!-- Reports Surveillance Table -->
-    <div class="gov-card">
+    <!-- Pending Reports Surveillance Table -->
+    <div class="gov-card" style="margin-bottom:22px;">
       <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-        <h3 id="dashboardTitle" style="font-size:14px; font-weight:700; margin:0;">📊 Active Reports Surveillance Table</h3>
+        <h3 id="pendingDashboardTitle" style="font-size:14px; font-weight:700; margin:0;">⏳ Pending Reports Surveillance Table</h3>
         <div style="display:flex; align-items:center; gap:8px;">
-          <input type="text" id="reportFilterInput" class="form-control" placeholder="Search by location / text..." style="font-size:11.5px; padding:4px 10px; width:200px;" oninput="filterReportsTable()">
-          <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px;" onclick="loadReports()">↻ Refresh Live Table</button>
+          <input type="text" id="pendingReportFilterInput" class="form-control" placeholder="Search pending reports..." style="font-size:11.5px; padding:4px 10px; width:200px;" oninput="filterPendingReportsTable()">
+          <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px;" onclick="loadPendingReportsTable()">↻ Refresh Pending</button>
         </div>
       </div>
       <div class="table-scroll">
@@ -185,18 +210,21 @@
               <th style="width:120px;">Status</th>
             </tr>
           </thead>
-          <tbody id="reportsTableBody">
-            <tr><td colspan="6" class="empty-state">Loading reports from secure database...</td></tr>
+          <tbody id="pendingReportsTableBody">
+            <tr><td colspan="6" class="empty-state">Loading pending reports...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Resolved Reports Section -->
-    <div class="gov-card" id="resolvedReportsSection" style="margin-top:22px;">
+    <!-- Resolved Reports Surveillance Table -->
+    <div class="gov-card" style="margin-bottom:22px;">
       <div class="gov-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-        <h3 style="font-size:14px; font-weight:700; margin:0;">✅ Resolved Reports</h3>
-        <span style="font-size:11px; color:var(--text-muted);">Closed reports • High → Medium → Low → Precaution Act</span>
+        <h3 id="resolvedDashboardTitle" style="font-size:14px; font-weight:700; margin:0;">✅ Resolved Reports Surveillance Table</h3>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="text" id="resolvedReportFilterInput" class="form-control" placeholder="Search resolved reports..." style="font-size:11.5px; padding:4px 10px; width:200px;" oninput="filterResolvedReportsTable()">
+          <button class="btn btn-ghost" style="padding:4px 12px; font-size:11.5px;" onclick="loadResolvedReportsTable()">↻ Refresh Resolved</button>
+        </div>
       </div>
       <div class="table-scroll">
         <table>
@@ -216,45 +244,16 @@
         </table>
       </div>
     </div>
-  </main>
 
-  <!-- Human-in-the-loop Safety Officer Review Modal -->
-  <div id="hitlReviewModal" class="hitl-modal-backdrop" onclick="closeHITLReview(event)">
-    <div class="hitl-modal-card" onclick="event.stopPropagation()">
-      <div class="hitl-modal-header">
-        <div>
-          <div class="hitl-modal-title">👨‍💼 Human-in-the-Loop Safety Review</div>
-          <div class="hitl-modal-subtitle">AI recommends. Safety Officer validates the operational decision.</div>
-        </div>
-        <button class="evidence-modal-close" type="button" onclick="closeHITLReview()">&times;</button>
-      </div>
-      <div class="hitl-modal-body">
-        <div id="hitlReviewAlert" class="alert"></div>
-        <div id="hitlReportSummary" class="hitl-report-summary"></div>
-        <div class="hitl-ai-panel">
-          <div class="hitl-section-label">🤖 AI RECOMMENDATION</div>
-          <div id="hitlAIRecommendation"></div>
-        </div>
-        <div class="hitl-section-label" style="margin-top:16px;">👨‍💼 OFFICER VALIDATION</div>
-        <div class="hitl-action-grid">
-          <button type="button" class="hitl-action-btn confirm" onclick="submitHITLReview('confirm')"><span>✅</span><strong>Confirm AI Prediction</strong><small>AI assessment is correct</small></button>
-          <button type="button" class="hitl-action-btn override" onclick="selectHITLOverride()"><span>✏️</span><strong>Override Prediction</strong><small>Officer selects final risk</small></button>
-          <button type="button" class="hitl-action-btn evidence" onclick="submitHITLReview('needs_evidence')"><span>📎</span><strong>Needs More Evidence</strong><small>Do not finalize risk yet</small></button>
-        </div>
-        <div id="hitlOverrideFields" class="hitl-override-fields" style="display:none;">
-          <label class="form-label">Officer's Final Risk <span class="required">*</span></label>
-          <select id="hitlFinalRisk" class="form-control"><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
-          <button type="button" class="btn hitl-save-override" onclick="submitHITLReview('override')">Save Override</button>
-        </div>
-        <div class="form-group" style="margin-top:12px;">
-          <label class="form-label" for="hitlFeedback">Officer Feedback / Reason</label>
-          <textarea id="hitlFeedback" class="form-control" rows="3" placeholder="Explain why the AI was confirmed, overridden, or why more evidence is required..."></textarea>
-        </div>
-        <div class="hitl-audit-note">🔐 <strong>Audit-safe:</strong> the original AI prediction remains unchanged. Human validation is stored separately as labelled feedback for controlled model evaluation and retraining.</div>
+    <!-- Improvement in Station: monthly High/Medium/Low trend -->
+    <div class="gov-card" style="margin-bottom:22px;">
+      <div class="gov-card-header">📈 Improvement in Station — Monthly Risk Trend</div>
+      <div class="gov-card-body">
+        <canvas id="monthlyTrendChart" height="90"></canvas>
       </div>
     </div>
-  </div>
 
+  </main>
 
   <!-- Floating Chatbot Widget ("OIL Suraksha Sahayak") -->
   <button id="oilChatbotToggle" class="oil-chatbot-toggle" onclick="toggleChatbot()" aria-label="Open Safety AI Assistant">
@@ -345,6 +344,44 @@
       </div>
     </div>
   </div>
+
+  <!-- Human-in-the-loop Safety Officer Review Modal -->
+  <div id="hitlReviewModal" class="hitl-modal-backdrop" onclick="closeHITLReview(event)">
+    <div class="hitl-modal-card" onclick="event.stopPropagation()">
+      <div class="hitl-modal-header">
+        <div>
+          <div class="hitl-modal-title">👨‍💼 Human-in-the-Loop Safety Review</div>
+          <div class="hitl-modal-subtitle">AI recommends. Safety Officer validates the operational decision.</div>
+        </div>
+        <button class="evidence-modal-close" type="button" onclick="closeHITLReview()">&times;</button>
+      </div>
+      <div class="hitl-modal-body">
+        <div id="hitlReviewAlert" class="alert"></div>
+        <div id="hitlReportSummary" class="hitl-report-summary"></div>
+        <div class="hitl-ai-panel">
+          <div class="hitl-section-label">🤖 AI RECOMMENDATION</div>
+          <div id="hitlAIRecommendation"></div>
+        </div>
+        <div class="hitl-section-label" style="margin-top:16px;">👨‍💼 OFFICER VALIDATION</div>
+        <div class="hitl-action-grid">
+          <button type="button" class="hitl-action-btn confirm" onclick="submitHITLReview('confirm')"><span>✅</span><strong>Confirm AI Prediction</strong><small>AI assessment is correct</small></button>
+          <button type="button" class="hitl-action-btn override" onclick="selectHITLOverride()"><span>✏️</span><strong>Override Prediction</strong><small>Officer selects final risk</small></button>
+          <button type="button" class="hitl-action-btn evidence" onclick="submitHITLReview('needs_evidence')"><span>📎</span><strong>Needs More Evidence</strong><small>Do not finalize risk yet</small></button>
+        </div>
+        <div id="hitlOverrideFields" class="hitl-override-fields" style="display:none;">
+          <label class="form-label">Officer's Final Risk <span class="required">*</span></label>
+          <select id="hitlFinalRisk" class="form-control"><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
+          <button type="button" class="btn hitl-save-override" onclick="submitHITLReview('override')">Save Override</button>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label class="form-label" for="hitlFeedback">Officer Feedback / Reason</label>
+          <textarea id="hitlFeedback" class="form-control" rows="3" placeholder="Explain why the AI was confirmed, overridden, or why more evidence is required..."></textarea>
+        </div>
+        <div class="hitl-audit-note">🔐 <strong>Audit-safe:</strong> the original AI prediction remains unchanged. Human validation is stored separately as labelled feedback for controlled model evaluation and retraining.</div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Government Standard Footer -->
   <footer class="gov-footer">
